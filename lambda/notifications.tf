@@ -100,4 +100,10 @@ resource "aws_sns_topic_subscription" "staging_topic_subscription" {
   protocol  = "lambda"
   topic_arn = "arn:aws:sns:eu-west-2:${data.aws_ssm_parameter.staging_account_number.*.value[count.index]}:tdr-notifications-staging"
 }
-// Need to add a prod subscription when it exists
+
+resource "aws_sns_topic_subscription" "prod_topic_subscription" {
+  count     = local.count_notifications
+  endpoint  = aws_lambda_function.notifications_lambda_function.*.arn[count.index]
+  protocol  = "lambda"
+  topic_arn = "arn:aws:sns:eu-west-2:${data.aws_ssm_parameter.prod_account_number.*.value[count.index]}:tdr-notifications-prod"
+}
