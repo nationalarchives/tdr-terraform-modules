@@ -64,15 +64,28 @@ resource "aws_security_group" "create_db_users_lambda" {
   description = "Allow access to the database"
   vpc_id      = var.vpc_id
 
-  egress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = merge(
     var.common_tags,
     map("Name", "${var.project}-create-db-users-lambda-security-group")
   )
+}
+
+resource "aws_security_group_rule" "allow_https_create_db_users_rule" {
+  count             = local.count_create_db_users
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.create_db_users_lambda[count.index].id
+  to_port           = 443
+  type              = "egress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "create_db_user_db_rule" {
+  count                    = local.count_create_db_users
+  from_port                = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.create_db_users_lambda[count.index].id
+  to_port                  = 5432
+  type                     = "egress"
+  source_security_group_id = var.api_database_security_group
 }

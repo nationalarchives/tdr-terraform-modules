@@ -22,3 +22,6 @@ output "mount_target_one" {
   value = aws_efs_mount_target.mount_target_az_one
 }
 
+output "security_group_id" {
+  value = aws_security_group.mount_target_sg.id
+}
