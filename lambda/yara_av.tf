@@ -92,15 +92,28 @@ resource "aws_security_group" "allow_efs_lambda_av" {
   description = "Allow EFS inbound traffic"
   vpc_id      = var.vpc_id
 
-  egress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = merge(
     var.common_tags,
     map("Name", "${var.project}-lambda-allow-efs-av-files")
   )
+}
+
+resource "aws_security_group_rule" "allow_https_lambda_av_rule" {
+  count             = local.count_av_yara
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.allow_efs_lambda_av[count.index].id
+  to_port           = 443
+  type              = "egress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "allow_outbound_efs_yara_av" {
+  count                    = local.count_av_yara
+  from_port                = 2049
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.allow_efs_lambda_av[count.index].id
+  to_port                  = 2049
+  type                     = "egress"
+  source_security_group_id = var.efs_security_group_id
 }

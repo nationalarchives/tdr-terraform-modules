@@ -180,3 +180,16 @@ variable "lambda_create_keycloak_db_users" {
 variable "keycloak_password" {
   default = ""
 }
+
+variable "efs_security_group_id" {
+  default     = ""
+  description = "The security group for the EFS mount targets"
+}
+
+variable "keycloak_database_security_group" {
+  default = ""
+}
+
+variable "api_database_security_group" {
+  default = ""
+}

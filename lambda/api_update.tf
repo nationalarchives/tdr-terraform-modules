@@ -17,6 +17,12 @@ resource "aws_lambda_function" "lambda_api_update_function" {
       QUEUE_URL     = aws_kms_ciphertext.environment_vars_api_update["queue_url"].ciphertext_blob
     }
   }
+
+  vpc_config {
+    subnet_ids         = var.private_subnet_ids
+    security_group_ids = aws_security_group.lambda_api_update.*.id
+  }
+
   lifecycle {
     ignore_changes = [filename]
   }
@@ -58,3 +64,24 @@ resource "aws_iam_role_policy_attachment" "lambda_api_update_role_policy" {
   role       = aws_iam_role.lambda_api_update_iam_role.*.name[0]
 }
 
+resource "aws_security_group" "lambda_api_update" {
+  count       = local.count_api_update
+  name        = "allow-https-outbound-api-update"
+  description = "Allow HTTPS outbound traffic"
+  vpc_id      = var.vpc_id
+
+  tags = merge(
+    var.common_tags,
+    map("Name", "${var.project}-allow-https-outbound-api-update")
+  )
+}
+
+resource "aws_security_group_rule" "allow_https_lambda_api_update_rule" {
+  count             = local.count_api_update
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.lambda_api_update[count.index].id
+  to_port           = 443
+  type              = "egress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}

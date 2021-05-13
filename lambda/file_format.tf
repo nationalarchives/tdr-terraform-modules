@@ -77,15 +77,28 @@ resource "aws_security_group" "allow_efs_lambda_file_format" {
   description = "Allow EFS inbound traffic"
   vpc_id      = var.vpc_id
 
-  egress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = merge(
     var.common_tags,
     map("Name", "${var.project}-lambda-allow-efs-download-files")
   )
+}
+
+resource "aws_security_group_rule" "allow_https_lambda_file_format" {
+  count             = local.count_file_format
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.allow_efs_lambda_file_format[count.index].id
+  to_port           = 443
+  type              = "egress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "file_format_outbound_efs_rule" {
+  count                    = local.count_file_format
+  from_port                = 2049
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.allow_efs_lambda_file_format[count.index].id
+  to_port                  = 2049
+  type                     = "egress"
+  source_security_group_id = var.efs_security_group_id
 }

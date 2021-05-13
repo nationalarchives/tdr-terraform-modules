@@ -14,6 +14,11 @@ resource "aws_lambda_function" "export_api_authoriser_lambda_function" {
     }
   }
 
+  vpc_config {
+    subnet_ids         = var.private_subnet_ids
+    security_group_ids = aws_security_group.lambda_export_api_authoriser.*.id
+  }
+
   lifecycle {
     ignore_changes = [filename]
   }
@@ -57,4 +62,26 @@ resource "aws_lambda_permission" "export_api_lambda_permissions" {
   function_name = "${var.project}-export-api-authoriser-${local.environment}"
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${var.api_gateway_arn}/authorizers/*"
+}
+
+resource "aws_security_group" "lambda_export_api_authoriser" {
+  count       = local.count_export_api_authoriser
+  name        = "allow-https-outbound-export-api-authoriser"
+  description = "Allow HTTPS outbound traffic"
+  vpc_id      = var.vpc_id
+
+  tags = merge(
+    var.common_tags,
+    map("Name", "${var.project}-allow-https-outbound-export-api-authoriser")
+  )
+}
+
+resource "aws_security_group_rule" "allow_https_export_api_authoriser_rule" {
+  count             = local.count_export_api_authoriser
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.lambda_export_api_authoriser[count.index].id
+  to_port           = 443
+  type              = "egress"
+  cidr_blocks       = ["0.0.0.0/0"]
 }
