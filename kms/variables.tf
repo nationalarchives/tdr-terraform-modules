@@ -16,5 +16,5 @@ variable "environment" {
 
 variable "key_policy" {
   description = "key policy within templates folder"
-  default     = "message_system_access"
+  default     = "root_access"
 }
