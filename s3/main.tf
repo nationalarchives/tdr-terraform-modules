@@ -138,5 +138,5 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 resource "aws_s3_bucket_policy" "ip_restriction" {
   count  = var.ip_restriction == true ? 1 : 0
   bucket = aws_s3_bucket.bucket.*.id[0]
-  policy = templatefile("./tdr-terraform-modules/s3/templates/ip_bucket_restriction.json.tpl", { ip_bucket_allowlist = jsonencode(var.ip_bucket_allowlist), bucket_name = aws_s3_bucket.bucket.*.id[0]  })
+  policy = templatefile("./tdr-terraform-modules/s3/templates/ip_bucket_restriction.json.tpl", { ip_bucket_allowlist = jsonencode(var.ip_bucket_allowlist), bucket_name = aws_s3_bucket.bucket.*.id[0] })
 }
