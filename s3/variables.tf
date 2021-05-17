@@ -103,3 +103,14 @@ variable "log_data_sns_topic_region" {
   description = "Region for log data SNS topic"
   default     = "eu-west-2"
 }
+
+variable "ip_restriction" {
+  description = "Access to S3 bucket restricted by IP address"
+  default     = false
+}
+
+variable "ip_bucket_allowlist" {
+  description = "IP addresses allowed to access S3 bucket"
+  default     = ["0.0.0.0/0"]
+  type        = list(string)
+}
