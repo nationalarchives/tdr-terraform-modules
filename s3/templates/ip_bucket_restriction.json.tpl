@@ -1,5 +1,5 @@
 {
-  "Id": "SourceIP",
+  "Id": "ip-bucket-restriction-${bucket_name}",
   "Version": "2012-10-17",
   "Statement": [
     {
