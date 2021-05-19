@@ -25,10 +25,22 @@ variable "security_group_id" {
   default = ""
 }
 
-variable "kms_arn" {}
-
 variable "subnet_id" {}
 
 variable "public_key" {
   default = ""
+}
+variable "instance_type" {
+  default = "t2.micro"
+}
+variable "volume_size" {
+  type    = number
+  default = 30
+}
+variable "private_ip" {
+  default = ""
+}
+variable "attach_policies" {
+  type    = map(string)
+  default = {}
 }
