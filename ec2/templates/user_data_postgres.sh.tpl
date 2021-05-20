@@ -7,6 +7,8 @@ GRANT CONNECT ON DATABASE consignmentapi TO bastion_user;
 GRANT USAGE ON SCHEMA public TO bastion_user;
 GRANT rds_iam TO bastion_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO bastion_user;
+SET ROLE migrations_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO bastion_user;
 EOM
 cat /home/ssm-user/create-user | PGPASSWORD=${db_password} psql -h ${db_host} -U ${db_username} -d consignmentapi | true
 cat <<\EOF >> /home/ssm-user/connect.sh
