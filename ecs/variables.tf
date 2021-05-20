@@ -36,6 +36,10 @@ variable "consignment_export" {
   default = false
 }
 
+variable "jenkins" {
+  default = false
+}
+
 variable "grafana_database_type" {
   default = "postgres"
 }
@@ -67,3 +71,10 @@ variable "backend_client_secret_path" {
 }
 
 variable "vpc_id" {}
+
+variable "execution_role_arn" {
+  default = ""
+}
+variable "task_role_arn" {
+  default = ""
+}
