@@ -32,23 +32,9 @@
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/docker/password",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/ami_aws_account",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/access_key",
-        "arn:aws:s3:::tdr-jenkins-backup-mgmt"
+        "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/github/prod/secret",
+        "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/github/prod/client"
       ]
-    },
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Action": "s3:ListBucket",
-      "Resource": "arn:aws:s3:::tdr-jenkins-backup-mgmt"
-    },
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject"
-      ],
-      "Resource": "arn:aws:s3:::tdr-jenkins-backup-mgmt/*"
     },
     {
       "Sid": "",

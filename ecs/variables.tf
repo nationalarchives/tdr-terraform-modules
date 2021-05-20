@@ -40,6 +40,10 @@ variable "jenkins" {
   default = false
 }
 
+variable "sbt_with_postgres" {
+  default = false
+}
+
 variable "grafana_database_type" {
   default = "postgres"
 }
@@ -76,5 +80,13 @@ variable "execution_role_arn" {
   default = ""
 }
 variable "task_role_arn" {
+  default = ""
+}
+
+variable "name" {
+  default = ""
+}
+
+variable "jenkins_repository_name" {
   default = ""
 }
