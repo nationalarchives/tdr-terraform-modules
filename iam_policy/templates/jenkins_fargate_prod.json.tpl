@@ -48,7 +48,7 @@
         "arn:aws:iam::${account_id}:role/TDRCustodianAssumeRoleProd",
         "arn:aws:ecs:eu-west-2:${account_id}:task/*",
         "arn:aws:ecs:eu-west-2:${account_id}:task-definition/*:*",
-        "arn:aws:ecs:eu-west-2:${account_id}:cluster/jenkins-mgmt"
+        "arn:aws:ecs:eu-west-2:${account_id}:cluster/jenkins-prod-mgmt"
       ]
     },
     {
