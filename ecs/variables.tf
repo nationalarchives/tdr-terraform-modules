@@ -38,7 +38,7 @@ variable "consignment_export" {
 
 variable "jenkins" {
   description = "Creates the jenkins ECS service when set to true"
-  default = false
+  default     = false
 }
 
 variable "grafana_database_type" {

@@ -46,6 +46,6 @@ variable "private_ip" {
 
 variable "attach_policies" {
   description = "A list of policy arns to attach to the instance IAM role"
-  type    = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }
