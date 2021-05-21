@@ -5,11 +5,11 @@
       "Sid": "",
       "Effect": "Allow",
       "Action": [
-        "logs:PutLogEvents",
-        "logs:CreateLogStream",
-        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchCheckLayerAvailability",
         "ecr:BatchGetImage",
-        "ecr:BatchCheckLayerAvailability"
+        "ecr:GetDownloadUrlForLayer",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
       ],
       "Resource": [
         "arn:aws:logs:eu-west-2:${account_id}:log-group:/ecs/tdr-jenkins-mgmt:*",

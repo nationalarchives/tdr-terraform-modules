@@ -7,7 +7,9 @@ variable "parameters" {
   }))
   default = []
 }
+
 variable "common_tags" {}
+
 resource "aws_ssm_parameter" "ssm_parameter" {
   for_each    = { for ssm_parameter in var.parameters : ssm_parameter.name => ssm_parameter }
   name        = each.value.name

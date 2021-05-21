@@ -37,7 +37,8 @@ variable "consignment_export" {
 }
 
 variable "jenkins" {
-  default = false
+  description = "Creates the jenkins ECS service when set to true"
+  default     = false
 }
 
 variable "sbt_with_postgres" {

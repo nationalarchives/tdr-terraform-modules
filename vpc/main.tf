@@ -1,5 +1,3 @@
-# Creates a VPC with public and private subnets. Currently only used for Jenkins but we may be able to move the TDR terraform to use this.
-
 # Fetch AZs in the current region
 data "aws_availability_zones" "available" {
 }
