@@ -35,6 +35,6 @@ resource "aws_route53_record" "amazonses_dkim_record" {
 }
 
 resource "aws_ses_email_identity" "email_address" {
-  email = "${local.email}@${var.domain}"
+  email = "${var.email_address}@${var.domain}"
 }
 
