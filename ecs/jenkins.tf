@@ -34,7 +34,6 @@ resource "aws_ecs_task_definition" "jenkins_task" {
     host_path = "/var/run/docker.sock"
   }
 
-
   tags = merge(
     var.common_tags,
     map(
@@ -58,7 +57,6 @@ resource "aws_ecs_service" "jenkins" {
     container_port   = 8080
   }
 }
-
 
 # Set up CloudWatch group and log stream and retain logs for 30 days
 resource "aws_cloudwatch_log_group" "tdr_jenkins_log_group" {

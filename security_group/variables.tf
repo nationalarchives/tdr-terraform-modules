@@ -1,6 +1,9 @@
 variable "vpc_id" {}
+
 variable "name" {}
+
 variable "description" {}
+
 variable "ingress_cidr_rules" {
   type = set(object({
     port        = number
@@ -38,4 +41,5 @@ variable "egress_security_group_rules" {
   }))
   default = []
 }
+
 variable "common_tags" {}

@@ -5,9 +5,9 @@
       "Sid": "",
       "Effect": "Allow",
       "Action": [
-        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchCheckLayerAvailability",
         "ecr:BatchGetImage",
-        "ecr:BatchCheckLayerAvailability"
+        "ecr:GetDownloadUrlForLayer"
       ],
       "Resource": [
         "${repository_arn}"

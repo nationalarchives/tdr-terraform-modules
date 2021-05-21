@@ -37,6 +37,7 @@ variable "consignment_export" {
 }
 
 variable "jenkins" {
+  description = "Creates the jenkins ECS service when set to true"
   default = false
 }
 

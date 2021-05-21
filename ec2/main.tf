@@ -6,7 +6,7 @@ resource "aws_instance" "instance" {
   user_data              = var.user_data != "" ? templatefile("${path.module}/templates/${var.user_data}.sh.tpl", var.user_data_variables) : ""
   vpc_security_group_ids = [var.security_group_id]
   key_name               = local.key_count == 0 ? "" : "bastion_key"
-  private_ip             = var.private_ip != "" ? null : var.private_ip
+  private_ip             = var.private_ip == "" ? null : var.private_ip
 
 
   root_block_device {

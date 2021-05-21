@@ -7,9 +7,9 @@
       "Action": [
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
-        "logs:PutLogEvents",
         "logs:DescribeLogGroups",
-        "logs:DescribeLogStreams"
+        "logs:DescribeLogStreams",
+        "logs:PutLogEvents"
       ],
       "Resource": "arn:aws:logs:*:*:log-group:/flowlogs/tdr-jenkins-vpc-*"
     }
