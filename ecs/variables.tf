@@ -80,6 +80,7 @@ variable "vpc_id" {}
 variable "execution_role_arn" {
   default = ""
 }
+
 variable "task_role_arn" {
   default = ""
 }
@@ -88,6 +89,6 @@ variable "name" {
   default = ""
 }
 
-variable "jenkins_repository_name" {
+variable "domain_name" {
   default = ""
 }

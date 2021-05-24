@@ -41,6 +41,14 @@
       {
         "name": "GF_DATABASE_TYPE",
         "value": "${database_type}"
+      },
+      {
+        "name": "GF_SERVER_DOMAIN",
+        "value": "${domain_name}"
+      },
+      {
+        "name": "GF_SERVER_PROTOCOL",
+        "value": "https"
       }
     ],
     "networkMode": "awsvpc",
