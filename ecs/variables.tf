@@ -67,3 +67,7 @@ variable "backend_client_secret_path" {
 }
 
 variable "vpc_id" {}
+
+variable "domain_name" {
+  default = ""
+}
