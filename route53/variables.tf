@@ -24,3 +24,18 @@ variable "manual_creation" {
   description = "DNS zone created manually and imported to Terraform state"
   default     = false
 }
+
+variable "alb_dns_name" {
+  description = "The DNS name for the target load balancer"
+  default     = ""
+}
+
+variable "alb_zone_id" {
+  description = "The zone for the target load balancer"
+  default     = ""
+}
+
+variable "a_record_name" {
+  description = "The name to use for the A record"
+  default     = ""
+}

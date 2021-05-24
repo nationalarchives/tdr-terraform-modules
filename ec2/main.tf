@@ -1,19 +1,16 @@
 resource "aws_instance" "instance" {
   ami                    = var.ami_id
-  instance_type          = "t2.micro"
+  instance_type          = var.instance_type
   iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
   subnet_id              = var.subnet_id
   user_data              = var.user_data != "" ? templatefile("${path.module}/templates/${var.user_data}.sh.tpl", var.user_data_variables) : ""
   vpc_security_group_ids = [var.security_group_id]
   key_name               = local.key_count == 0 ? "" : "bastion_key"
-  ebs_block_device {
-    device_name = "/dev/xvda"
-    encrypted   = true
-    kms_key_id  = var.kms_arn
-  }
+  private_ip             = var.private_ip == "" ? null : var.private_ip
 
-  lifecycle {
-    ignore_changes = [ebs_block_device]
+
+  root_block_device {
+    volume_size = var.volume_size
   }
 
   tags = merge(
@@ -49,4 +46,10 @@ resource "aws_iam_role" "ec2_role" {
 resource "aws_iam_role_policy_attachment" "ec2_role_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   role       = aws_iam_role.ec2_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_variable_policy_attachment" {
+  for_each   = var.attach_policies
+  policy_arn = each.value
+  role       = aws_iam_role.ec2_role.id
 }
