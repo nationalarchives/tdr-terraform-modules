@@ -76,6 +76,11 @@ variable "vpc_id" {}
 variable "execution_role_arn" {
   default = ""
 }
+
 variable "task_role_arn" {
+  default = ""
+}
+
+variable "domain_name" {
   default = ""
 }

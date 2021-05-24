@@ -68,6 +68,7 @@ resource "aws_ecs_task_definition" "grafana_task" {
       database_user_path     = data.aws_ssm_parameter.database_user[count.index].name
       database_password_path = data.aws_ssm_parameter.database_password[count.index].name
       database_type          = var.grafana_database_type
+      domain_name            = var.domain_name
       log_group_name         = aws_cloudwatch_log_group.grafana_build_log_group[count.index].name
       project                = var.project
     }
