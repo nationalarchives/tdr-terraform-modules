@@ -25,10 +25,27 @@ variable "security_group_id" {
   default = ""
 }
 
-variable "kms_arn" {}
-
 variable "subnet_id" {}
 
 variable "public_key" {
   default = ""
+}
+
+variable "instance_type" {
+  default = "t2.micro"
+}
+
+variable "volume_size" {
+  type    = number
+  default = 30
+}
+
+variable "private_ip" {
+  default = ""
+}
+
+variable "attach_policies" {
+  description = "A list of policy arns to attach to the instance IAM role"
+  type        = map(string)
+  default     = {}
 }

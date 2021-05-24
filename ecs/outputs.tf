@@ -25,3 +25,7 @@ output "consignment_export_task_role_arn" {
 output "consignment_export_execution_role_arn" {
   value = var.consignment_export == true && length(aws_iam_role.consignment_export_ecs_execution) > 0 ? aws_iam_role.consignment_export_ecs_execution.*.arn[0] : ""
 }
+
+output "jenkins_cluster_arn" {
+  value = var.jenkins == true ? aws_ecs_cluster.jenkins_cluster[0].arn : ""
+}
