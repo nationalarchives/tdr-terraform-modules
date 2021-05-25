@@ -13,7 +13,7 @@ variable "domain" {
 
 variable "email_address" {
   description = "address prefix, e.g. secops"
-  default     = ""
+  default     = "tdr-secops"
 }
 
 variable "hosted_zone_id" {
