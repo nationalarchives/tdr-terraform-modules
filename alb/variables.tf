@@ -36,10 +36,6 @@ variable "certificate_arn" {
   description = "SSL certificate ARN"
 }
 
-variable "domain_name" {
-  description = "Domain name to be used in SSL certificate"
-}
-
 variable "health_check_path" {
   description = "path to be used for health check"
   default     = "login"

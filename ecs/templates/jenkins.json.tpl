@@ -1,7 +1,7 @@
 [
       {
-        "name": "jenkins-${app_environment}",
-        "image": "${management_account}.dkr.ecr.${region}.amazonaws.com/jenkins",
+        "name": "${jenkins_repository_name}-${app_environment}",
+        "image": "${management_account}.dkr.ecr.${region}.amazonaws.com/${jenkins_repository_name}",
         "cpu": 0,
         "logConfiguration": {
           "logDriver": "awslogs",

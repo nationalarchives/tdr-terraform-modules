@@ -17,6 +17,8 @@
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/github/jenkins-api-key",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/github/jenkins-ssh-key",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/github/jenkins-ssh-username",
+        "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/github/prod/client",
+        "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/github/prod/secret",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/github/secret",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/identitypoolid_intg",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/identitypoolid_prod",
@@ -34,21 +36,6 @@
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/sonatype/passphrase",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/staging_account"
       ]
-    },
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Action": "s3:ListBucket",
-      "Resource": "arn:aws:s3:::tdr-jenkins-backup-mgmt"
-    },
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject"
-      ],
-      "Resource": "arn:aws:s3:::tdr-jenkins-backup-mgmt/*"
     },
     {
       "Sid": "",

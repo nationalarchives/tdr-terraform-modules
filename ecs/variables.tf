@@ -41,6 +41,10 @@ variable "jenkins" {
   default     = false
 }
 
+variable "sbt_with_postgres" {
+  default = false
+}
+
 variable "grafana_database_type" {
   default = "postgres"
 }
@@ -79,6 +83,11 @@ variable "execution_role_arn" {
 
 variable "task_role_arn" {
   default = ""
+}
+
+variable "name" {
+  description = "Name of the service. This is currently only used for the Jenkins ECS service which can either be called jenkins or jenkins-prod"
+  default     = ""
 }
 
 variable "domain_name" {
