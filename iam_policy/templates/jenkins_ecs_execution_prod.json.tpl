@@ -12,8 +12,8 @@
         "logs:PutLogEvents"
       ],
       "Resource": [
-        "arn:aws:logs:eu-west-2:${account_id}:log-group:/ecs/tdr-jenkins-prod-mgmt:*",
-        "arn:aws:ecr:eu-west-2:${account_id}:repository/jenkins-prod"
+        "arn:aws:ecr:eu-west-2:${account_id}:repository/jenkins-prod",
+        "arn:aws:logs:eu-west-2:${account_id}:log-group:/ecs/tdr-jenkins-prod-mgmt:*"
       ]
     },
     {
