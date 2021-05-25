@@ -87,7 +87,7 @@ variable "task_role_arn" {
 
 variable "name" {
   description = "Name of the service. This is currently only used for the Jenkins ECS service which can either be called jenkins or jenkins-prod"
-  default = ""
+  default     = ""
 }
 
 variable "domain_name" {
