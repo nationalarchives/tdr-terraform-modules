@@ -48,7 +48,7 @@
       },
       {
         "name": "GF_SERVER_PROTOCOL",
-        "value": "https"
+        "value": "http"
       }
     ],
     "networkMode": "awsvpc",
