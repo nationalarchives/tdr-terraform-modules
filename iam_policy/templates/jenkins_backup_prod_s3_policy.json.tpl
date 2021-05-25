@@ -4,13 +4,13 @@
     {
       "Effect": "Allow",
       "Action": [
-        "s3:PutObject",
         "s3:GetObject",
-        "s3:ListBucket"
+        "s3:ListBucket",
+        "s3:PutObject"
       ],
       "Resource": [
-        "arn:aws:s3:::tdr-jenkins-backup-prod-mgmt/*",
-        "arn:aws:s3:::tdr-jenkins-backup-prod-mgmt"
+        "arn:aws:s3:::tdr-jenkins-backup-prod-mgmt",
+        "arn:aws:s3:::tdr-jenkins-backup-prod-mgmt/*"
       ]
     }
   ]
