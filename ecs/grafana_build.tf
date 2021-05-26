@@ -71,6 +71,8 @@ resource "aws_ecs_task_definition" "grafana_task" {
       domain_name            = var.domain_name
       log_group_name         = aws_cloudwatch_log_group.grafana_build_log_group[count.index].name
       project                = var.project
+      //Protocol set to 'http' with redirect to 'https' due to difficulties running ECS task on 'https'
+      server_protocol        = "http"
     }
   )
   task_role_arn = aws_iam_role.grafana_ecs_task[count.index].arn
