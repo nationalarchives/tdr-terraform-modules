@@ -52,7 +52,7 @@
       },
       {
         "name": "GF_SERVER_ROOT_URL",
-        "value": "${server_protocol}://${domain_name}"
+        "value": "https://${domain_name}"
       }
     ],
     "networkMode": "awsvpc",
