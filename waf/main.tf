@@ -10,10 +10,6 @@ resource "aws_wafregional_ipset" "trusted" {
       value = ip.value
     }
   }
-  ip_set_descriptor {
-    type  = "IPV6"
-    value = "2001:0920:306a:0000:0000:0000:0000:0000/48"
-  }
 }
 
 resource "aws_wafregional_byte_match_set" "restricted_uri" {
