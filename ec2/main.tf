@@ -19,10 +19,6 @@ resource "aws_instance" "instance" {
       "Name", "${var.name}-ec2-instance-${var.environment}",
     )
   )
-
-  lifecycle {
-    ignore_changes = [ami]
-  }
 }
 
 resource "aws_key_pair" "bastion_key_pair" {
