@@ -29,7 +29,6 @@
         "arn:aws:iam::${account_id}:role/TDRJenkinsBuildTransferFrontendExecutionRole",
         "arn:aws:iam::${account_id}:role/TDRJenkinsCheckAmiRole",
         "arn:aws:iam::${account_id}:role/TDRJenkinsNodeLambdaRoleIntg",
-        "arn:aws:iam::${account_id}:role/TDRJenkinsNodeLambdaRoleMgmt",
         "arn:aws:iam::${account_id}:role/TDRJenkinsNodeReadParamsRoleIntg",
         "arn:aws:iam::${account_id}:role/TDRJenkinsNodeRoleIntg",
         "arn:aws:iam::${account_id}:role/TDRJenkinsNodeS3ExportRoleIntg",
@@ -37,7 +36,6 @@
         "arn:aws:iam::${account_id}:role/TDRJenkinsRunSsmRoleIntg",
         "arn:aws:iam::${account_id}:role/TDRScriptsTerraformRoleIntg",
         "arn:aws:iam::${account_id}:role/TDRTerraformAssumeRoleIntg",
-        "arn:aws:iam::${account_id}:role/TDRTerraformRoleMgmt",
         "arn:aws:s3:::tdr-releases-mgmt",
         "arn:aws:s3:::tdr-releases-mgmt/*"
       ]
