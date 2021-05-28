@@ -83,7 +83,7 @@ resource "aws_lambda_permission" "lambda_permissions_sns" {
 }
 
 resource "aws_sns_topic_subscription" "intg_topic_subscription" {
-  for_each      = var.sns_topic_arns
+  for_each  = var.sns_topic_arns
   endpoint  = aws_lambda_function.notifications_lambda_function.*.arn[0]
   protocol  = "lambda"
   topic_arn = each.value
