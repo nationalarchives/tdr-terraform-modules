@@ -25,18 +25,6 @@
           "AWS:SourceOwner": "${account_id}"
         }
       }
-    },
-    {
-      "Sid": "lambda-access",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::${management_account}:root"
-      },
-      "Action": [
-        "SNS:Subscribe",
-        "SNS:ListSubscriptionsByTopic"
-      ],
-      "Resource": "arn:aws:sns:${region}:${account_id}:${sns_topic_name}"
     }
   ]
 }
