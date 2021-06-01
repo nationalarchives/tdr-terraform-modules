@@ -22,22 +22,17 @@ resource "aws_lambda_function" "notifications_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_notifications" {
-  for_each = local.count_notifications == 0 ? {} : { slack_webhook = data.aws_ssm_parameter.slack_webook[0].value, to_email = "${data.aws_ssm_parameter.notification_email_prefix[0].value}@nationalarchives.gov.uk", muted_vulnerabilities = join(",", var.muted_scan_alerts) }
+  for_each = local.count_notifications == 0 ? {} : { slack_webhook = data.aws_ssm_parameter.slack_webook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", muted_vulnerabilities = join(",", var.muted_scan_alerts) }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
   # created by the terraform environments project as they won't exist when we first run the backend project.
   # This KMS key is created by tdr-accounts which means it will exist when we run the terraform backend project for the first time
-  key_id    = "alias/tdr-account-mgmt"
+  key_id    = "alias/tdr-account-${local.environment}"
   plaintext = each.value
   context   = { "LambdaFunctionName" = local.notifications_function_name }
 }
 
 data "aws_kms_key" "encryption_key" {
   key_id = "alias/tdr-account-${local.environment}"
-}
-
-data aws_ssm_parameter "notification_email_prefix" {
-  count = local.count_notifications
-  name  = "/${local.environment}/notification/email/prefix"
 }
 
 data aws_ssm_parameter "slack_webook" {
@@ -53,7 +48,7 @@ resource "aws_cloudwatch_log_group" "notifications_lambda_log_group" {
 
 resource "aws_iam_policy" "notifications_lambda_policy" {
   count  = local.count_notifications
-  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "${data.aws_ssm_parameter.notification_email_prefix[count.index].value}@nationalarchives.gov.uk", kms_arn = data.aws_kms_key.encryption_key.arn })
+  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "tdr-secops@nationalarchives.gov.uk", kms_arn = data.aws_kms_key.encryption_key.arn })
   name   = "${upper(var.project)}NotificationsLambdaPolicy${title(local.environment)}"
 }
 
@@ -88,22 +83,8 @@ resource "aws_lambda_permission" "lambda_permissions_sns" {
 }
 
 resource "aws_sns_topic_subscription" "intg_topic_subscription" {
-  count     = local.count_notifications
-  endpoint  = aws_lambda_function.notifications_lambda_function.*.arn[count.index]
+  for_each  = var.sns_topic_arns
+  endpoint  = aws_lambda_function.notifications_lambda_function.*.arn[0]
   protocol  = "lambda"
-  topic_arn = "arn:aws:sns:eu-west-2:${data.aws_ssm_parameter.intg_account_number.*.value[count.index]}:tdr-notifications-intg"
-}
-
-resource "aws_sns_topic_subscription" "staging_topic_subscription" {
-  count     = local.count_notifications
-  endpoint  = aws_lambda_function.notifications_lambda_function.*.arn[count.index]
-  protocol  = "lambda"
-  topic_arn = "arn:aws:sns:eu-west-2:${data.aws_ssm_parameter.staging_account_number.*.value[count.index]}:tdr-notifications-staging"
-}
-
-resource "aws_sns_topic_subscription" "prod_topic_subscription" {
-  count     = local.count_notifications
-  endpoint  = aws_lambda_function.notifications_lambda_function.*.arn[count.index]
-  protocol  = "lambda"
-  topic_arn = "arn:aws:sns:eu-west-2:${data.aws_ssm_parameter.prod_account_number.*.value[count.index]}:tdr-notifications-prod"
+  topic_arn = each.value
 }
