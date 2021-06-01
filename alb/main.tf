@@ -9,6 +9,8 @@ resource "aws_alb" "alb_module" {
     enabled = true
   }
 
+  enable_deletion_protection = true
+
   tags = merge(
     var.common_tags,
     map("Name", "${var.project}-${var.function}-${var.environment}")
