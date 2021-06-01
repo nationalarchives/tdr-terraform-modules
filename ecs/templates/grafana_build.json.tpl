@@ -48,7 +48,7 @@
       },
       {
         "name": "GF_SERVER_PROTOCOL",
-        "value": "{server_protocol}"
+        "value": "${server_protocol}"
       },
       {
         "name": "GF_SERVER_ROOT_URL",
