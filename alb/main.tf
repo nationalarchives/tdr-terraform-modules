@@ -10,6 +10,7 @@ resource "aws_alb" "alb_module" {
   }
 
   enable_deletion_protection = true
+  drop_invalid_header_fields = true
 
   tags = merge(
     var.common_tags,
