@@ -28,3 +28,8 @@ variable "include_global_service_events" {
 variable "kms_key_id" {
   description = "KMS Key ID for CloudTrail encryption"
 }
+
+variable "log_stream_wildcard" {
+  description = "Later versions of Terraform require the log stream wildcard to be explicitly stated"
+  default     = ""
+}
