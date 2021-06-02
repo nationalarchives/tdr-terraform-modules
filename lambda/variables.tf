@@ -193,3 +193,13 @@ variable "keycloak_database_security_group" {
 variable "api_database_security_group" {
   default = ""
 }
+
+variable "lambda_name" {
+  description = "The name of the lambda when using shared tf files like create_db_users"
+  default     = ""
+}
+
+variable "database_name" {
+  description = "The name to pass to the create db users lambda. Values are either consignmentapi to create the API users or bastion to create the bastion user"
+  default     = ""
+}

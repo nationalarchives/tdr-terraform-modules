@@ -16,7 +16,7 @@ locals {
   count_export_api_authoriser           = var.apply_resource == true && var.lambda_export_authoriser == true ? 1 : 0
   api_update_function_name              = "${var.project}-api-update-${local.environment}"
   checksum_function_name                = "${var.project}-checksum-${local.environment}"
-  create_db_users_function_name         = "${var.project}-create-db-users-${local.environment}"
+  create_db_users_function_name         = "${var.project}-${var.lambda_name}-${local.environment}"
   create_keycloak_db_user_function_name = "${var.project}-create-keycloak-db-user-${local.environment}"
   download_files_function_name          = "${var.project}-download-files-${local.environment}"
   export_api_authoriser_function_name   = "${var.project}-export-api-authoriser-${local.environment}"
