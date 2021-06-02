@@ -48,7 +48,11 @@
       },
       {
         "name": "GF_SERVER_PROTOCOL",
-        "value": "http"
+        "value": "${server_protocol}"
+      },
+      {
+        "name": "GF_SERVER_ROOT_URL",
+        "value": "https://${domain_name}"
       }
     ],
     "networkMode": "awsvpc",
