@@ -28,7 +28,7 @@ resource "aws_lambda_function" "create_db_users_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_create_db_users" {
-  for_each  = local.count_create_db_users == 0 ? {} : { db_admin_user = var.db_admin_user, db_admin_password = var.db_admin_password, db_url = "jdbc:postgresql://${var.db_url}:5432/consignmentapi", database_name = "consignmentapi" }
+  for_each  = local.count_create_db_users == 0 ? {} : { db_admin_user = var.db_admin_user, db_admin_password = var.db_admin_password, db_url = "jdbc:postgresql://${var.db_url}:5432/consignmentapi", database_name = var.database_name }
   key_id    = var.kms_key_arn
   plaintext = each.value
   context   = { "LambdaFunctionName" = local.create_db_users_function_name }
@@ -43,13 +43,13 @@ resource "aws_cloudwatch_log_group" "create_db_users_lambda_log_group" {
 resource "aws_iam_policy" "create_db_users_lambda_policy" {
   count  = local.count_create_db_users
   policy = templatefile("${path.module}/templates/create_db_users_lambda.json.tpl", { environment = local.environment, account_id = data.aws_caller_identity.current.account_id, kms_arn = var.kms_key_arn })
-  name   = "${upper(var.project)}CreateDbUsersPolicy${title(local.environment)}"
+  name   = "${upper(var.project)}CreateDbUsers${title(var.database_name)}Policy${title(local.environment)}"
 }
 
 resource "aws_iam_role" "create_db_users_lambda_iam_role" {
   count              = local.count_create_db_users
   assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", {})
-  name               = "${upper(var.project)}CreateDbUsersRole${title(local.environment)}"
+  name               = "${upper(var.project)}CreateDbUsers${title(var.database_name)}Role${title(local.environment)}"
 }
 
 resource "aws_iam_role_policy_attachment" "create_db_users_lambda_role_policy" {
@@ -60,7 +60,7 @@ resource "aws_iam_role_policy_attachment" "create_db_users_lambda_role_policy" {
 
 resource "aws_security_group" "create_db_users_lambda" {
   count       = local.count_create_db_users
-  name        = "create-db-users-lambda-security-group"
+  name        = "create-db-users-${var.database_name}-lambda-security-group"
   description = "Allow access to the database"
   vpc_id      = var.vpc_id
 
