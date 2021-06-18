@@ -46,6 +46,7 @@
         "arn:aws:iam::${account_id}:role/TDRTerraformAssumeRoleProd",
         "arn:aws:iam::${account_id}:role/TDRTerraformAssumeRoleStaging",
         "arn:aws:iam::${account_id}:role/TDRTerraformRoleMgmt",
+        "arn:aws:iam::${account_id}:role/TDRJenkinsRunEC2DescribeInstancesStaging",
         "arn:aws:s3:::tdr-releases-mgmt",
         "arn:aws:s3:::tdr-releases-mgmt/*",
         "arn:aws:s3:::tdr-staging-mgmt",
