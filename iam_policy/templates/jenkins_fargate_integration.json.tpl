@@ -37,6 +37,7 @@
         "arn:aws:iam::${account_id}:role/TDRJenkinsRunSsmRoleIntg",
         "arn:aws:iam::${account_id}:role/TDRScriptsTerraformRoleIntg",
         "arn:aws:iam::${account_id}:role/TDRTerraformAssumeRoleIntg",
+        "arn:aws:iam::${account_id}:role/TDRJenkinsRunEC2DescribeInstancesIntg",
         "arn:aws:s3:::tdr-releases-mgmt",
         "arn:aws:s3:::tdr-releases-mgmt/*"
       ]
