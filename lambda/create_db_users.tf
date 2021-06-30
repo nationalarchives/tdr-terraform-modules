@@ -66,7 +66,9 @@ resource "aws_security_group" "create_db_users_lambda" {
 
   tags = merge(
     var.common_tags,
-    map("Name", "${var.project}-create-db-users-lambda-security-group")
+    tomap(
+      {"Name" = "${var.project}-create-db-users-lambda-security-group"}
+    )
   )
 }
 

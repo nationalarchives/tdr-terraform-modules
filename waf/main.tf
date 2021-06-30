@@ -45,8 +45,8 @@ resource "aws_wafregional_rule" "restricted_access" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "${var.project}-${var.function}-${var.environment}-restricted-uri",
+    tomap(
+      {"Name" = "${var.project}-${var.function}-${var.environment}-restricted-uri"}
     )
   )
 }
@@ -78,8 +78,8 @@ resource "aws_wafregional_rule" "geo_match" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "${var.project}-${var.function}-${var.environment}-restricted-uri",
+    tomap(
+      {"Name" = "${var.project}-${var.function}-${var.environment}-restricted-uri"}
     )
   )
 }
@@ -114,8 +114,8 @@ resource "aws_wafregional_web_acl" "alb" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "${var.project}-${var.function}-${var.environment}-alb",
+    tomap(
+      {"Name" = "${var.project}-${var.function}-${var.environment}-alb"}
     )
   )
 }

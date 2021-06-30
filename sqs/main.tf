@@ -9,8 +9,8 @@ resource "aws_sqs_queue" "sqs_queue" {
   }) : null
   tags = merge(
     var.common_tags,
-    map(
-      "Name", local.sqs_name,
+    tomap(
+      {"Name" = local.sqs_name}
     )
   )
   kms_master_key_id = var.kms_key_id != "" ? var.kms_key_id : null

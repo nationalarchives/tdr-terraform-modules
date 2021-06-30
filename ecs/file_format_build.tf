@@ -34,8 +34,8 @@ resource "aws_iam_role" "fileformat_ecs_execution" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "ff-build-ecs-execution-iam-role-${local.environment}",
+    tomap(
+      {"Name" = "ff-build-ecs-execution-iam-role-${local.environment}"}
     )
   )
 }
@@ -46,8 +46,8 @@ resource "aws_iam_role" "fileformat_ecs_task" {
   assume_role_policy = templatefile("${path.module}/templates/ecs_assume_role_policy.json.tpl", {})
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "ff-build-ecs-execution-iam-role-${local.environment}",
+    tomap(
+      {"Name" = "ff-build-ecs-execution-iam-role-${local.environment}"}
     )
   )
 }
@@ -97,6 +97,8 @@ resource "aws_security_group" "ecs_run_efs" {
 
   tags = merge(
     var.common_tags,
-    map("Name", "allow-ecs-mount-efs")
+    tomap(
+      {"Name" = "allow-ecs-mount-efs"}
+    )
   )
 }

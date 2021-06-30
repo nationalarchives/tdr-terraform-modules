@@ -6,8 +6,8 @@ resource "aws_efs_file_system" "file_system" {
   kms_key_id = data.aws_kms_key.efs_kms_key.arn
   tags = merge(
     var.common_tags,
-    map(
-      "Name", local.efs_volume_name,
+    tomap(
+      {"Name" = local.efs_volume_name}
     )
   )
 }
@@ -55,7 +55,9 @@ resource "aws_security_group" "mount_target_sg" {
 
   tags = merge(
     var.common_tags,
-    map("Name", "mount-target-outbound-only")
+    tomap(
+      {"Name" = "mount-target-outbound-only"}
+    )
   )
 }
 
@@ -66,7 +68,9 @@ resource "aws_subnet" "efs_private" {
   vpc_id            = var.vpc_id
   tags = merge(
     var.common_tags,
-    map("Name", "tdr-efs-private-subnet-${var.function}-${count.index}-${local.environment}")
+    tomap(
+      {"Name" = "tdr-efs-private-subnet-${var.function}-${count.index}-${local.environment}"}
+    )
   )
 }
 
@@ -81,7 +85,9 @@ resource "aws_route_table" "efs_private" {
 
   tags = merge(
     var.common_tags,
-    map("Name", "route-table-${count.index}-tdr-${local.environment}")
+    tomap(
+      {"Name" = "route-table-${count.index}-tdr-${local.environment}"}
+    )
   )
 }
 

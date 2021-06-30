@@ -25,8 +25,8 @@ resource "aws_athena_workgroup" "workgroup" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", local.athena_name,
+    tomap(
+      {"Name" = local.athena_name}
     )
   )
 }

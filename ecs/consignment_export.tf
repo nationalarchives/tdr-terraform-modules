@@ -45,8 +45,8 @@ resource "aws_iam_role" "consignment_export_ecs_execution" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "ce-ecs-execution-iam-role-${local.environment}",
+    tomap(
+      {"Name" = "ce-ecs-execution-iam-role-${local.environment}"}
     )
   )
 }
@@ -57,8 +57,8 @@ resource "aws_iam_role" "consignment_export_ecs_task" {
   assume_role_policy = templatefile("${path.module}/templates/ecs_assume_role_policy.json.tpl", {})
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "ce-ecs-execution-iam-role-${local.environment}",
+    tomap(
+      {"Name" = "ce-ecs-execution-iam-role-${local.environment}"}
     )
   )
 }
@@ -114,6 +114,8 @@ resource "aws_security_group" "consignment_export_ecs_run_efs" {
 
   tags = merge(
     var.common_tags,
-    map("Name", "export-allow-ecs-mount-efs")
+    tomap(
+      {"Name" = "export-allow-ecs-mount-efs"}
+    )
   )
 }

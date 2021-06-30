@@ -5,8 +5,8 @@ resource "aws_sns_topic" "sns_topic" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", local.sns_topic_name,
+    tomap(
+      {"Name" = local.sns_topic_name}
     )
   )
   kms_master_key_id = var.kms_key_arn != "" ? var.kms_key_arn : null

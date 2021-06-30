@@ -12,8 +12,8 @@ resource "aws_acm_certificate" "cert" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "${var.project}-${var.function}-${local.environment}",
+    tomap(
+      {"Name" = "${var.project}-${var.function}-${local.environment}"}
     )
   )
 }

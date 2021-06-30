@@ -3,8 +3,8 @@ resource "aws_network_acl" "acl" {
   subnet_ids = var.subnet_ids
   tags = merge(
     var.common_tags,
-    map(
-      "Name", var.name
+    tomap(
+      {"Name" = var.name}
     )
   )
 }
