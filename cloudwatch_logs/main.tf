@@ -3,7 +3,7 @@ resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = var.name}
+      { "Name" = var.name }
     )
   )
 }

@@ -44,7 +44,7 @@ resource "aws_ecs_cluster" "grafana_ecs" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.project}-${var.app_name}-${local.environment}"}
+      { "Name" = "${var.project}-${var.app_name}-${local.environment}" }
     )
   )
 }
@@ -81,7 +81,7 @@ resource "aws_ecs_task_definition" "grafana_task" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.app_name}-task-definition-${local.environment}"}
+      { "Name" = "${var.app_name}-task-definition-${local.environment}" }
     )
   )
 }
@@ -118,7 +118,7 @@ resource "aws_iam_role" "grafana_ecs_execution" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.app_name}-ecs-execution-iam-role-${local.environment}"}
+      { "Name" = "${var.app_name}-ecs-execution-iam-role-${local.environment}" }
     )
   )
 }
@@ -131,7 +131,7 @@ resource "aws_iam_role" "grafana_ecs_task" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.app_name}-ecs-task-iam-role-${local.environment}"}
+      { "Name" = "${var.app_name}-ecs-task-iam-role-${local.environment}" }
     )
   )
 }

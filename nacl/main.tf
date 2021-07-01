@@ -4,7 +4,7 @@ resource "aws_network_acl" "acl" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = var.name}
+      { "Name" = var.name }
     )
   )
 }

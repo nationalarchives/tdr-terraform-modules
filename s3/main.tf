@@ -20,7 +20,7 @@ resource "aws_s3_bucket" "log_bucket" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${local.bucket_name}-logs"}
+      { "Name" = "${local.bucket_name}-logs" }
     )
   )
 }
@@ -104,7 +104,7 @@ resource "aws_s3_bucket" "bucket" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = local.bucket_name}
+      { "Name" = local.bucket_name }
     )
   )
 }

@@ -13,7 +13,7 @@ resource "aws_acm_certificate" "cert" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.project}-${var.function}-${local.environment}"}
+      { "Name" = "${var.project}-${var.function}-${local.environment}" }
     )
   )
 }

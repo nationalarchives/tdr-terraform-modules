@@ -49,7 +49,7 @@ resource "aws_lambda_function" "log_data_lambda" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.project}-log-data-${local.environment}"}
+      { "Name" = "${var.project}-log-data-${local.environment}" }
     )
   )
 

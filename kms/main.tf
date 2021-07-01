@@ -13,7 +13,7 @@ resource "aws_kms_key" "encryption" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.project}-${var.function}-${var.environment}"}
+      { "Name" = "${var.project}-${var.function}-${var.environment}" }
     )
   )
 }

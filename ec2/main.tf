@@ -16,7 +16,7 @@ resource "aws_instance" "instance" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.name}-ec2-instance-${var.environment}"}
+      { "Name" = "${var.name}-ec2-instance-${var.environment}" }
     )
   )
 }
@@ -38,7 +38,7 @@ resource "aws_iam_role" "ec2_role" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.name}-ec2-iam-role-${var.environment}"}
+      { "Name" = "${var.name}-ec2-iam-role-${var.environment}" }
     )
   )
 }

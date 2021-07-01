@@ -15,7 +15,7 @@ resource "aws_alb" "alb_module" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.project}-${var.function}-${var.environment}"}
+      { "Name" = "${var.project}-${var.function}-${var.environment}" }
     )
   )
 }
@@ -53,7 +53,7 @@ resource "aws_alb_target_group" "alb_module" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.project}-${var.function}-${random_string.alb_prefix.result}-${var.environment}"}
+      { "Name" = "${var.project}-${var.function}-${random_string.alb_prefix.result}-${var.environment}" }
     )
   )
   depends_on = [aws_alb.alb_module]

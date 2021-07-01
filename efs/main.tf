@@ -7,7 +7,7 @@ resource "aws_efs_file_system" "file_system" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = local.efs_volume_name}
+      { "Name" = local.efs_volume_name }
     )
   )
 }
@@ -56,7 +56,7 @@ resource "aws_security_group" "mount_target_sg" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "mount-target-outbound-only"}
+      { "Name" = "mount-target-outbound-only" }
     )
   )
 }
@@ -69,7 +69,7 @@ resource "aws_subnet" "efs_private" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "tdr-efs-private-subnet-${var.function}-${count.index}-${local.environment}"}
+      { "Name" = "tdr-efs-private-subnet-${var.function}-${count.index}-${local.environment}" }
     )
   )
 }
@@ -86,7 +86,7 @@ resource "aws_route_table" "efs_private" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "route-table-${count.index}-tdr-${local.environment}"}
+      { "Name" = "route-table-${count.index}-tdr-${local.environment}" }
     )
   )
 }

@@ -73,7 +73,7 @@ resource "aws_security_group" "lambda_export_api_authoriser" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.project}-allow-https-outbound-export-api-authoriser"}
+      { "Name" = "${var.project}-allow-https-outbound-export-api-authoriser" }
     )
   )
 }

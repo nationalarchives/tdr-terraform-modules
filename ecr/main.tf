@@ -8,7 +8,7 @@ resource "aws_ecr_repository" "ecr_repository" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"ImageSource" = var.image_source_url}
+      { "ImageSource" = var.image_source_url }
     )
   )
 }

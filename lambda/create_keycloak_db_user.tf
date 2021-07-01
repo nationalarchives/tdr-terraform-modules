@@ -68,7 +68,7 @@ resource "aws_security_group" "create_keycloak_db_user_lambda" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.project}-create-keycloak-db-users-lambda-security-group"}
+      { "Name" = "${var.project}-create-keycloak-db-users-lambda-security-group" }
     )
   )
 }

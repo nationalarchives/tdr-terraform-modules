@@ -13,7 +13,7 @@ resource "aws_sns_topic" "config_topic" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.project}-config-${local.environment}"}
+      { "Name" = "${var.project}-config-${local.environment}" }
     )
   )
 
@@ -98,7 +98,7 @@ resource "aws_config_config_rule" "aws_managed_global_rule" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = lower(var.global_config_rule_list[count.index])}
+      { "Name" = lower(var.global_config_rule_list[count.index]) }
     )
   )
 
@@ -117,7 +117,7 @@ resource "aws_config_config_rule" "aws_managed_regional_rule" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = lower(var.regional_config_rule_list[count.index])}
+      { "Name" = lower(var.regional_config_rule_list[count.index]) }
     )
   )
 

@@ -5,7 +5,7 @@ resource "aws_ecs_cluster" "jenkins_cluster" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "tdr-ecs-${var.name}"}
+      { "Name" = "tdr-ecs-${var.name}" }
     )
   )
 }
@@ -39,7 +39,7 @@ resource "aws_ecs_task_definition" "jenkins_task" {
   tags = merge(
     var.common_tags,
     tomap(
-      {"Name" = "${var.name}-task-definition-${local.environment}"}
+      { "Name" = "${var.name}-task-definition-${local.environment}" }
     )
   )
 }
