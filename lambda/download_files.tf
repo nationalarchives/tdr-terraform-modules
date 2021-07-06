@@ -5,7 +5,7 @@ resource "aws_lambda_function" "download_files_lambda_function" {
   role          = aws_iam_role.download_files_lambda_iam_role.*.arn[0]
   runtime       = "java11"
   filename      = "${path.module}/functions/download-files.jar"
-  timeout       = 180
+  timeout       = var.timeout_seconds
   memory_size   = 1024
   tags          = var.common_tags
   environment {
