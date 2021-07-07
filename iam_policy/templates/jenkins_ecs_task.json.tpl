@@ -30,6 +30,7 @@
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/management_account",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/npm_token",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/pr_monitor/slack/webhook",
+        "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/release/slack/webhook",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/prod_account",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/secret_key",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/slack/token",
