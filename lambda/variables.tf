@@ -11,6 +11,12 @@ variable "apply_resource" {
   default     = true
 }
 
+variable "timeout_seconds" {
+  description = "The maximum time the function is allowed to run"
+  type        = number
+  default     = 180
+}
+
 variable "lambda_yara_av" {
   description = "deploy Lambda function to run yara av checks on files"
   default     = false

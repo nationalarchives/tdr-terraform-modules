@@ -5,7 +5,7 @@ resource "aws_lambda_function" "lambda_function" {
   role          = aws_iam_role.lambda_iam_role.*.arn[0]
   runtime       = "python3.7"
   filename      = "${path.module}/functions/yara-av.zip"
-  timeout       = 180
+  timeout       = var.timeout_seconds
   memory_size   = 3008
   tags          = var.common_tags
   environment {
