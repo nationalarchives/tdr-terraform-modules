@@ -5,7 +5,7 @@ resource "aws_lambda_function" "ecr_scan_lambda_function" {
   role          = aws_iam_role.ecr_scan_lambda_iam_role.*.arn[0]
   runtime       = "java11"
   filename      = "${path.module}/functions/ecr-scan.jar"
-  timeout       = 180
+  timeout       = var.timeout_seconds
   memory_size   = 512
   tags          = var.common_tags
 
