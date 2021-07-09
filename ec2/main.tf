@@ -15,8 +15,8 @@ resource "aws_instance" "instance" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "${var.name}-ec2-instance-${var.environment}",
+    tomap(
+      { "Name" = "${var.name}-ec2-instance-${var.environment}" }
     )
   )
 }
@@ -37,8 +37,8 @@ resource "aws_iam_role" "ec2_role" {
   assume_role_policy = templatefile("${path.module}/templates/ec2_assume_role.json.tpl", {})
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "${var.name}-ec2-iam-role-${var.environment}",
+    tomap(
+      { "Name" = "${var.name}-ec2-iam-role-${var.environment}" }
     )
   )
 }

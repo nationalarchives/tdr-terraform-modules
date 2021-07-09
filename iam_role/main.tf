@@ -3,8 +3,8 @@ resource "aws_iam_role" "iam_role" {
   name               = var.name
   tags = merge(
     var.common_tags,
-    map(
-      "Name", var.name,
+    tomap(
+      { "Name" = var.name }
     )
   )
 }

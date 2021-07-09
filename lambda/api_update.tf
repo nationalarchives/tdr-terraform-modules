@@ -72,7 +72,9 @@ resource "aws_security_group" "lambda_api_update" {
 
   tags = merge(
     var.common_tags,
-    map("Name", "${var.project}-allow-https-outbound-api-update")
+    tomap(
+      { "Name" = "${var.project}-allow-https-outbound-api-update" }
+    )
   )
 }
 

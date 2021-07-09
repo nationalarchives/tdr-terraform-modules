@@ -12,8 +12,8 @@ resource "aws_sns_topic" "config_topic" {
   name = "${var.project}-config-${local.environment}-${local.region}"
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "${var.project}-config-${local.environment}",
+    tomap(
+      { "Name" = "${var.project}-config-${local.environment}" }
     )
   )
 
@@ -97,8 +97,8 @@ resource "aws_config_config_rule" "aws_managed_global_rule" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", lower(var.global_config_rule_list[count.index]),
+    tomap(
+      { "Name" = lower(var.global_config_rule_list[count.index]) }
     )
   )
 
@@ -116,11 +116,10 @@ resource "aws_config_config_rule" "aws_managed_regional_rule" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", lower(var.regional_config_rule_list[count.index]),
+    tomap(
+      { "Name" = lower(var.regional_config_rule_list[count.index]) }
     )
   )
 
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
-

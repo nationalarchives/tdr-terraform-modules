@@ -80,7 +80,9 @@ resource "aws_security_group" "allow_efs_lambda_checksum" {
 
   tags = merge(
     var.common_tags,
-    map("Name", "${var.project}-lambda-allow-efs-checksum-files")
+    tomap(
+      { "Name" = "${var.project}-lambda-allow-efs-checksum-files" }
+    )
   )
 }
 

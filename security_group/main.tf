@@ -4,8 +4,8 @@ resource "aws_security_group" "security_group" {
   description = var.description
   tags = merge(
     var.common_tags,
-    map(
-      "Name", var.name
+    tomap(
+      { "Name" = var.name }
     )
   )
 }

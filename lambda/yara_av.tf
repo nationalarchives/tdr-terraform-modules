@@ -94,7 +94,9 @@ resource "aws_security_group" "allow_efs_lambda_av" {
 
   tags = merge(
     var.common_tags,
-    map("Name", "${var.project}-lambda-allow-efs-av-files")
+    tomap(
+      { "Name" = "${var.project}-lambda-allow-efs-av-files" }
+    )
   )
 }
 

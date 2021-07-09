@@ -7,7 +7,9 @@ resource "aws_ami_copy" "encrypted-ami" {
   kms_key_id        = var.kms_key_id
   tags = merge(
     var.common_tags,
-    map("Name", "${var.project}-${var.function}-${var.environment}")
+    tomap(
+      { "Name" = "${var.project}-${var.function}-${var.environment}" }
+    )
   )
 
   lifecycle {
