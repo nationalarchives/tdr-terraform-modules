@@ -72,7 +72,7 @@ resource "aws_iam_policy" "consignment_export_ecs_task_policy" {
 resource "aws_iam_policy" "consignment_export_ecs_execution_policy" {
   count  = local.count_consignment_export
   name   = "${upper(var.project)}ConsignmentExportECSExecutionPolicy${title(local.environment)}"
-  policy = templatefile("${path.module}/templates/consignment_export_execution_policy.json.tpl", { log_group_arn = aws_cloudwatch_log_group.consignment_export_log_group[count.index].arn, file_system_arn = data.aws_efs_file_system.efs_file_system.arn, management_account_number = data.aws_ssm_parameter.mgmt_account_number.value })
+  policy = templatefile("${path.module}/templates/consignment_export_execution_policy.json.tpl", { log_group_arn = "${aws_cloudwatch_log_group.consignment_export_log_group[count.index].arn}:*", file_system_arn = data.aws_efs_file_system.efs_file_system.arn, management_account_number = data.aws_ssm_parameter.mgmt_account_number.value })
 }
 
 resource "aws_iam_role_policy_attachment" "consignment_export_task_policy_attachment" {
