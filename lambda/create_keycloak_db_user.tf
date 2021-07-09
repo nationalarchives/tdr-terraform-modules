@@ -5,7 +5,7 @@ resource "aws_lambda_function" "create_keycloak_db_user_lambda_function" {
   role          = aws_iam_role.create_keycloak_db_user_lambda_iam_role.*.arn[0]
   runtime       = "java11"
   filename      = "${path.module}/functions/create-db-users.jar"
-  timeout       = 180
+  timeout       = var.timeout_seconds
   memory_size   = 1024
   tags          = var.common_tags
   environment {
