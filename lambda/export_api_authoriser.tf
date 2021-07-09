@@ -5,7 +5,7 @@ resource "aws_lambda_function" "export_api_authoriser_lambda_function" {
   role          = aws_iam_role.export_api_authoriser_lambda_iam_role.*.arn[0]
   runtime       = "java11"
   filename      = "${path.module}/functions/export-authoriser.jar"
-  timeout       = 10
+  timeout       = var.timeout_seconds
   memory_size   = 4096
   tags          = var.common_tags
   environment {
