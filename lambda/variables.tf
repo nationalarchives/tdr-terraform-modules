@@ -64,7 +64,7 @@ variable "lambda_export_authoriser" {
 
 variable "lambda_service_unavailable" {
   description = "deploy Lambda function for the service unavailable page"
-  default = false
+  default     = false
 }
 
 variable "target_s3_bucket" {

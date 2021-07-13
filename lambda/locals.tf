@@ -14,7 +14,7 @@ locals {
   count_create_db_users                 = var.apply_resource == true && var.lambda_create_db_users ? 1 : 0
   count_create_keycloak_db_user         = var.apply_resource == true && var.lambda_create_keycloak_db_users ? 1 : 0
   count_export_api_authoriser           = var.apply_resource == true && var.lambda_export_authoriser == true ? 1 : 0
-  count_service_unavailable           = var.apply_resource == true && var.lambda_service_unavailable == true ? 1 : 0
+  count_service_unavailable             = var.apply_resource == true && var.lambda_service_unavailable == true ? 1 : 0
   api_update_function_name              = "${var.project}-api-update-${local.environment}"
   checksum_function_name                = "${var.project}-checksum-${local.environment}"
   create_db_users_function_name         = "${var.project}-${var.lambda_name}-${local.environment}"
@@ -24,7 +24,7 @@ locals {
   file_format_function_name             = "${var.project}-file-format-${local.environment}"
   log_data_function_name                = "${var.project}-log-data-${local.environment}"
   notifications_function_name           = "${var.project}-notifications-${local.environment}"
-  service_unavailable_function_name              = "${var.project}-service-unavailable-${local.environment}"
+  service_unavailable_function_name     = "${var.project}-service-unavailable-${local.environment}"
   yara_av_function_name                 = "${var.project}-yara-av-${local.environment}"
   api_update_queue_name                 = "${var.project}-api-update-${local.environment}"
   api_update_queue                      = "arn:aws:sqs:${var.region}:${data.aws_caller_identity.current.account_id}:${local.api_update_queue_name}"

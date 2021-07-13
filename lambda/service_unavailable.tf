@@ -27,7 +27,7 @@ resource "aws_cloudwatch_log_group" "lambda_service_unavailable_log_group" {
 
 resource "aws_iam_policy" "lambda_service_unavailable_policy" {
   count  = local.count_service_unavailable
-  policy = templatefile("${path.module}/templates/service_unavailable.json.tpl", { environment = local.environment, account_id = data.aws_caller_identity.current.account_id})
+  policy = templatefile("${path.module}/templates/service_unavailable.json.tpl", { environment = local.environment, account_id = data.aws_caller_identity.current.account_id })
   name   = "${upper(var.project)}ServiceUnavailablePolicy${title(local.environment)}"
 }
 
@@ -55,18 +55,8 @@ resource "aws_security_group" "lambda_service_unavailable" {
   )
 }
 
-//resource "aws_security_group_rule" "allow_https_lambda_service_unavailable_rule" {
-//  count             = local.count_service_unavailable
-//  from_port         = 443
-//  protocol          = "tcp"
-//  security_group_id = aws_security_group.lambda_service_unavailable[count.index].id
-//  to_port           = 443
-//  type              = "egress"
-//  cidr_blocks       = ["0.0.0.0/0"]
-//}
-
 resource "aws_lambda_permission" "target_group_permission" {
-  count =  local.count_service_unavailable
+  count         = local.count_service_unavailable
   statement_id  = "AllowExecutionFromFailoverTargetGroup"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.lambda_service_unavailable_function[count.index].function_name
@@ -75,7 +65,7 @@ resource "aws_lambda_permission" "target_group_permission" {
 }
 
 resource "random_string" "alb_prefix" {
-  count            = local.count_service_unavailable
+  count   = local.count_service_unavailable
   length  = 4
   upper   = false
   special = false
@@ -85,11 +75,11 @@ resource "aws_alb_target_group_attachment" "alb_module" {
   count            = local.count_service_unavailable
   target_group_arn = aws_alb_target_group.failover_target_group[count.index].arn
   target_id        = aws_lambda_function.lambda_service_unavailable_function[count.index].arn
-  depends_on = [aws_lambda_permission.target_group_permission]
+  depends_on       = [aws_lambda_permission.target_group_permission]
 }
 
 resource "aws_alb_target_group" "failover_target_group" {
-  count =  local.count_service_unavailable
+  count = local.count_service_unavailable
   # name can't be longer than 32 characters
   name        = "${var.project}-su-${random_string.alb_prefix[count.index].result}-${local.environment}"
   protocol    = "HTTP"
@@ -97,7 +87,7 @@ resource "aws_alb_target_group" "failover_target_group" {
   vpc_id      = var.vpc_id
 
   tags = merge(
-  var.common_tags,
-  map("Name", "${var.project}-service-unavailable-${random_string.alb_prefix[count.index].result}-${local.environment}")
+    var.common_tags,
+    map("Name", "${var.project}-service-unavailable-${random_string.alb_prefix[count.index].result}-${local.environment}")
   )
 }
