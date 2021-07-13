@@ -3,8 +3,8 @@ resource "aws_route53_zone" "hosted_zone" {
 
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "${var.project}-${var.environment_full_name}",
+    tomap(
+      { "Name" = "${var.project}-${var.environment_full_name}" }
     )
   )
 }

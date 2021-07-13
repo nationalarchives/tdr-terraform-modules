@@ -12,8 +12,8 @@ resource "aws_kms_key" "encryption" {
   policy              = data.template_file.key_policy.rendered
   tags = merge(
     var.common_tags,
-    map(
-      "Name", "${var.project}-${var.function}-${var.environment}"
+    tomap(
+      { "Name" = "${var.project}-${var.function}-${var.environment}" }
     )
   )
 }

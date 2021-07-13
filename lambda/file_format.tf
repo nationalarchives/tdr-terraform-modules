@@ -79,7 +79,9 @@ resource "aws_security_group" "allow_efs_lambda_file_format" {
 
   tags = merge(
     var.common_tags,
-    map("Name", "${var.project}-lambda-allow-efs-download-files")
+    tomap(
+      { "Name" = "${var.project}-lambda-allow-efs-download-files" }
+    )
   )
 }
 

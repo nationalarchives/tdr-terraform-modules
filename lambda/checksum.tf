@@ -5,7 +5,7 @@ resource "aws_lambda_function" "checksum_lambda_function" {
   role          = aws_iam_role.checksum_lambda_iam_role.*.arn[0]
   runtime       = "java8"
   filename      = "${path.module}/functions/checksum.jar"
-  timeout       = 180
+  timeout       = var.timeout_seconds
   memory_size   = 1024
   tags          = var.common_tags
   environment {
@@ -80,7 +80,9 @@ resource "aws_security_group" "allow_efs_lambda_checksum" {
 
   tags = merge(
     var.common_tags,
-    map("Name", "${var.project}-lambda-allow-efs-checksum-files")
+    tomap(
+      { "Name" = "${var.project}-lambda-allow-efs-checksum-files" }
+    )
   )
 }
 

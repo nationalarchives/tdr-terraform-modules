@@ -5,7 +5,7 @@ resource "aws_lambda_function" "download_files_lambda_function" {
   role          = aws_iam_role.download_files_lambda_iam_role.*.arn[0]
   runtime       = "java11"
   filename      = "${path.module}/functions/download-files.jar"
-  timeout       = 180
+  timeout       = var.timeout_seconds
   memory_size   = 1024
   tags          = var.common_tags
   environment {
@@ -84,7 +84,9 @@ resource "aws_security_group" "allow_efs_lambda_download_files" {
 
   tags = merge(
     var.common_tags,
-    map("Name", "${var.project}-lambda-allow-efs-download-files")
+    tomap(
+      { "Name" = "${var.project}-lambda-allow-efs-download-files" }
+    )
   )
 }
 
