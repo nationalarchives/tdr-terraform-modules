@@ -142,7 +142,7 @@ resource "aws_iam_policy" "ecs_logs_policy" {
   policy = templatefile(
     "${path.module}/templates/ecs_logs_policy.json.tpl",
     {
-      log_group_arn = aws_cloudwatch_log_group.grafana_build_log_group[count.index].arn
+      log_group_arn = "${aws_cloudwatch_log_group.grafana_build_log_group[count.index].arn}:*"
     }
   )
 }
