@@ -43,7 +43,7 @@ resource "aws_lambda_function" "log_data_lambda" {
   handler          = "lambda_function.lambda_handler"
   source_code_hash = data.archive_file.log_data_lambda.output_base64sha256
   runtime          = "python3.7"
-  timeout          = 30
+  timeout          = var.timeout_seconds
   publish          = true
 
   tags = merge(
