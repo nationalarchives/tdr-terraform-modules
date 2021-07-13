@@ -5,7 +5,7 @@ resource "aws_lambda_function" "lambda_api_update_function" {
   role          = aws_iam_role.lambda_api_update_iam_role.*.arn[0]
   runtime       = "java8"
   filename      = "${path.module}/functions/api-update.jar"
-  timeout       = 20
+  timeout       = var.timeout_seconds
   memory_size   = 512
   tags          = var.common_tags
   environment {
