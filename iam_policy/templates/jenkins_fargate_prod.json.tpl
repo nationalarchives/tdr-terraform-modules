@@ -48,6 +48,8 @@
         "arn:aws:iam::${account_id}:role/TDRTerraformRoleMgmt",
         "arn:aws:iam::${account_id}:role/TDRJenkinsRunEC2DescribeInstancesStaging",
         "arn:aws:iam::${account_id}:role/TDRJenkinsRunEC2DescribeInstancesProd",
+        "arn:aws:iam::${account_id}:role/TDRJenkinsDeployServiceUnavailableRoleStaging",
+        "arn:aws:iam::${account_id}:role/TDRJenkinsDeployServiceUnavailableRoleProd",
         "arn:aws:s3:::tdr-releases-mgmt",
         "arn:aws:s3:::tdr-releases-mgmt/*",
         "arn:aws:s3:::tdr-staging-mgmt",

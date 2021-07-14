@@ -62,6 +62,11 @@ variable "lambda_export_authoriser" {
   default     = false
 }
 
+variable "lambda_service_unavailable" {
+  description = "deploy Lambda function for the service unavailable page"
+  default     = false
+}
+
 variable "target_s3_bucket" {
   description = "Target S3 bucket ARN used for the Lambda log data function"
   default     = ""
