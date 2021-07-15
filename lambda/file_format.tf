@@ -45,6 +45,7 @@ resource "aws_lambda_event_source_mapping" "file_format_sqs_queue_mapping" {
   count            = local.count_file_format
   event_source_arn = local.file_format_queue
   function_name    = aws_lambda_function.file_format_lambda_function.*.arn[0]
+  batch_size       = var.batch_size
 }
 
 resource "aws_cloudwatch_log_group" "file_format_lambda_log_group" {

@@ -214,3 +214,8 @@ variable "database_name" {
   description = "The name to pass to the create db users lambda. Values are either consignmentapi to create the API users or bastion to create the bastion user"
   default     = ""
 }
+
+variable "batch_size" {
+  description = "The maximum number of messages sent to a lambda from an SQS queue."
+  default     = 1
+}

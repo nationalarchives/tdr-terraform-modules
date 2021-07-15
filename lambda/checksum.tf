@@ -46,6 +46,7 @@ resource "aws_lambda_event_source_mapping" "checksum_sqs_queue_mapping" {
   count            = local.count_checksum
   event_source_arn = local.checksum_queue
   function_name    = aws_lambda_function.checksum_lambda_function.*.arn[0]
+  batch_size       = var.batch_size
 }
 
 resource "aws_cloudwatch_log_group" "checksum_lambda_log_group" {
