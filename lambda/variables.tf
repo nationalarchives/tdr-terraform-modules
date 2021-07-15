@@ -214,3 +214,8 @@ variable "database_name" {
   description = "The name to pass to the create db users lambda. Values are either consignmentapi to create the API users or bastion to create the bastion user"
   default     = ""
 }
+
+variable "reserved_concurrency" {
+  description = "The total number of concurrent lambdas which can run at one time. Defaults to -1 which is unlimited up to the account limit"
+  default     = -1
+}
