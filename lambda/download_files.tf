@@ -49,7 +49,7 @@ resource "aws_lambda_event_source_mapping" "download_files_sqs_queue_mapping" {
   count            = local.count_download_files
   event_source_arn = local.download_files_queue
   function_name    = aws_lambda_function.download_files_lambda_function.*.arn[0]
-  batch_size       = var.batch_size
+  batch_size       = 1
 }
 
 resource "aws_cloudwatch_log_group" "download_files_lambda_log_group" {
