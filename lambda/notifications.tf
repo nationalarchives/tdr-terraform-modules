@@ -1,13 +1,14 @@
 resource "aws_lambda_function" "notifications_lambda_function" {
-  count         = local.count_notifications
-  function_name = local.notifications_function_name
-  handler       = "uk.gov.nationalarchives.notifications.Lambda::process"
-  role          = aws_iam_role.notifications_lambda_iam_role.*.arn[0]
-  runtime       = "java11"
-  filename      = "${path.module}/functions/notifications.jar"
-  timeout       = var.timeout_seconds
-  memory_size   = 1024
-  tags          = var.common_tags
+  count                          = local.count_notifications
+  function_name                  = local.notifications_function_name
+  handler                        = "uk.gov.nationalarchives.notifications.Lambda::process"
+  role                           = aws_iam_role.notifications_lambda_iam_role.*.arn[0]
+  runtime                        = "java11"
+  filename                       = "${path.module}/functions/notifications.jar"
+  timeout                        = var.timeout_seconds
+  memory_size                    = 1024
+  reserved_concurrent_executions = var.reserved_concurrency
+  tags                           = var.common_tags
   environment {
     variables = {
       SLACK_WEBHOOK         = aws_kms_ciphertext.environment_vars_notifications["slack_webhook"].ciphertext_blob

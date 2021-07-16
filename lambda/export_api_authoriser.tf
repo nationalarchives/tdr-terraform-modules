@@ -1,13 +1,14 @@
 resource "aws_lambda_function" "export_api_authoriser_lambda_function" {
-  count         = local.count_export_api_authoriser
-  function_name = local.export_api_authoriser_function_name
-  handler       = "uk.gov.nationalarchives.consignmentexport.authoriser.Lambda::process"
-  role          = aws_iam_role.export_api_authoriser_lambda_iam_role.*.arn[0]
-  runtime       = "java11"
-  filename      = "${path.module}/functions/export-authoriser.jar"
-  timeout       = var.timeout_seconds
-  memory_size   = 4096
-  tags          = var.common_tags
+  count                          = local.count_export_api_authoriser
+  function_name                  = local.export_api_authoriser_function_name
+  handler                        = "uk.gov.nationalarchives.consignmentexport.authoriser.Lambda::process"
+  role                           = aws_iam_role.export_api_authoriser_lambda_iam_role.*.arn[0]
+  runtime                        = "java11"
+  filename                       = "${path.module}/functions/export-authoriser.jar"
+  timeout                        = var.timeout_seconds
+  memory_size                    = 4096
+  reserved_concurrent_executions = var.reserved_concurrency
+  tags                           = var.common_tags
   environment {
     variables = {
       API_URL = aws_kms_ciphertext.environment_vars_export_api_authoriser["api_url"].ciphertext_blob

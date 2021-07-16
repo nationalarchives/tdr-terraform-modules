@@ -35,16 +35,17 @@ data "archive_file" "log_data_lambda" {
 }
 
 resource "aws_lambda_function" "log_data_lambda" {
-  count            = local.count_log_data
-  filename         = data.archive_file.log_data_lambda.output_path
-  function_name    = local.log_data_function_name
-  description      = "Aggregate log data to a target S3 bucket"
-  role             = aws_iam_role.log_data_assume_role.*.arn[0]
-  handler          = "lambda_function.lambda_handler"
-  source_code_hash = data.archive_file.log_data_lambda.output_base64sha256
-  runtime          = "python3.7"
-  timeout          = var.timeout_seconds
-  publish          = true
+  count                          = local.count_log_data
+  filename                       = data.archive_file.log_data_lambda.output_path
+  function_name                  = local.log_data_function_name
+  description                    = "Aggregate log data to a target S3 bucket"
+  role                           = aws_iam_role.log_data_assume_role.*.arn[0]
+  handler                        = "lambda_function.lambda_handler"
+  source_code_hash               = data.archive_file.log_data_lambda.output_base64sha256
+  runtime                        = "python3.7"
+  timeout                        = var.timeout_seconds
+  publish                        = true
+  reserved_concurrent_executions = var.reserved_concurrency
 
   tags = merge(
     var.common_tags,

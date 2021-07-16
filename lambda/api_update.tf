@@ -1,13 +1,14 @@
 resource "aws_lambda_function" "lambda_api_update_function" {
-  count         = local.count_api_update
-  function_name = local.api_update_function_name
-  handler       = "uk.gov.nationalarchives.api.update.Lambda::update"
-  role          = aws_iam_role.lambda_api_update_iam_role.*.arn[0]
-  runtime       = "java8"
-  filename      = "${path.module}/functions/api-update.jar"
-  timeout       = var.timeout_seconds
-  memory_size   = 512
-  tags          = var.common_tags
+  count                          = local.count_api_update
+  function_name                  = local.api_update_function_name
+  handler                        = "uk.gov.nationalarchives.api.update.Lambda::update"
+  role                           = aws_iam_role.lambda_api_update_iam_role.*.arn[0]
+  runtime                        = "java8"
+  filename                       = "${path.module}/functions/api-update.jar"
+  timeout                        = var.timeout_seconds
+  memory_size                    = 512
+  reserved_concurrent_executions = var.reserved_concurrency
+  tags                           = var.common_tags
   environment {
     variables = {
       API_URL       = aws_kms_ciphertext.environment_vars_api_update["api_url"].ciphertext_blob
