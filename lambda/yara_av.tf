@@ -47,6 +47,7 @@ resource "aws_lambda_event_source_mapping" "av_sqs_queue_mapping" {
   count            = local.count_av_yara
   event_source_arn = local.antivirus_queue
   function_name    = aws_lambda_function.lambda_function.*.arn[0]
+  batch_size       = 1
   // The mapping will be updated to point to a new lambda version each time the lambda is deployed. This prevents terraform from resetting it when it runs.
   lifecycle {
     ignore_changes = [function_name]
