@@ -1,13 +1,14 @@
 resource "aws_lambda_function" "checksum_lambda_function" {
-  count         = local.count_checksum
-  function_name = local.checksum_function_name
-  handler       = "uk.gov.nationalarchives.checksum.Lambda::process"
-  role          = aws_iam_role.checksum_lambda_iam_role.*.arn[0]
-  runtime       = "java8"
-  filename      = "${path.module}/functions/checksum.jar"
-  timeout       = var.timeout_seconds
-  memory_size   = 1024
-  tags          = var.common_tags
+  count                          = local.count_checksum
+  function_name                  = local.checksum_function_name
+  handler                        = "uk.gov.nationalarchives.checksum.Lambda::process"
+  role                           = aws_iam_role.checksum_lambda_iam_role.*.arn[0]
+  runtime                        = "java8"
+  filename                       = "${path.module}/functions/checksum.jar"
+  timeout                        = var.timeout_seconds
+  memory_size                    = 1024
+  reserved_concurrent_executions = var.reserved_concurrency
+  tags                           = var.common_tags
   environment {
     variables = {
       INPUT_QUEUE      = aws_kms_ciphertext.environment_vars_checksum["input_queue"].ciphertext_blob

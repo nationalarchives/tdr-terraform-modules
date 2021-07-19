@@ -1,13 +1,14 @@
 resource "aws_lambda_function" "create_keycloak_db_user_lambda_function" {
-  count         = local.count_create_keycloak_db_user
-  function_name = local.create_keycloak_db_user_function_name
-  handler       = "uk.gov.nationalarchives.db.users.Lambda::process"
-  role          = aws_iam_role.create_keycloak_db_user_lambda_iam_role.*.arn[0]
-  runtime       = "java11"
-  filename      = "${path.module}/functions/create-db-users.jar"
-  timeout       = var.timeout_seconds
-  memory_size   = 1024
-  tags          = var.common_tags
+  count                          = local.count_create_keycloak_db_user
+  function_name                  = local.create_keycloak_db_user_function_name
+  handler                        = "uk.gov.nationalarchives.db.users.Lambda::process"
+  role                           = aws_iam_role.create_keycloak_db_user_lambda_iam_role.*.arn[0]
+  runtime                        = "java11"
+  filename                       = "${path.module}/functions/create-db-users.jar"
+  timeout                        = var.timeout_seconds
+  memory_size                    = 1024
+  reserved_concurrent_executions = var.reserved_concurrency
+  tags                           = var.common_tags
   environment {
     variables = {
       DB_ADMIN_USER     = aws_kms_ciphertext.environment_vars_create_keycloak_db_user["db_admin_user"].ciphertext_blob
