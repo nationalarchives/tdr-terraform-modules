@@ -27,7 +27,6 @@
         "arn:aws:iam::${account_id}:role/TDRJenkinsBuildPluginUpdatesExecutionRole",
         "arn:aws:iam::${account_id}:role/TDRJenkinsBuildPostgresExecutionRole",
         "arn:aws:iam::${account_id}:role/TDRJenkinsBuildTerraformExecutionRole",
-        "arn:aws:iam::${account_id}:role/TDRJenkinsBuildTerraformV13ExecutionRole",
         "arn:aws:iam::${account_id}:role/TDRJenkinsBuildTransferFrontendExecutionRole",
         "arn:aws:iam::${account_id}:role/TDRJenkinsCheckAmiRole",
         "arn:aws:iam::${account_id}:role/TDRJenkinsNodeLambdaRoleMgmt",

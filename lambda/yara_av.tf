@@ -1,13 +1,14 @@
 resource "aws_lambda_function" "lambda_function" {
-  count         = local.count_av_yara
-  function_name = local.yara_av_function_name
-  handler       = "matcher.matcher_lambda_handler"
-  role          = aws_iam_role.lambda_iam_role.*.arn[0]
-  runtime       = "python3.7"
-  filename      = "${path.module}/functions/yara-av.zip"
-  timeout       = var.timeout_seconds
-  memory_size   = 3008
-  tags          = var.common_tags
+  count                          = local.count_av_yara
+  function_name                  = local.yara_av_function_name
+  handler                        = "matcher.matcher_lambda_handler"
+  role                           = aws_iam_role.lambda_iam_role.*.arn[0]
+  runtime                        = "python3.7"
+  filename                       = "${path.module}/functions/yara-av.zip"
+  timeout                        = var.timeout_seconds
+  memory_size                    = 3008
+  reserved_concurrent_executions = var.reserved_concurrency
+  tags                           = var.common_tags
   environment {
     variables = {
       ENVIRONMENT    = aws_kms_ciphertext.environment_vars_yara_av["environment"].ciphertext_blob

@@ -1,13 +1,14 @@
 resource "aws_lambda_function" "download_files_lambda_function" {
-  count         = local.count_download_files
-  function_name = local.download_files_function_name
-  handler       = "uk.gov.nationalarchives.downloadfiles.Lambda::process"
-  role          = aws_iam_role.download_files_lambda_iam_role.*.arn[0]
-  runtime       = "java11"
-  filename      = "${path.module}/functions/download-files.jar"
-  timeout       = var.timeout_seconds
-  memory_size   = 1024
-  tags          = var.common_tags
+  count                          = local.count_download_files
+  function_name                  = local.download_files_function_name
+  handler                        = "uk.gov.nationalarchives.downloadfiles.Lambda::process"
+  role                           = aws_iam_role.download_files_lambda_iam_role.*.arn[0]
+  runtime                        = "java11"
+  filename                       = "${path.module}/functions/download-files.jar"
+  timeout                        = var.timeout_seconds
+  memory_size                    = 1024
+  reserved_concurrent_executions = var.reserved_concurrency
+  tags                           = var.common_tags
   environment {
     variables = {
       ENVIRONMENT       = aws_kms_ciphertext.environment_vars_download_files["environment"].ciphertext_blob

@@ -1,13 +1,14 @@
 resource "aws_lambda_function" "file_format_lambda_function" {
-  count         = local.count_file_format
-  function_name = local.file_format_function_name
-  handler       = "uk.gov.nationalarchives.fileformat.Lambda::process"
-  role          = aws_iam_role.file_format_lambda_iam_role.*.arn[0]
-  runtime       = "java11"
-  filename      = "${path.module}/functions/file-format.jar"
-  timeout       = var.timeout_seconds
-  memory_size   = 1024
-  tags          = var.common_tags
+  count                          = local.count_file_format
+  function_name                  = local.file_format_function_name
+  handler                        = "uk.gov.nationalarchives.fileformat.Lambda::process"
+  role                           = aws_iam_role.file_format_lambda_iam_role.*.arn[0]
+  runtime                        = "java11"
+  filename                       = "${path.module}/functions/file-format.jar"
+  timeout                        = var.timeout_seconds
+  memory_size                    = 1024
+  reserved_concurrent_executions = var.reserved_concurrency
+  tags                           = var.common_tags
   environment {
     variables = {
       ENVIRONMENT    = aws_kms_ciphertext.environment_vars_file_format["environment"].ciphertext_blob

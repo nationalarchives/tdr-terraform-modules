@@ -1,13 +1,14 @@
 resource "aws_lambda_function" "lambda_service_unavailable_function" {
-  count         = local.count_service_unavailable
-  function_name = local.service_unavailable_function_name
-  handler       = "app.lambda_handler"
-  role          = aws_iam_role.lambda_service_unavailable_iam_role.*.arn[0]
-  runtime       = "python3.8"
-  filename      = "${path.module}/functions/service-unavailable.zip"
-  timeout       = 3
-  memory_size   = 128
-  tags          = var.common_tags
+  count                          = local.count_service_unavailable
+  function_name                  = local.service_unavailable_function_name
+  handler                        = "app.lambda_handler"
+  role                           = aws_iam_role.lambda_service_unavailable_iam_role.*.arn[0]
+  runtime                        = "python3.8"
+  filename                       = "${path.module}/functions/service-unavailable.zip"
+  timeout                        = 3
+  memory_size                    = 128
+  reserved_concurrent_executions = var.reserved_concurrency
+  tags                           = var.common_tags
 
   vpc_config {
     subnet_ids         = var.private_subnet_ids
