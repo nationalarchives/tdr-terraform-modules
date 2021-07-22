@@ -37,9 +37,10 @@
     {
       "Effect": "Allow",
       "Action": [
-        "sqs:ReceiveMessage",
+        "sqs:ChangeMessageVisibility",
         "sqs:DeleteMessage",
-        "sqs:GetQueueAttributes"
+        "sqs:GetQueueAttributes",
+        "sqs:ReceiveMessage"
       ],
       "Resource": [
         "${download_files_queue}"

@@ -15,10 +15,11 @@
     {
       "Effect": "Allow",
       "Action": [
-        "sqs:SendMessage",
-        "sqs:ReceiveMessage",
+        "sqs:ChangeMessageVisibility",
         "sqs:DeleteMessage",
-        "sqs:GetQueueAttributes"
+        "sqs:GetQueueAttributes",
+        "sqs:ReceiveMessage",
+        "sqs:SendMessage"
       ],
       "Resource": [
         "${input_sqs_arn}"
