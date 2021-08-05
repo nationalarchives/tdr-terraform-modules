@@ -16,5 +16,5 @@ resource "aws_ecs_task_definition" "npm_task" {
   cpu                      = "2048"
   memory                   = "4096"
   task_role_arn            = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/TDRJenkinsPublishRole"
-  execution_role_arn       = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/TDRJenkinsBuildPluginUpdatesExecutionRole"
+  execution_role_arn       = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/TDRJenkinsBuildNpmExecutionRole"
 }
