@@ -1,6 +1,6 @@
 data "template_file" "sbt_with_postgres_template" {
   count    = local.count_sbt_with_postgres
-  template = file("${path.module}/templates/s3publish.json.tpl")
+  template = file("${path.module}/templates/sbt_with_postgres.json.tpl")
 
   vars = {
     account = data.aws_caller_identity.current.account_id

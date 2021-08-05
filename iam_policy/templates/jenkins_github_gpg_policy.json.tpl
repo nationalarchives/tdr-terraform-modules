@@ -4,7 +4,7 @@
     {
       "Sid": "",
       "Effect": "Allow",
-      "Action": "ssm:GetParameter",
+      "Action": "ssm:GetParameters",
       "Resource": [
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/github/gpg/passphrase",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/mgmt/github/gpg/key",
