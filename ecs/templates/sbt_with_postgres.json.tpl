@@ -6,7 +6,21 @@
       "name": "sbtwithpostgres",
       "taskRoleArn": "arn:aws:iam::${account}:role/TDRJenkinsPublishRole",
       "compatibilities": ["FARGATE"],
-      "networkMode": "awsvpc"
+      "networkMode": "awsvpc",
+      "secrets": [
+        {
+          "valueFrom": "/mgmt/github/gpg/passphrase",
+          "name": "PASSPHRASE"
+        },
+        {
+          "valueFrom": "/mgmt/github/gpg/key",
+          "name": "GPG_KEY"
+        },
+        {
+          "valueFrom": "/mgmt/github/gpg/id",
+          "name": "GPG_KEY_ID"
+        }
+      ]
     },
     {
       "cpu": 256,
