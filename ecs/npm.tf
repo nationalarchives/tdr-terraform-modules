@@ -1,9 +1,10 @@
 data "template_file" "npm_template" {
   count    = local.count_npm
-  template = file("${path.module}/templates/npm.json.tpl")
+  template = file("${path.module}/templates/jenkins_sign_commits.json.tpl")
 
   vars = {
-    account = data.aws_caller_identity.current.account_id
+    account = data.aws_caller_identity.current.account_id,
+    name    = "npm"
   }
 }
 

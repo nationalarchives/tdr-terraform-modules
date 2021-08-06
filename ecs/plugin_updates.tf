@@ -1,9 +1,10 @@
 data "template_file" "plugin_updates_template" {
   count    = local.count_plugin_updates
-  template = file("${path.module}/templates/plugin_updates.json.tpl")
+  template = file("${path.module}/templates/jenkins_sign_commits.json.tpl")
 
   vars = {
     account = data.aws_caller_identity.current.account_id
+    name    = "plugin-updates"
   }
 }
 
