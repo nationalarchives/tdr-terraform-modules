@@ -93,3 +93,13 @@ variable "name" {
 variable "domain_name" {
   default = ""
 }
+
+variable "plugin_updates" {
+  default     = false
+  description = "Create the jenkins build plugin updates task definition"
+}
+
+variable "npm" {
+  default     = false
+  description = "Create the jenkins build npm task definition"
+}
