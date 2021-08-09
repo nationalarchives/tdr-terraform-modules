@@ -24,3 +24,5 @@ variable "queries" {
   description = "comma separated list of queries"
   default     = []
 }
+
+variable "environment" {}
