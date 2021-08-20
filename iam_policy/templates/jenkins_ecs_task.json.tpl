@@ -62,8 +62,7 @@
         "arn:aws:ecr:eu-west-2:${account_id}:repository/transfer-frontend",
         "arn:aws:ecr:eu-west-2:${account_id}:repository/yara",
         "arn:aws:ecr:eu-west-2:${account_id}:repository/yara-dependencies",
-        "arn:aws:ecr:eu-west-2:${account_id}:repository/yara-rules",
-        "arn:aws:ecr:eu-west-2:${sandbox_account_id}:repository/yara-rules"
+        "arn:aws:ecr:eu-west-2:${account_id}:repository/yara-rules"
       ]
     },
     {
