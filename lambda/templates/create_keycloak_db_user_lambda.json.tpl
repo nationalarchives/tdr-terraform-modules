@@ -8,8 +8,8 @@
         "logs:PutLogEvents"
       ],
       "Resource": [
-        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/-create-keycloak-db-user-${environment}",
-        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/-create-keycloak-db-user-${environment}:log-stream:*"
+        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-create-keycloak-db-user-${environment}",
+        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-create-keycloak-db-user-${environment}:log-stream:*"
       ]
     },
     {
