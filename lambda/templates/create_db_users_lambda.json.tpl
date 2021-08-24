@@ -8,8 +8,8 @@
         "logs:PutLogEvents"
       ],
       "Resource": [
-        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-checksum-${environment}",
-        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-checksum-${environment}:log-stream:*"
+        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-${lambda_name}-${environment}",
+        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-${lambda_name}-${environment}:log-stream:*"
       ]
     },
     {

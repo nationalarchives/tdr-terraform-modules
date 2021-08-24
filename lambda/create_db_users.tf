@@ -43,7 +43,7 @@ resource "aws_cloudwatch_log_group" "create_db_users_lambda_log_group" {
 
 resource "aws_iam_policy" "create_db_users_lambda_policy" {
   count  = local.count_create_db_users
-  policy = templatefile("${path.module}/templates/create_db_users_lambda.json.tpl", { environment = local.environment, account_id = data.aws_caller_identity.current.account_id, kms_arn = var.kms_key_arn })
+  policy = templatefile("${path.module}/templates/create_db_users_lambda.json.tpl", { lambda_name = var.lambda_name, environment = local.environment, account_id = data.aws_caller_identity.current.account_id, kms_arn = var.kms_key_arn })
   name   = "${upper(var.project)}CreateDbUsers${title(var.database_name)}Policy${title(local.environment)}"
 }
 
