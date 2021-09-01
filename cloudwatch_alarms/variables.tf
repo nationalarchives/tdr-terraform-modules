@@ -49,6 +49,6 @@ variable "comparison_operator" {
   description = "Can be GreaterThanOrEqualToThreshold, GreaterThanThreshold, LessThanThreshold, LessThanOrEqualToThreshold"
 }
 variable "treat_missing_data" {
-  default     = "missing"
-  description = "Sets how this alarm is to handle missing data points. Can be missing, ignore, breaching and notBreaching"
+  default     = "breaching"
+  description = "Sets how this alarm is to handle missing data points. Can be missing, ignore, breaching and notBreaching. Default is breaching so we'll get an alert if cloudwatch agent fails"
 }
