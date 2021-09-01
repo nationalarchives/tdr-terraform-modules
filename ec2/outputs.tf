@@ -13,3 +13,7 @@ output "instance_id" {
 output "role_id" {
   value = aws_iam_role.ec2_role.id
 }
+
+output "private_dns" {
+  value = aws_instance.instance.private_dns
+}
