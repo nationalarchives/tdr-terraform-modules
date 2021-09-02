@@ -16,7 +16,7 @@ variable "datapoints_to_alarm" {
   description = "How many datapoints over the threshold to trigger the alarm"
 }
 variable "threshold" {
-  description = "The threshold for the metric above which is will alarm"
+  description = "The threshold for the metric above which an alarm is triggered"
 }
 
 variable "dimensions" {
@@ -50,5 +50,5 @@ variable "comparison_operator" {
 }
 variable "treat_missing_data" {
   default     = "breaching"
-  description = "Sets how this alarm is to handle missing data points. Can be missing, ignore, breaching and notBreaching. Default is breaching so we'll get an alert if cloudwatch agent fails"
+  description = "Sets how this alarm is to handle missing data points. Can be missing, ignore, breaching and notBreaching. Default is 'breaching' so there will be an alert if the Cloudwatch agent fails"
 }

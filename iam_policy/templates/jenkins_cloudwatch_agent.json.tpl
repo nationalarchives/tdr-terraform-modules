@@ -5,13 +5,13 @@
       "Effect": "Allow",
       "Action": [
         "cloudwatch:PutMetricData",
-        "ec2:DescribeVolumes",
         "ec2:DescribeTags",
-        "logs:PutLogEvents",
-        "logs:DescribeLogStreams",
-        "logs:DescribeLogGroups",
+        "ec2:DescribeVolumes",
+        "logs:CreateLogGroup",
         "logs:CreateLogStream",
-        "logs:CreateLogGroup"
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams",
+        "logs:PutLogEvents"
       ],
       "Resource": "*"
     },
