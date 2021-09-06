@@ -11,7 +11,11 @@ output "instance_id" {
 }
 
 output "role_id" {
-  value = aws_iam_role.ec2_role.id
+  value = length(aws_iam_role.ec2_role) == 0 ? "" : aws_iam_role.ec2_role[0].id
+}
+
+output "role_arn" {
+  value = length(aws_iam_role.ec2_role) == 0 ? "" : aws_iam_role.ec2_role[0].arn
 }
 
 output "private_dns" {

@@ -49,3 +49,12 @@ variable "attach_policies" {
   type        = map(string)
   default     = {}
 }
+
+variable "role_name" {
+  default     = ""
+  description = "Allows the role for the instance to be overridden with an existing one."
+}
+
+variable "user_data_list" {
+  default = []
+}

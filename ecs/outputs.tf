@@ -29,3 +29,7 @@ output "consignment_export_execution_role_arn" {
 output "jenkins_cluster_arn" {
   value = var.jenkins == true ? aws_ecs_cluster.jenkins_cluster[0].arn : ""
 }
+
+output "file_format_build_role" {
+  value = aws_iam_role.fileformat_ecs_task.*.arn
+}

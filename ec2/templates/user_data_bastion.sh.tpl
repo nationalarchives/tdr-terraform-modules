@@ -1,4 +1,5 @@
 #!/bin/bash
+%{ if connect_to_database == "true" }
 mkdir -p /home/ssm-user
 yum install -y postgresql jq
 cat <<\EOF >> /home/ssm-user/connect.sh
@@ -20,3 +21,10 @@ EOF
 chmod +x /home/ssm-user/connect.sh
 chown -R 1001:1001 /home/ssm-user
 history -c
+%{ endif }
+
+%{ if connect_to_efs == "true" }
+mkdir -p /home/ssm-user/efs
+yum install -y amazon-efs-utils
+mount -t efs -o tls ${file_system_id} efs/
+%{ endif }
