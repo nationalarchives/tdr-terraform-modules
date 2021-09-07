@@ -26,5 +26,5 @@ history -c
 %{ if connect_to_efs == "true" }
 mkdir -p /home/ssm-user/efs
 yum install -y amazon-efs-utils
-mount -t efs -o tls ${file_system_id} efs/
+mount -t efs -o iam,tls ${file_system_id} /home/ssm-user/efs/
 %{ endif }
