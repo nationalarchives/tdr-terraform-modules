@@ -23,16 +23,16 @@ chown -R 1001:1001 /home/ssm-user
 history -c
 %{ endif }
 
-%{ if connect_to_backend_checks_efs == "true" || connect_to_export_efs == "true" }
-yum install -y amazon-efs-utils
-mkdir -p /home/ssm-user/efs
-chown -R 1001:1001 /home/ssm-user/efs
-%{ endif }
-
 %{ if connect_to_backend_checks_efs == "true" }
-mount -t efs -o iam,tls ${backend_checks_file_system_id} /home/ssm-user/efs/
+yum install -y amazon-efs-utils
+mkdir -p /home/ssm-user/backend-checks
+chown -R 1001:1001 /home/ssm-user/backend-checks
+mount -t efs -o iam,tls ${backend_checks_file_system_id} /home/ssm-user/backend-checks/
 %{ endif }
 
 %{ if connect_to_export_efs == "true" }
-mount -t efs -o iam,tls ${export_file_system_id} /home/ssm-user/efs/
+yum install -y amazon-efs-utils
+mkdir -p /home/ssm-user/export
+chown -R 1001:1001 /home/ssm-user/export
+mount -t efs -o iam,tls ${export_file_system_id} /home/ssm-user/export/
 %{ endif }
