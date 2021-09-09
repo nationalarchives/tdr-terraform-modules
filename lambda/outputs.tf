@@ -34,3 +34,18 @@ output "create_keycloak_user_lambda_security_group" {
   value = aws_security_group.create_keycloak_db_user_lambda.*.id
 }
 
+output "antivirus_lambda_role" {
+  value = aws_iam_role.lambda_iam_role.*.arn
+}
+
+output "download_files_lambda_role" {
+  value = aws_iam_role.download_files_lambda_iam_role.*.arn
+}
+
+output "file_format_lambda_role" {
+  value = aws_iam_role.file_format_lambda_iam_role.*.arn
+}
+
+output "checksum_lambda_role" {
+  value = aws_iam_role.checksum_lambda_iam_role.*.arn
+}

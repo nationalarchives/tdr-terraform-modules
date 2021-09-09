@@ -1,4 +1,5 @@
 #!/bin/bash
+%{ if connect_to_database == "true" }
 mkdir -p /home/ssm-user
 yum install -y postgresql jq
 cat <<\EOF >> /home/ssm-user/connect.sh
@@ -20,3 +21,18 @@ EOF
 chmod +x /home/ssm-user/connect.sh
 chown -R 1001:1001 /home/ssm-user
 history -c
+%{ endif }
+
+%{ if connect_to_backend_checks_efs == "true" }
+yum install -y amazon-efs-utils
+mkdir -p /home/ssm-user/backend-checks
+chown -R 1001:1001 /home/ssm-user/backend-checks
+mount -t efs -o iam,tls ${backend_checks_file_system_id} /home/ssm-user/backend-checks/
+%{ endif }
+
+%{ if connect_to_export_efs == "true" }
+yum install -y amazon-efs-utils
+mkdir -p /home/ssm-user/export
+chown -R 1001:1001 /home/ssm-user/export
+mount -t efs -o iam,tls ${export_file_system_id} /home/ssm-user/export/
+%{ endif }

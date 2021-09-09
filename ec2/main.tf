@@ -29,10 +29,11 @@ resource "aws_key_pair" "bastion_key_pair" {
 
 resource "aws_iam_instance_profile" "instance_profile" {
   name = var.name
-  role = aws_iam_role.ec2_role.name
+  role = local.role_name
 }
 
 resource "aws_iam_role" "ec2_role" {
+  count              = local.role_count
   name               = "${title(var.name)}EC2Role${title(var.environment)}"
   assume_role_policy = templatefile("${path.module}/templates/ec2_assume_role.json.tpl", {})
   tags = merge(
@@ -45,11 +46,11 @@ resource "aws_iam_role" "ec2_role" {
 
 resource "aws_iam_role_policy_attachment" "ec2_role_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-  role       = aws_iam_role.ec2_role.name
+  role       = local.role_name
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_variable_policy_attachment" {
   for_each   = var.attach_policies
   policy_arn = each.value
-  role       = aws_iam_role.ec2_role.id
+  role       = local.role_name
 }
