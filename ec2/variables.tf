@@ -52,7 +52,7 @@ variable "attach_policies" {
 
 variable "role_name" {
   default     = ""
-  description = "Allows the role for the instance to be overridden with an existing one."
+  description = "Allows the role for the instance to be overridden with a different one."
 }
 
 variable "user_data_list" {
