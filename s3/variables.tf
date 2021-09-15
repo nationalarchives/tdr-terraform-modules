@@ -103,3 +103,8 @@ variable "log_data_sns_topic_region" {
   description = "Region for log data SNS topic"
   default     = "eu-west-2"
 }
+
+variable "cloudfront_oai" {
+  description = "The origin access id from the cloudwatch distribution which is connecting to this bucket"
+  default     = ""
+}
