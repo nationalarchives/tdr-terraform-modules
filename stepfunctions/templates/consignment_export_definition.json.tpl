@@ -10,8 +10,8 @@
       "Retry": [
         {
           "ErrorEquals": [
-            "States.Timeout",
-            "States.HeartbeatTimeout"
+            "States.HeartbeatTimeout",
+            "States.Timeout"
           ],
           "MaxAttempts": 3
         }
@@ -19,9 +19,9 @@
       "Catch": [
         {
           "ErrorEquals": [
+            "States.HeartbeatTimeout",
             "States.TaskFailed",
-            "States.Timeout",
-            "States.HeartbeatTimeout"
+            "States.Timeout"
           ],
           "Next": "Task failed choice"
         }
