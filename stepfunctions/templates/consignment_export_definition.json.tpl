@@ -5,12 +5,25 @@
     "Run ECS task": {
       "Type": "Task",
       "Resource": "arn:aws:states:::ecs:runTask.waitForTaskToken",
+      "HeartbeatSeconds": 60,
+      "TimeoutSeconds": 600,
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.HeartbeatTimeout",
+            "States.Timeout"
+          ],
+          "MaxAttempts": 3
+        }
+      ],
       "Catch": [
         {
           "ErrorEquals": [
-            "States.TaskFailed"
+            "States.HeartbeatTimeout",
+            "States.TaskFailed",
+            "States.Timeout"
           ],
-          "Next": "Task failed notification"
+          "Next": "Task failed choice"
         }
       ],
       "Parameters": {
@@ -20,7 +33,7 @@
         "PlatformVersion": "1.4.0",
         "NetworkConfiguration": {
           "AwsvpcConfiguration": {
-            "AssignPublicIp": "ENABLED",
+            "AssignPublicIp": "DISABLED",
             "SecurityGroups": ${security_groups},
             "Subnets": ${subnet_ids}
           }
@@ -35,8 +48,8 @@
                   "Value.$": "$.consignmentId"
                 },
                 {
-                  "Name":"TASK_TOKEN_ENV_VARIABLE",
-                  "Value.$":"$$.Task.Token"
+                  "Name": "TASK_TOKEN_ENV_VARIABLE",
+                  "Value.$": "$$.Task.Token"
                 }
               ]
             }
@@ -59,6 +72,23 @@
       },
       "End": true
     },
+    "Task failed choice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Not": {
+            "Variable": "$.Error",
+            "StringEquals": "States.Timeout"
+          },
+          "Next": "Task failed notification"
+        },
+        {
+          "Variable": "$.Error",
+          "StringEquals": "States.Timeout",
+          "Next": "Task timed out notification"
+        }
+      ]
+    },
     "Task failed notification": {
       "Type": "Task",
       "Resource": "arn:aws:states:::sns:publish",
@@ -73,8 +103,22 @@
       },
       "Next": "Fail State"
     },
+    "Task timed out notification": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "Message": {
+          "consignmentId.$": "$$.Execution.Input.consignmentId",
+          "success": false,
+          "environment": "${environment}",
+          "failureCause": "The export task has timed out"
+        },
+        "TopicArn": "${sns_topic}"
+      },
+      "Next": "Fail State"
+    },
     "Fail State": {
-       "Type": "Fail"
+      "Type": "Fail"
     }
   }
 }
