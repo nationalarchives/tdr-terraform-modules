@@ -1,5 +1,6 @@
 resource "aws_route53_zone" "hosted_zone" {
-  name = var.environment_full_name == "production" ? "${var.project}.${var.domain}" : "${var.project}-${var.environment_full_name}.${var.domain}"
+  count = var.create_hosted_zone == true ? 1 : 0
+  name  = var.environment_full_name == "production" ? "${var.project}.${var.domain}" : "${var.project}-${var.environment_full_name}.${var.domain}"
 
   tags = merge(
     var.common_tags,

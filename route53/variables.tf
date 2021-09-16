@@ -39,3 +39,8 @@ variable "a_record_name" {
   description = "The name to use for the A record"
   default     = ""
 }
+
+variable "create_hosted_zone" {
+  // The default behaviour of this module is to create the hosted zone. I don't need it so I'm adding this variable but defaulting it to true so I don't break any existing code using it.
+  default = true
+}
