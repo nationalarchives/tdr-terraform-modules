@@ -7,3 +7,11 @@ variable "logging_bucket_regional_domain_name" {
 }
 
 variable "environment" {}
+
+variable "alias_domain_name" {
+  description = "The custom domain name which will be attached to the Cloudfront distribution"
+}
+
+variable "certificate_arn" {
+  description = "The ACM certificate to provide ssl for the custom domain name"
+}
