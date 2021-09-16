@@ -67,6 +67,11 @@ variable "lambda_service_unavailable" {
   default     = false
 }
 
+variable "lambda_sign_cookies" {
+  description = "deploy Lambda function for the sign cookies API endpoint"
+  default     = false
+}
+
 variable "target_s3_bucket" {
   description = "Target S3 bucket ARN used for the Lambda log data function"
   default     = ""
