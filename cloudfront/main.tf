@@ -68,7 +68,7 @@ resource "aws_cloudfront_distribution" "cloudfront_s3_distribution" {
 
 resource "aws_cloudfront_public_key" "cookie_signing_key" {
   comment     = "Public key for signed cookies"
-  encoded_key = data.aws_ssm_parameter.public_key.value
+  encoded_key = file("${path.module}/keys/sign_cookies_public_key.pem")
   name        = "tdr-signed-cookie-key-${var.environment}"
 }
 
