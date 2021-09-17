@@ -17,7 +17,7 @@ resource "aws_lambda_function" "sign_cookies_lambda_function" {
 
   vpc_config {
     subnet_ids         = var.private_subnet_ids
-    security_group_ids = aws_security_group.allow_efs_lambda_sign_cookies.*.id
+    security_group_ids = aws_security_group.lambda_sign_cookies_security_group.*.id
   }
 
   lifecycle {
@@ -58,10 +58,10 @@ resource "aws_iam_role_policy_attachment" "sign_cookies_lambda_role_policy" {
   role       = aws_iam_role.sign_cookies_lambda_iam_role.*.name[0]
 }
 
-resource "aws_security_group" "allow_efs_lambda_sign_cookies" {
+resource "aws_security_group" "lambda_sign_cookies_security_group" {
   count       = local.count_sign_cookies
   name        = "${var.project}-lambda-sign_cookies"
-  description = "Allow EFS inbound traffic"
+  description = "Signed Cookies Lambda Security Group"
   vpc_id      = var.vpc_id
 
   tags = merge(
@@ -71,6 +71,17 @@ resource "aws_security_group" "allow_efs_lambda_sign_cookies" {
     )
   )
 }
+
+resource "aws_security_group_rule" "allow_https_lambda_sign_cookies_rule" {
+  count             = local.count_sign_cookies
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.lambda_sign_cookies_security_group[count.index].id
+  to_port           = 443
+  type              = "egress"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 
 resource "aws_lambda_permission" "sign_cookies_lambda_permissions" {
   count         = local.count_sign_cookies

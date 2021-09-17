@@ -15,3 +15,7 @@ variable "alias_domain_name" {
 variable "certificate_arn" {
   description = "The ACM certificate to provide ssl for the custom domain name"
 }
+
+variable "api_gateway_url" {
+  description = "The API gateway URL to create an origin for"
+}

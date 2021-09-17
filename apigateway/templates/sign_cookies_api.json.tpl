@@ -34,7 +34,7 @@
             "default" : {
               "statusCode" : "200",
               "responseParameters" : {
-                "method.response.header.Access-Control-Allow-Origin" : "${upload_cors_urls}"
+                "method.response.header.Access-Control-Allow-Origin" : "'${upload_cors_urls}'"
               }
             }
           },
@@ -76,7 +76,10 @@
                 "method.response.header.Access-Control-Allow-Credentials" : "'true'",
                 "method.response.header.Access-Control-Allow-Methods" : "'GET,OPTIONS'",
                 "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-                "method.response.header.Access-Control-Allow-Origin" : "${upload_cors_urls}"
+                "method.response.header.Access-Control-Allow-Origin" : "'${upload_cors_urls}'"
+              },
+              "responseTemplates" : {
+                "application/json" : "#if( $input.params('origin') == 'http://localhost:9000' && $context.stage == 'intg')   #set($context.responseOverride.header.Access-Control-Allow-Origin = 'http://localhost:9000') #end"
               }
             }
           },
