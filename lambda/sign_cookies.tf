@@ -1,7 +1,7 @@
 resource "aws_lambda_function" "sign_cookies_lambda_function" {
   count                          = local.count_sign_cookies
   function_name                  = local.sign_cookies_function_name
-  handler                        = "uk.gov.nationalarchives.sign_cookies.Lambda::process"
+  handler                        = "uk.gov.nationalarchives.signcookies.Lambda::handleRequest"
   role                           = aws_iam_role.sign_cookies_lambda_iam_role.*.arn[0]
   runtime                        = "java11"
   filename                       = "${path.module}/functions/sign-cookies.jar"
@@ -73,7 +73,7 @@ resource "aws_security_group" "allow_efs_lambda_sign_cookies" {
 }
 
 resource "aws_lambda_permission" "sign_cookies_lambda_permissions" {
-  count         = local.count_export_api_authoriser
+  count         = local.count_sign_cookies
   statement_id  = "AllowExecutionFromSignedCookiesApi"
   action        = "lambda:InvokeFunction"
   function_name = local.sign_cookies_function_name
