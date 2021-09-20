@@ -21,7 +21,8 @@ data "aws_cloudfront_cache_policy" "caching_disabled" {
   name = "Managed-CachingDisabled"
 }
 
-resource "aws_cloudfront_distribution" "cloudfront_s3_distribution" {
+resource "aws_cloudfront_distribution" "cloudfront_distribution" {
+  aliases = [var.alias_domain_name]
   enabled = true
   logging_config {
     bucket = var.logging_bucket_regional_domain_name
@@ -60,5 +61,8 @@ resource "aws_cloudfront_distribution" "cloudfront_s3_distribution" {
   }
   viewer_certificate {
     cloudfront_default_certificate = true
+    ssl_support_method             = "sni-only"
+    minimum_protocol_version       = "TLSv1.2_2021"
+    acm_certificate_arn            = var.certificate_arn
   }
 }
