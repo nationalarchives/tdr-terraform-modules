@@ -12,6 +12,7 @@ resource "aws_lambda_function" "sign_cookies_lambda_function" {
   environment {
     variables = {
       PRIVATE_KEY = aws_kms_ciphertext.environment_vars_sign_cookies["private_key"].ciphertext_blob
+      ENVIRONMENT = aws_kms_ciphertext.environment_vars_sign_cookies["environment"].ciphertext_blob
     }
   }
 
@@ -28,7 +29,7 @@ resource "aws_lambda_function" "sign_cookies_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_sign_cookies" {
-  for_each  = local.count_sign_cookies == 0 ? {} : { private_key = data.aws_ssm_parameter.cloudfront_private_key[0].value }
+  for_each  = local.count_sign_cookies == 0 ? {} : { private_key = data.aws_ssm_parameter.cloudfront_private_key[0].value, environment = local.environment }
   key_id    = var.kms_key_arn
   plaintext = each.value
   context   = { "LambdaFunctionName" = local.sign_cookies_function_name }
