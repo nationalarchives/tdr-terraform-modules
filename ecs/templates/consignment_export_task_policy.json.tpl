@@ -5,7 +5,8 @@
       "Effect": "Allow",
       "Action": [
         "states:SendTaskSuccess",
-        "states:SendTaskFailure"
+        "states:SendTaskFailure",
+        "states:SendTaskHeartbeat"
       ],
       "Resource": [
         "arn:aws:states:${aws_region}:${account}:stateMachine:TDRConsignmentExport${titleEnvironment}"
