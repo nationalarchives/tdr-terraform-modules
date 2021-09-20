@@ -21,7 +21,7 @@ data "aws_cloudfront_cache_policy" "caching_disabled" {
   name = "Managed-CachingDisabled"
 }
 
-resource "aws_cloudfront_distribution" "cloudfront_s3_distribution" {
+resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   aliases = [var.alias_domain_name]
   enabled = true
   logging_config {
