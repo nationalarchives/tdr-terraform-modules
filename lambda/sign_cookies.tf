@@ -11,9 +11,12 @@ resource "aws_lambda_function" "sign_cookies_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      PRIVATE_KEY = aws_kms_ciphertext.environment_vars_sign_cookies["private_key"].ciphertext_blob
-      ENVIRONMENT = aws_kms_ciphertext.environment_vars_sign_cookies["environment"].ciphertext_blob
-      AUTH_URL    = aws_kms_ciphertext.environment_vars_sign_cookies["auth_url"].ciphertext_blob
+      PRIVATE_KEY   = aws_kms_ciphertext.environment_vars_sign_cookies["private_key"].ciphertext_blob
+      FRONTEND_URL  = aws_kms_ciphertext.environment_vars_sign_cookies["frontend_url"].ciphertext_blob
+      AUTH_URL      = aws_kms_ciphertext.environment_vars_sign_cookies["auth_url"].ciphertext_blob
+      ENVIRONMENT   = aws_kms_ciphertext.environment_vars_sign_cookies["environment"].ciphertext_blob
+      UPLOAD_DOMAIN = aws_kms_ciphertext.environment_vars_sign_cookies["upload_domain"].ciphertext_blob,
+      KEY_PAIR_ID   = aws_kms_ciphertext.environment_vars_sign_cookies["key_pair_id"].ciphertext_blob,
     }
   }
 
@@ -30,7 +33,14 @@ resource "aws_lambda_function" "sign_cookies_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_sign_cookies" {
-  for_each  = local.count_sign_cookies == 0 ? {} : { private_key = data.aws_ssm_parameter.cloudfront_private_key[0].value, environment = local.environment, auth_url = var.auth_url }
+  for_each = local.count_sign_cookies == 0 ? {} : {
+    private_key   = data.aws_ssm_parameter.cloudfront_private_key[0].value,
+    auth_url      = var.auth_url,
+    frontend_url  = var.frontend_url,
+    environment   = local.environment,
+    upload_domain = var.upload_domain
+    key_pair_id   = var.cloudfront_key_pair_id
+  }
   key_id    = var.kms_key_arn
   plaintext = each.value
   context   = { "LambdaFunctionName" = local.sign_cookies_function_name }

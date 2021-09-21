@@ -87,6 +87,21 @@ variable "auth_url" {
   default     = ""
 }
 
+variable "frontend_url" {
+  description = "The url of the frontend"
+  default     = ""
+}
+
+variable "upload_domain" {
+  description = "The url of the upload url pointing to the cloudfront distribution which proxies s3 requests"
+  default     = ""
+}
+
+variable "cloudfront_key_pair_id" {
+  description = "The key pair used to sign the cookies for the cloudfront distribution which proxies s3 requests"
+  default     = ""
+}
+
 variable "api_url" {
   description = "The url of the graphql api"
   default     = ""
