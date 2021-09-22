@@ -1,7 +1,7 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "version" : "2021-09-06T09:43:11Z",
+    "version" : "0.0.1",
     "title" : "${title}"
   },
   "basePath" : "/${environment}",
