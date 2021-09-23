@@ -5,6 +5,8 @@ resource "aws_api_gateway_rest_api" "rest_api" {
 }
 
 resource "aws_api_gateway_account" "rest_api_account" {
+  //Only needs to be created once
+  count               = var.api_name == "ExportAPI" ? 1 : 0
   cloudwatch_role_arn = aws_iam_role.rest_api_cloudwatch_role.arn
   depends_on          = [aws_iam_role_policy_attachment.cloudwatch_policy_attachment]
 }

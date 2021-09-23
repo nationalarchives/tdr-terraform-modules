@@ -67,6 +67,11 @@ variable "lambda_service_unavailable" {
   default     = false
 }
 
+variable "lambda_sign_cookies" {
+  description = "deploy Lambda function for the sign cookies API endpoint"
+  default     = false
+}
+
 variable "target_s3_bucket" {
   description = "Target S3 bucket ARN used for the Lambda log data function"
   default     = ""
@@ -79,6 +84,21 @@ variable "log_data_sns_topic" {
 
 variable "auth_url" {
   description = "The url of the keycloak server"
+  default     = ""
+}
+
+variable "frontend_url" {
+  description = "The url of the frontend"
+  default     = ""
+}
+
+variable "upload_domain" {
+  description = "The url of the upload url pointing to the cloudfront distribution which proxies s3 requests"
+  default     = ""
+}
+
+variable "cloudfront_key_pair_id" {
+  description = "The key pair used to sign the cookies for the cloudfront distribution which proxies s3 requests"
   default     = ""
 }
 
