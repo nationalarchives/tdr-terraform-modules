@@ -20,7 +20,9 @@
       ],
       "Resource" : [
         "arn:aws:s3:::tdr-upload-files-dirty-${environment}/*",
-        "arn:aws:s3:::tdr-upload-files-dirty-${environment}"
+        "arn:aws:s3:::tdr-upload-files-dirty-${environment}",
+        "arn:aws:s3:::tdr-upload-files-cloudfront-dirty-${environment}",
+        "arn:aws:s3:::tdr-upload-files-cloudfront-dirty-${environment}/*"
       ]
     },
     {

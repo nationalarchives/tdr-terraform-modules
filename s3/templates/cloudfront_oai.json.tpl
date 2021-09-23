@@ -9,6 +9,17 @@
       },
       "Action": "s3:PutObject",
       "Resource": "arn:aws:s3:::${bucket_name}/*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+          "arn:aws:iam::${account_id}:role/TDRDownloadFilesRole",
+          "arn:aws:iam::${account_id}:role/TDRYaraAvRole"
+        ]
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::tdr-upload-files-cloudfront-dirty-${environment}/*"
     }
   ]
 }
