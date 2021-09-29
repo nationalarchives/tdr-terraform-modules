@@ -126,8 +126,8 @@ resource "aws_cloudfront_origin_request_policy" "sign_cookies_api_policy" {
 
 resource "aws_cloudfront_public_key" "cookie_signing_key" {
   comment     = "Public key for signed cookies"
-  encoded_key = file("${path.module}/keys/sign_cookies_public_key.pem")
-  name        = "tdr-signed-cookie-key-${var.environment}"
+  encoded_key = file("${path.module}/keys/sign_cookies_public_key_${var.environment}.pem")
+  name        = "tdr-signed-cookie-public-key-${var.environment}"
 }
 
 resource "aws_cloudfront_key_group" "cookie_signing_key_group" {
