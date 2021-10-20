@@ -1,4 +1,5 @@
 locals {
+  ecs_account_number = local.environment == "sbox" ? data.aws_caller_identity.current.account_id : data.aws_ssm_parameter.mgmt_account_number.value
   count_file_format_build        = var.file_format_build == true ? 1 : 0
   count_grafana_build            = var.grafana_build == true ? 1 : 0
   count_consignment_export       = var.consignment_export == true ? 1 : 0
