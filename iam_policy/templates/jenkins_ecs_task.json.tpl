@@ -56,9 +56,12 @@
       ],
       "Resource": [
         "arn:aws:ecr:eu-west-2:${account_id}:repository/auth-server",
+        "arn:aws:ecr:eu-west-2:${sandbox_account_id}:repository/auth-server",
         "arn:aws:ecr:eu-west-2:${account_id}:repository/consignment-api",
+        "arn:aws:ecr:eu-west-2:${sandbox_account_id}:repository/consignment-api",
         "arn:aws:ecr:eu-west-2:${account_id}:repository/consignment-export",
         "arn:aws:ecr:eu-west-2:${account_id}:repository/file-format-build",
+        "arn:aws:ecr:eu-west-2:${sandbox_account_id}:repository/file-format-build",
         "arn:aws:ecr:eu-west-2:${account_id}:repository/transfer-frontend",
         "arn:aws:ecr:eu-west-2:${account_id}:repository/yara",
         "arn:aws:ecr:eu-west-2:${account_id}:repository/yara-dependencies",
