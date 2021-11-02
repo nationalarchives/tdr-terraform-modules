@@ -8,7 +8,8 @@
         "AWS": [
           "arn:aws:iam::${intg_account}:role/keycloak_ecs_execution_role_intg",
           "arn:aws:iam::${staging_account}:role/keycloak_ecs_execution_role_staging",
-          "arn:aws:iam::${prod_account}:role/keycloak_ecs_execution_role_prod"
+          "arn:aws:iam::${prod_account}:role/keycloak_ecs_execution_role_prod",
+          "arn:aws:iam::${intg_account}:role/KeycloakECSExecutionRoleIntg"
         ]
       },
       "Action": [

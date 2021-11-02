@@ -41,11 +41,11 @@ resource "aws_security_group_rule" "egress_cidr_rule" {
 }
 
 resource "aws_security_group_rule" "egress_security_group_rule" {
-  for_each          = { for rule in var.egress_security_group_rules : rule.description => rule }
-  protocol          = "tcp"
-  security_group_id = aws_security_group.security_group.id
-  cidr_blocks       = each.value.cidr_blocks
-  to_port           = each.value.port
-  from_port         = each.value.port
-  type              = "egress"
+  for_each                 = { for rule in var.egress_security_group_rules : rule.description => rule }
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.security_group.id
+  source_security_group_id = each.value.security_group_id
+  to_port                  = each.value.port
+  from_port                = each.value.port
+  type                     = "egress"
 }
