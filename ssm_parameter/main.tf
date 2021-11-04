@@ -30,7 +30,7 @@ resource "aws_ssm_parameter" "ssm_parameter" {
   tags        = var.common_tags
 }
 
-resource "aws_ssm_parameter" "random_ssm_parameter" {
+resource "aws_ssm_parameter" "ssm_parameter_ignore_value" {
   for_each    = { for ssm_parameter in var.random_parameters : ssm_parameter.name => ssm_parameter }
   name        = each.value.name
   type        = each.value.type
@@ -42,6 +42,7 @@ resource "aws_ssm_parameter" "random_ssm_parameter" {
     ignore_changes = [value]
   }
 }
+
 output "params" {
-  value = merge(aws_ssm_parameter.ssm_parameter, aws_ssm_parameter.random_ssm_parameter)
+  value = merge(aws_ssm_parameter.ssm_parameter, aws_ssm_parameter.ssm_parameter_ignore_value)
 }

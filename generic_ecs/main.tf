@@ -31,9 +31,9 @@ resource "aws_ecs_service" "ecs_service" {
   name                              = var.service_name
   cluster                           = aws_ecs_cluster.ecs_cluster.id
   task_definition                   = aws_ecs_task_definition.ecs_task.arn
-  desired_count                     = 1
+  desired_count                     = var.desired_count
   launch_type                       = "FARGATE"
-  health_check_grace_period_seconds = "360"
+  health_check_grace_period_seconds = var.health_check_grace_period
 
   network_configuration {
     security_groups  = var.security_groups

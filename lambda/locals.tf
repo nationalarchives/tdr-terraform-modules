@@ -21,7 +21,7 @@ locals {
   checksum_function_name                    = "${var.project}-checksum-${local.environment}"
   create_db_users_function_name             = "${var.project}-${var.lambda_name}-${local.environment}"
   create_keycloak_db_user_function_name     = "${var.project}-create-keycloak-db-user-${local.environment}"
-  create_keycloak_db_user_new_function_name = "${var.project}-create-keycloak-db-user-new-${local.environment}"
+  create_keycloak_db_user_function_name_new = "${var.project}-create-keycloak-db-user-new-${local.environment}"
   download_files_function_name              = "${var.project}-download-files-${local.environment}"
   export_api_authoriser_function_name       = "${var.project}-export-api-authoriser-${local.environment}"
   file_format_function_name                 = "${var.project}-file-format-${local.environment}"

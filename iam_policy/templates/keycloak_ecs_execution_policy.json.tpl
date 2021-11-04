@@ -5,11 +5,11 @@
       "Sid": "",
       "Effect": "Allow",
       "Action": [
-        "logs:CreateLogStream",
-        "logs:PutLogEvents",
         "ecr:BatchCheckLayerAvailability",
         "ecr:BatchGetImage",
-        "ecr:GetDownloadUrlForLayer"
+        "ecr:GetDownloadUrlForLayer",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
       ],
       "Resource": [
         "${cloudwatch_log_group}",
