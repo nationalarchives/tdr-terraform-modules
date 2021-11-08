@@ -239,3 +239,7 @@ variable "reserved_concurrency" {
   description = "The total number of concurrent lambdas which can run at one time. Defaults to -1 which is unlimited up to the account limit"
   default     = -1
 }
+
+variable "lambda_create_keycloak_db_users_new" {
+  default = false
+}
