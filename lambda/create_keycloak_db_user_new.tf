@@ -1,6 +1,6 @@
 resource "aws_lambda_function" "create_keycloak_db_user_lambda_function_new" {
   count                          = local.count_create_keycloak_db_user_new
-  function_name                  = local.create_keycloak_db_user_new_function_name
+  function_name                  = local.create_keycloak_db_user_function_name_new
   handler                        = "uk.gov.nationalarchives.db.users.Lambda::process"
   role                           = aws_iam_role.create_keycloak_db_user_lambda_iam_role_new.*.arn[0]
   runtime                        = "java11"
@@ -33,7 +33,7 @@ resource "aws_kms_ciphertext" "environment_vars_create_keycloak_db_user_new" {
   for_each  = local.count_create_keycloak_db_user_new == 0 ? {} : { db_admin_user = var.db_admin_user, db_admin_password = var.db_admin_password, db_url = "jdbc:postgresql://${var.db_url}:5432/keycloak", database_name = "keycloak", keycloak_password = var.keycloak_password }
   key_id    = var.kms_key_arn
   plaintext = each.value
-  context   = { "LambdaFunctionName" = local.create_keycloak_db_user_new_function_name }
+  context   = { "LambdaFunctionName" = local.create_keycloak_db_user_function_name_new }
 }
 
 resource "aws_cloudwatch_log_group" "create_keycloak_db_user_lambda_log_group_new" {
