@@ -9,6 +9,11 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   )
 }
 
+variable "file_systems" {
+  type    = set(object({ file_system_id = string, access_point_id = string }))
+  default = []
+}
+
 resource "aws_ecs_task_definition" "ecs_task" {
   family                   = var.task_family_name
   execution_role_arn       = var.execution_role
@@ -19,6 +24,22 @@ resource "aws_ecs_task_definition" "ecs_task" {
   container_definitions    = var.container_definition
   task_role_arn            = var.task_role
 
+  dynamic "volume" {
+    for_each = var.file_systems
+    content {
+      name = "consignmentexport"
+      efs_volume_configuration {
+        file_system_id = volume.value["file_system_id"]
+        root_directory = "/"
+        authorization_config {
+          iam             = "ENABLED"
+          access_point_id = volume.value["access_point_id"]
+        }
+        transit_encryption = "ENABLED"
+      }
+    }
+  }
+
   tags = merge(
     var.common_tags,
     tomap(
@@ -28,6 +49,7 @@ resource "aws_ecs_task_definition" "ecs_task" {
 }
 
 resource "aws_ecs_service" "ecs_service" {
+  count                             = var.service_name == "" ? 0 : 1
   name                              = var.service_name
   cluster                           = aws_ecs_cluster.ecs_cluster.id
   task_definition                   = aws_ecs_task_definition.ecs_task.arn

@@ -32,10 +32,6 @@ variable "grafana_build" {
   default = false
 }
 
-variable "consignment_export" {
-  default = false
-}
-
 variable "jenkins" {
   description = "Creates the jenkins ECS service when set to true"
   default     = false
