@@ -55,7 +55,7 @@ resource "aws_s3_bucket_notification" "log_bucket_notification" {
 resource "aws_s3_bucket" "bucket" {
   count         = var.apply_resource == true ? 1 : 0
   bucket        = local.bucket_name
-  acl           = var.acl
+  acl           = length(var.full_access_ids) == 0 ? var.acl : null
   force_destroy = var.force_destroy
 
   server_side_encryption_configuration {
@@ -63,6 +63,15 @@ resource "aws_s3_bucket" "bucket" {
       apply_server_side_encryption_by_default {
         sse_algorithm = "AES256"
       }
+    }
+  }
+
+  dynamic "grant" {
+    for_each = var.full_access_ids
+    content {
+      permissions = ["FULL_CONTROL"]
+      type        = "CanonicalUser"
+      id          = grant.value
     }
   }
 

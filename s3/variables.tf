@@ -24,6 +24,12 @@ variable "acl" {
   default = "private"
 }
 
+variable "full_control_canonical_ids" {
+  description = "A list of canonical user IDs to allow full access for. If this is set, you cannot use a canned ACL"
+  type        = list(string)
+  default     = []
+}
+
 variable "versioning" {
   default = true
 }
