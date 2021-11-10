@@ -55,7 +55,7 @@ resource "aws_s3_bucket_notification" "log_bucket_notification" {
 resource "aws_s3_bucket" "bucket" {
   count         = var.apply_resource == true ? 1 : 0
   bucket        = local.bucket_name
-  acl           = length(var.full_access_ids) == 0 ? var.acl : null
+  acl           = length(var.canonical_user_grants) == 0 ? var.acl : null
   force_destroy = var.force_destroy
 
   server_side_encryption_configuration {
@@ -67,11 +67,11 @@ resource "aws_s3_bucket" "bucket" {
   }
 
   dynamic "grant" {
-    for_each = var.full_access_ids
+    for_each = var.canonical_user_grants
     content {
-      permissions = ["FULL_CONTROL"]
+      permissions = grant.value.permissions
       type        = "CanonicalUser"
-      id          = grant.value
+      id          = grant.value.id
     }
   }
 
