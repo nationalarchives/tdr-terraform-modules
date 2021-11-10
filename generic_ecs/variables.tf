@@ -17,10 +17,14 @@ variable "execution_role" {}
 variable "health_check_grace_period" {
   default = "360"
 }
-variable "load_balancer_container_port" {}
+variable "load_balancer_container_port" {
+  default = ""
+}
 variable "memory" {}
 variable "private_subnets" {}
 variable "security_groups" {}
-variable "service_name" {}
+variable "service_name" {
+  default = ""
+}
 variable "task_family_name" {}
 variable "task_role" {}
