@@ -114,3 +114,8 @@ variable "cloudfront_oai" {
   description = "The origin access id from the cloudwatch distribution which is connecting to this bucket"
   default     = ""
 }
+
+variable "policy_variables" {
+  default = {}
+  type    = map(string)
+}

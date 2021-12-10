@@ -43,7 +43,7 @@ output "create_keycloak_user_lambda_security_group_new" {
 }
 
 output "antivirus_lambda_role" {
-  value = aws_iam_role.lambda_iam_role.*.arn
+  value = var.lambda_yara_av == true ? aws_iam_role.lambda_iam_role[0].arn : ""
 }
 
 output "download_files_lambda_role" {
