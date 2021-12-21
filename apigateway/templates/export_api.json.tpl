@@ -9,7 +9,7 @@
     "https"
   ],
   "paths": {
-    "/export/{consignmentType}/{consignmentId+}": {
+    "/export/{consignmentId+}": {
       "post": {
         "consumes": [
           "application/json"
@@ -20,12 +20,6 @@
         "parameters": [
           {
             "name": "consignmentId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "consignmentType",
             "in": "path",
             "required": true,
             "type": "string"
@@ -54,18 +48,16 @@
           },
           "requestParameters": {
             "integration.request.header.Accept-Encoding": "'identity'",
-            "integration.request.header.Content-Type": "'application/x-amz-json-1.1'",
-            "integration.request.querystring.consignmentType": false
+            "integration.request.header.Content-Type": "'application/x-amz-json-1.1'"
           },
           "requestTemplates": {
-            "application/json": "{\"input\": \"{\\\"consignmentId\\\": \\\"$input.params('consignmentId')\\\",\\\"consignmentType\\\": \\\"standard\\\"}\",\"stateMachineArn\": \"${state_machine_arn}\"}"
+            "application/json": "{\"input\": \"{\\\"consignmentId\\\": \\\"$input.params('consignmentId')\\\"}\",\"stateMachineArn\": \"${state_machine_arn}\"}"
           },
           "passthroughBehavior": "when_no_templates",
           "httpMethod": "POST",
           "cacheNamespace": "pddmb7",
           "cacheKeyParameters": [
-            "method.request.path.consignmentId",
-            "method.request.path.consignmentType"
+            "method.request.path.consignmentId"
           ],
           "type": "aws"
         }
