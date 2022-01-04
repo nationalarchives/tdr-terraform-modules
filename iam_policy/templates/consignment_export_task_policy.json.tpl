@@ -37,7 +37,9 @@
       ],
       "Resource": [
         "arn:aws:s3:::tdr-consignment-export-${environment}/*",
-        "arn:aws:s3:::tdr-consignment-export-${environment}"
+        "arn:aws:s3:::tdr-consignment-export-${environment}",
+        "arn:aws:s3:::tdr-consignment-export-judgment-${environment}/*",
+        "arn:aws:s3:::tdr-consignment-export-judgment-${environment}"
       ]
     }
   ]

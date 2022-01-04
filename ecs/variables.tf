@@ -67,6 +67,10 @@ variable "output_bucket" {
   default = ""
 }
 
+variable "output_bucket_judgment" {
+  default = ""
+}
+
 variable "backend_client_secret_path" {
   default = ""
 }
