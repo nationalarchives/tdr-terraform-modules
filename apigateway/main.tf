@@ -29,7 +29,7 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_policy_attachment" {
 resource "aws_api_gateway_deployment" "api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.rest_api.id
   triggers = {
-    redeployment = aws_api_gateway_rest_api.rest_api.body
+    redeployment = sha1(jsonencode(aws_api_gateway_rest_api.rest_api.body))
   }
   lifecycle {
     create_before_destroy = true
