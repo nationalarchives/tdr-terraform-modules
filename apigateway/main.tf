@@ -28,10 +28,18 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_policy_attachment" {
 
 resource "aws_api_gateway_deployment" "api_deployment" {
   rest_api_id = aws_api_gateway_rest_api.rest_api.id
-  stage_name  = var.environment
+  triggers = {
+    redeployment = aws_api_gateway_rest_api.rest_api.body
+  }
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "aws_api_gateway_stage" "api_stage" {
+  deployment_id = aws_api_gateway_deployment.api_deployment.id
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  stage_name    = var.environment
 }
 
 resource "aws_cloudwatch_log_group" "rest_api_log_group" {
