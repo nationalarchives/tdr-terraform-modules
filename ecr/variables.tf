@@ -15,6 +15,6 @@ variable "policy_name" {
 }
 
 variable "policy_variables" {
-  type    = map
+  type    = map(any)
   default = {}
 }

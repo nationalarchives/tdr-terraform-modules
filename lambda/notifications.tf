@@ -36,7 +36,7 @@ data "aws_kms_key" "encryption_key" {
   key_id = "alias/tdr-account-${local.environment}"
 }
 
-data aws_ssm_parameter "slack_webook" {
+data "aws_ssm_parameter" "slack_webook" {
   count = local.count_notifications
   name  = "/${local.environment}/slack/notification/webhook"
 }

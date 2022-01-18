@@ -55,7 +55,7 @@ resource "aws_security_group" "lambda_service_unavailable" {
     tomap(
       {
         "Name" = "${var.project}-allow-https-outbound-service-unavailable"
-      })
+    })
   )
 }
 
@@ -93,7 +93,7 @@ resource "aws_alb_target_group" "failover_target_group" {
   tags = merge(
     var.common_tags,
     tomap({
-      "Name" =  "${var.project}-service-unavailable-${random_string.alb_prefix[count.index].result}-${local.environment}"
+      "Name" = "${var.project}-service-unavailable-${random_string.alb_prefix[count.index].result}-${local.environment}"
     })
   )
 }
