@@ -15,7 +15,8 @@ variable "random_parameters" {
     value       = string
     description = string
   }))
-  default = []
+  default   = []
+  sensitive = true
 }
 
 variable "common_tags" {}
