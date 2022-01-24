@@ -6,8 +6,8 @@
       "Effect": "Allow",
       "Action": "s3:GetObject",
       "Resource": [
-        "arn:aws:s3:::tdr-backend-code-mgmt/*",
-        "arn:aws:s3:::tdr-antivirus-test-files-mgmt/*"
+        "arn:aws:s3:::tdr-antivirus-test-files-mgmt/*",
+        "arn:aws:s3:::tdr-backend-code-mgmt/*"
       ]
     }
   ]
