@@ -66,7 +66,7 @@ resource "aws_iam_role_policy_attachment" "notifications_lambda_role_policy" {
 }
 
 resource "aws_lambda_permission" "lambda_permissions" {
-  for_each      = var.event_rule_arns
+  for_each      = nonsensitive(var.event_rule_arns)
   statement_id  = "AllowExecutionFromEvents${split("/", each.key)[1]}"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.notifications_lambda_function.*.arn[0]
