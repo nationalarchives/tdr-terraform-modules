@@ -15,7 +15,8 @@ variable "random_parameters" {
     value       = string
     description = string
   }))
-  default = []
+  default   = []
+  sensitive = true
 }
 
 variable "common_tags" {}
@@ -31,7 +32,7 @@ resource "aws_ssm_parameter" "ssm_parameter" {
 }
 
 resource "aws_ssm_parameter" "ssm_parameter_ignore_value" {
-  for_each    = { for ssm_parameter in var.random_parameters : ssm_parameter.name => ssm_parameter }
+  for_each    = nonsensitive({ for ssm_parameter in var.random_parameters : ssm_parameter.name => ssm_parameter })
   name        = each.value.name
   type        = each.value.type
   value       = each.value.value

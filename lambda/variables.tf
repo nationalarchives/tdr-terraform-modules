@@ -140,8 +140,9 @@ variable "use_efs" {
 }
 
 variable "event_rule_arns" {
-  type    = set(string)
-  default = []
+  type      = set(string)
+  default   = []
+  sensitive = true
 }
 
 variable "sns_topic_arns" {
