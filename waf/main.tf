@@ -1,7 +1,7 @@
 resource "aws_wafv2_ip_set" "trusted" {
-  count = var.trusted_ips == "" ? 0 : 1
-  name  = "${var.project}-${var.function}-${var.environment}-whitelist"
-  addresses = var.trusted_ips
+  count              = var.trusted_ips == "" ? 0 : 1
+  name               = "${var.project}-${var.function}-${var.environment}-whitelist"
+  addresses          = var.trusted_ips
   ip_address_version = "IPV4"
   scope              = "REGIONAL"
 }
@@ -89,7 +89,7 @@ resource "aws_wafv2_web_acl" "acl" {
       none {}
     }
     statement {
-        rule_group_reference_statement {
+      rule_group_reference_statement {
         arn = aws_wafv2_rule_group.rule_group.arn
       }
     }
@@ -110,5 +110,5 @@ resource "aws_wafv2_web_acl" "acl" {
 resource "aws_wafv2_web_acl_association" "association" {
   count        = length(var.alb_target_groups)
   resource_arn = var.alb_target_groups[count.index]
-  web_acl_arn   = aws_wafv2_web_acl.acl.arn
+  web_acl_arn  = aws_wafv2_web_acl.acl.arn
 }
