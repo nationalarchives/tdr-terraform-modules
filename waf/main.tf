@@ -1,127 +1,114 @@
-resource "aws_wafregional_ipset" "trusted" {
-  count = var.trusted_ips == "" ? 0 : 1
-  name  = "${var.project}-${var.function}-${var.environment}-whitelist"
-
-  dynamic "ip_set_descriptor" {
-    iterator = ip
-    for_each = var.trusted_ips
-    content {
-      type  = "IPV4"
-      value = ip.value
-    }
-  }
+resource "aws_wafv2_ip_set" "trusted" {
+  count              = var.trusted_ips == "" ? 0 : 1
+  name               = "${var.project}-${var.function}-${var.environment}-whitelist"
+  addresses          = var.trusted_ips
+  ip_address_version = "IPV4"
+  scope              = "REGIONAL"
 }
 
-resource "aws_wafregional_byte_match_set" "restricted_uri" {
-  count = var.restricted_uri == "" ? 0 : 1
-  name  = "${var.project}-${var.function}-${var.environment}-restricted-uri"
-
-  byte_match_tuples {
-    text_transformation   = "NONE"
-    target_string         = var.restricted_uri
-    positional_constraint = "CONTAINS"
-    field_to_match {
-      type = "URI"
-    }
-  }
-}
-
-resource "aws_wafregional_rule" "restricted_access" {
-  count       = var.restricted_uri == "" ? 0 : 1
-  name        = "${var.project}-${var.function}-${var.environment}-restricted-uri"
-  metric_name = "RestrictedUri"
-
-  predicate {
-    data_id = aws_wafregional_ipset.trusted.*.id[0]
-    negated = true
-    type    = "IPMatch"
-  }
-
-  predicate {
-    data_id = aws_wafregional_byte_match_set.restricted_uri.*.id[0]
-    negated = false
-    type    = "ByteMatch"
-  }
-
-  tags = merge(
-    var.common_tags,
-    tomap(
-      { "Name" = "${var.project}-${var.function}-${var.environment}-restricted-uri" }
-    )
-  )
-}
-
-resource "aws_wafregional_geo_match_set" "geo_match" {
-  count = var.geo_match == "" ? 0 : 1
-  name  = "geo_match_set"
-
-  dynamic "geo_match_constraint" {
-    iterator = country
-    for_each = var.geo_match
-    content {
-      type  = "Country"
-      value = country.value
-    }
-  }
-}
-
-resource "aws_wafregional_rule" "geo_match" {
-  count       = var.geo_match == "" ? 0 : 1
-  name        = "${var.project}-${var.function}-${var.environment}-geo-match"
-  metric_name = "GeoMatch"
-
-  predicate {
-    data_id = aws_wafregional_geo_match_set.geo_match.*.id[0]
-    negated = false
-    type    = "GeoMatch"
-  }
-
-  tags = merge(
-    var.common_tags,
-    tomap(
-      { "Name" = "${var.project}-${var.function}-${var.environment}-restricted-uri" }
-    )
-  )
-}
-
-resource "aws_wafregional_web_acl" "alb" {
-  name        = "${var.project}-${var.function}-${var.environment}-alb"
-  metric_name = "ALBWebAcl"
-
-  default_action {
-    type = "BLOCK"
-  }
-
+resource "aws_wafv2_rule_group" "rule_group" {
+  capacity = 12
+  name     = "waf-rule-group"
+  scope    = "REGIONAL"
   rule {
-    action {
-      type = "BLOCK"
-    }
-
-    priority = 10
-    rule_id  = aws_wafregional_rule.restricted_access.*.id[0]
-    type     = "REGULAR"
-  }
-
-  rule {
-    action {
-      type = "ALLOW"
-    }
-
+    name     = "waf-rule-restricted-uri"
     priority = 20
-    rule_id  = aws_wafregional_rule.geo_match.*.id[0]
-    type     = "REGULAR"
+    action {
+      block {}
+    }
+    statement {
+      and_statement {
+        statement {
+          byte_match_statement {
+            positional_constraint = "CONTAINS"
+            search_string         = var.restricted_uri
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 10
+              type     = "NONE"
+            }
+          }
+        }
+        statement {
+          not_statement {
+            statement {
+              ip_set_reference_statement {
+                arn = aws_wafv2_ip_set.trusted[0].arn
+              }
+            }
+          }
+        }
+      }
+
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "url-restrictions"
+      sampled_requests_enabled   = false
+    }
   }
 
-  tags = merge(
-    var.common_tags,
-    tomap(
-      { "Name" = "${var.project}-${var.function}-${var.environment}-alb" }
-    )
-  )
+  rule {
+    name     = "geo-match-restrictions"
+    priority = 30
+    action {
+      allow {}
+    }
+    statement {
+      geo_match_statement {
+        country_codes = ["GB"]
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "waf-geo-match"
+      sampled_requests_enabled   = false
+    }
+  }
+  visibility_config {
+    cloudwatch_metrics_enabled = false
+    metric_name                = "geo-match-metric"
+    sampled_requests_enabled   = false
+  }
 }
 
-resource "aws_wafregional_web_acl_association" "alb_web_acl" {
+resource "aws_wafv2_web_acl" "acl" {
+  name  = "${var.project}-${var.function}-${var.environment}-restricted-uri"
+  scope = "REGIONAL"
+  default_action {
+    block {}
+  }
+
+  rule {
+    name     = "acl-rule"
+    priority = 1
+    override_action {
+      none {}
+    }
+    statement {
+      rule_group_reference_statement {
+        arn = aws_wafv2_rule_group.rule_group.arn
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "acl-rule-metric"
+      sampled_requests_enabled   = false
+    }
+  }
+
+  visibility_config {
+    cloudwatch_metrics_enabled = false
+    metric_name                = "restricted-uri"
+    sampled_requests_enabled   = false
+  }
+}
+
+resource "aws_wafv2_web_acl_association" "association" {
   count        = length(var.alb_target_groups)
   resource_arn = var.alb_target_groups[count.index]
-  web_acl_id   = aws_wafregional_web_acl.alb.id
+  web_acl_arn  = aws_wafv2_web_acl.acl.arn
 }
