@@ -166,6 +166,10 @@ variable "backend_checks_client_secret" {
   default = ""
 }
 
+variable "user_admin_client_secret" {
+  default = ""
+}
+
 variable "mount_target_zero" {
   default = ""
 }
@@ -243,4 +247,17 @@ variable "reserved_concurrency" {
 
 variable "lambda_create_keycloak_db_users_new" {
   default = false
+}
+
+variable "lambda_create_keycloak_user_api" {
+  default = false
+}
+
+variable "lambda_create_keycloak_user_s3" {
+  default = false
+}
+
+variable "s3_bucket_arn" {
+  description = "The bucket which will trigger the lambda"
+  default     = ""
 }
