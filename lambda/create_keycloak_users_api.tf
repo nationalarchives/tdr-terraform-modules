@@ -79,4 +79,3 @@ resource "aws_security_group_rule" "allow_https_lambda_create_keycloak_users_api
   type              = "egress"
   cidr_blocks       = ["0.0.0.0/0"]
 }
-
