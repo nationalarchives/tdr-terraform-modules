@@ -23,7 +23,10 @@
         "AWS": [
           "arn:aws:iam::${external_account_1}:role/TDRJenkinsLambdaRoleIntg",
           "arn:aws:iam::${external_account_2}:role/TDRJenkinsLambdaRoleStaging",
-          "arn:aws:iam::${external_account_3}:role/TDRJenkinsLambdaRoleProd"
+          "arn:aws:iam::${external_account_3}:role/TDRJenkinsLambdaRoleProd",
+          "arn:aws:iam::${external_account_1}:role/TDRGithubActionsDeployLambdaIntg",
+          "arn:aws:iam::${external_account_2}:role/TDRGithubActionsDeployLambdaStaging",
+          "arn:aws:iam::${external_account_3}:role/TDRGithubActionsDeployLambdaProd"
         ]
       },
       "Action": ["s3:GetObject"],
