@@ -23,7 +23,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_notifications" {
-  for_each = local.count_notifications == 0 ? {} : { slack_webhook = data.aws_ssm_parameter.slack_webook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", muted_vulnerabilities = join(",", var.muted_scan_alerts) }
+  for_each = local.count_notifications == 0 ? {} : { slack_webhook = data.aws_ssm_parameter.slack_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", muted_vulnerabilities = join(",", var.muted_scan_alerts), transfer_engine_sqs = data.aws_ssm_parameter.transfer_engine_sqs[0].value }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
   # created by the terraform environments project as they won't exist when we first run the backend project.
   # This KMS key is created by tdr-accounts which means it will exist when we run the terraform backend project for the first time
@@ -36,9 +36,14 @@ data "aws_kms_key" "encryption_key" {
   key_id = "alias/tdr-account-${local.environment}"
 }
 
-data "aws_ssm_parameter" "slack_webook" {
+data "aws_ssm_parameter" "slack_webhook" {
   count = local.count_notifications
   name  = "/${local.environment}/slack/notification/webhook"
+}
+
+data "aws_ssm_parameter" "transfer_engine_sqs" {
+  count = local.count_notifications
+  name = "/${local.environment}/transform_engine/sqs"
 }
 
 resource "aws_cloudwatch_log_group" "notifications_lambda_log_group" {
