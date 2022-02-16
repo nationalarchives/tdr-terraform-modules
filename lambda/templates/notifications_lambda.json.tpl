@@ -34,6 +34,15 @@
         "kms:Decrypt"
       ],
       "Resource": "${kms_arn}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sqs:SendMessage"
+      ],
+      "Resource": [
+        "${transform_engine_queue}"
+      ]
     }
   ]
 }
