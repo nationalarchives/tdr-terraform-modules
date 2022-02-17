@@ -43,6 +43,17 @@
       "Resource": [
         "${transform_engine_queue}"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      "Resource" : [
+        "arn:aws:s3:::tdr-consignment-export-${environment}"
+        "arn:aws:s3:::tdr-consignment-export-judgment-${environment}"
+      ]
     }
   ]
 }
