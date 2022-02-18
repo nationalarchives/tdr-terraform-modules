@@ -41,7 +41,7 @@
         "sqs:SendMessage"
       ],
       "Resource": [
-        "${transform_engine_queue}"
+        "${transform_engine_output_queue}"
       ]
     },
     {
@@ -51,7 +51,7 @@
         "s3:ListBucket"
       ],
       "Resource" : [
-        "arn:aws:s3:::tdr-consignment-export-${environment}"
+        "arn:aws:s3:::tdr-consignment-export-${environment}",
         "arn:aws:s3:::tdr-consignment-export-judgment-${environment}"
       ]
     }

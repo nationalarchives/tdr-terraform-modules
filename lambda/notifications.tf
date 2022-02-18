@@ -55,7 +55,7 @@ resource "aws_cloudwatch_log_group" "notifications_lambda_log_group" {
 
 resource "aws_iam_policy" "notifications_lambda_policy" {
   count  = local.count_notifications
-  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "tdr-secops@nationalarchives.gov.uk", kms_arn = data.aws_kms_key.encryption_key.arn, transform_engine_queue = data.aws_ssm_parameter.transform_engine_output_sqs[0].value })
+  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "tdr-secops@nationalarchives.gov.uk", kms_arn = data.aws_kms_key.encryption_key.arn, transform_engine_output_queue = data.aws_ssm_parameter.transform_engine_output_sqs[0].value })
   name   = "${upper(var.project)}NotificationsLambdaPolicy${title(local.environment)}"
 }
 
