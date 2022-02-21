@@ -8,7 +8,7 @@ data "github_team" "team" {
 
 resource "github_repository_environment" "environment" {
   environment = var.environment
-  repository   = data.github_repository.repository.name
+  repository  = data.github_repository.repository.name
   dynamic "reviewers" {
     for_each = var.environment == "intg" ? [] : [var.team_slug]
     content {
@@ -18,9 +18,9 @@ resource "github_repository_environment" "environment" {
 }
 
 resource "github_actions_environment_secret" "secret" {
-  for_each = var.secrets
-  environment = github_repository_environment.environment.environment
-  repository = data.github_repository.repository.name
-  secret_name = each.key
+  for_each        = var.secrets
+  environment     = github_repository_environment.environment.environment
+  repository      = data.github_repository.repository.name
+  secret_name     = each.key
   plaintext_value = each.value
 }
