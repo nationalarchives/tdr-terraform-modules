@@ -81,6 +81,7 @@ resource "aws_security_group_rule" "allow_https_lambda_create_keycloak_users_api
 }
 
 resource "aws_lambda_permission" "api_gateway_permission" {
+  count         = local.count_create_keycloak_users_api
   statement_id  = "AllowAPIInvoke"
   action        = "lambda:InvokeFunction"
   function_name = local.create_keycloak_user_api_function_name
