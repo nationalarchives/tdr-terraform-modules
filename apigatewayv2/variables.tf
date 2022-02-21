@@ -1,4 +1,4 @@
-variable "name" {}
+variable "api_name" {}
 
 variable "protocol" {
   default = "HTTP"

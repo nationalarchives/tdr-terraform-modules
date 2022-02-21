@@ -121,5 +121,6 @@ variable "cloudfront_oai" {
 }
 
 variable "lambda_arn" {
-  default = ""
+  description = "The lambda arn to send S3 event messages to"
+  default     = ""
 }
