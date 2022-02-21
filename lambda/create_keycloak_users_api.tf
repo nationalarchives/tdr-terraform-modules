@@ -79,3 +79,10 @@ resource "aws_security_group_rule" "allow_https_lambda_create_keycloak_users_api
   type              = "egress"
   cidr_blocks       = ["0.0.0.0/0"]
 }
+
+resource "aws_lambda_permission" "api_gateway_permission" {
+  statement_id  = "AllowAPIInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = local.create_keycloak_user_api_function_name
+  principal     = "apigateway.amazonaws.com"
+}
