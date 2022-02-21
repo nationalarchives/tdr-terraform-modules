@@ -86,5 +86,5 @@ resource "aws_lambda_permission" "api_gateway_permission" {
   action        = "lambda:InvokeFunction"
   function_name = local.create_keycloak_user_api_function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn = var.keycloak_user_management_api_arn
+  source_arn    = var.keycloak_user_management_api_arn
 }
