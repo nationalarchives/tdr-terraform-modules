@@ -261,3 +261,7 @@ variable "s3_bucket_arn" {
   description = "The bucket which will trigger the lambda"
   default     = ""
 }
+
+variable "keycloak_user_management_api_arn" {
+  default = ""
+}
