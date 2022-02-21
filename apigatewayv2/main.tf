@@ -1,11 +1,11 @@
 resource "aws_apigatewayv2_api" "api" {
-  name          = var.name
+  name          = var.api_name
   protocol_type = var.protocol
   body          = var.body_template
   tags = merge(
     var.common_tags,
     tomap(
-      { "Name" = var.name }
+      { "Name" = var.api_name }
     )
   )
 }
@@ -31,5 +31,5 @@ resource "aws_apigatewayv2_stage" "api_stage" {
 }
 
 resource "aws_cloudwatch_log_group" "api_log_group" {
-  name = "/apigateway/${var.name}"
+  name = "/apigateway/${var.api_name}"
 }
