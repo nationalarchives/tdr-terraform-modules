@@ -41,7 +41,7 @@
         "sqs:SendMessage"
       ],
       "Resource": [
-        "${transform_engine_output_queue}"
+        "${transform_engine_output_queue_arn}"
       ]
     },
     {

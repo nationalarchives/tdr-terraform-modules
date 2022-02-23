@@ -244,3 +244,7 @@ variable "reserved_concurrency" {
 variable "lambda_create_keycloak_db_users_new" {
   default = false
 }
+
+variable "judgment_export_s3_bucket_name" {
+  default = ""
+}
