@@ -15,17 +15,6 @@
     {
       "Effect": "Allow",
       "Action": [
-        "s3:GetObject",
-        "s3:ListBucket"
-      ],
-      "Resource": [
-        "arn:aws:s3:::tdr-upload-files-dirty-${environment}/*",
-        "arn:aws:s3:::tdr-upload-files-dirty-${environment}"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
         "sqs:ChangeMessageVisibility",
         "sqs:DeleteMessage",
         "sqs:GetQueueAttributes",
