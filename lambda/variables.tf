@@ -265,3 +265,7 @@ variable "s3_bucket_arn" {
 variable "keycloak_user_management_api_arn" {
   default = ""
 }
+
+variable "judgment_export_s3_bucket_name" {
+  default = ""
+}

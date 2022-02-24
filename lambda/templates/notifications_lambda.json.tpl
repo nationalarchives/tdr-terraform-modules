@@ -34,6 +34,26 @@
         "kms:Decrypt"
       ],
       "Resource": "${kms_arn}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sqs:SendMessage"
+      ],
+      "Resource": [
+        "${transform_engine_output_queue_arn}"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:ListBucket"
+      ],
+      "Resource" : [
+        "arn:aws:s3:::tdr-consignment-export-${environment}",
+        "arn:aws:s3:::tdr-consignment-export-judgment-${environment}"
+      ]
     }
   ]
 }
