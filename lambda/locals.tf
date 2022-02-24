@@ -17,12 +17,16 @@ locals {
   count_create_keycloak_db_user_new         = var.apply_resource == true && var.lambda_create_keycloak_db_users_new ? 1 : 0
   count_export_api_authoriser               = var.apply_resource == true && var.lambda_export_authoriser == true ? 1 : 0
   count_service_unavailable                 = var.apply_resource == true && var.lambda_service_unavailable == true ? 1 : 0
+  count_create_keycloak_users_api           = var.apply_resource == true && var.lambda_create_keycloak_user_api == true ? 1 : 0
+  count_create_keycloak_users_s3            = var.apply_resource == true && var.lambda_create_keycloak_user_s3 == true ? 1 : 0
   api_update_function_name                  = "${var.project}-api-update-${local.environment}"
   checksum_function_name                    = "${var.project}-checksum-${local.environment}"
   create_db_users_function_name             = "${var.project}-${var.lambda_name}-${local.environment}"
   create_keycloak_db_user_function_name     = "${var.project}-create-keycloak-db-user-${local.environment}"
   create_keycloak_db_user_function_name_new = "${var.project}-create-keycloak-db-user-new-${local.environment}"
   download_files_function_name              = "${var.project}-download-files-${local.environment}"
+  create_keycloak_user_api_function_name    = "${var.project}-create-keycloak-user-api-${local.environment}"
+  create_keycloak_user_s3_function_name     = "${var.project}-create-keycloak-user-s3-${local.environment}"
   export_api_authoriser_function_name       = "${var.project}-export-api-authoriser-${local.environment}"
   file_format_function_name                 = "${var.project}-file-format-${local.environment}"
   log_data_function_name                    = "${var.project}-log-data-${local.environment}"
@@ -43,4 +47,6 @@ locals {
   file_format_queue_url                     = "https://sqs.${var.region}.amazonaws.com/${data.aws_caller_identity.current.account_id}/${var.project}-file-format-${local.environment}"
   export_api_authoriser_arn                 = var.apply_resource == true && var.lambda_export_authoriser == true && length(aws_lambda_function.export_api_authoriser_lambda_function) > 0 ? aws_lambda_function.export_api_authoriser_lambda_function.*.arn[0] : ""
   sign_cookies_arn                          = var.apply_resource == true && var.lambda_sign_cookies == true && length(aws_lambda_function.sign_cookies_lambda_function) > 0 ? aws_lambda_function.sign_cookies_lambda_function.*.arn[0] : ""
+  create_keycloak_user_api_arn              = var.apply_resource == true && var.lambda_create_keycloak_user_api == true && length(aws_lambda_function.create_keycloak_users_api_lambda_function) > 0 ? aws_lambda_function.create_keycloak_users_api_lambda_function.*.arn[0] : ""
+  create_keycloak_user_s3_arn               = var.apply_resource == true && var.lambda_create_keycloak_user_s3 == true && length(aws_lambda_function.create_keycloak_users_s3_lambda_function) > 0 ? aws_lambda_function.create_keycloak_users_s3_lambda_function.*.arn[0] : ""
 }

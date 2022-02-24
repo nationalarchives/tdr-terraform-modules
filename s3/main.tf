@@ -144,3 +144,12 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     events    = ["s3:ObjectCreated:*"]
   }
 }
+
+resource "aws_s3_bucket_notification" "bucket_lambda_invocation" {
+  count  = var.apply_resource == true && var.lambda_notification ? 1 : 0
+  bucket = aws_s3_bucket.bucket.*.id[0]
+  lambda_function {
+    events              = ["s3:ObjectCreated:*"]
+    lambda_function_arn = var.lambda_arn
+  }
+}
