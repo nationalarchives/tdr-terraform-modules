@@ -59,7 +59,7 @@ resource "aws_wafv2_rule_group" "rule_group" {
     }
     statement {
       geo_match_statement {
-        country_codes = ["GB"]
+        country_codes = var.environment == "intg" || var.environment == "staging" ? ["GB", "US"] : ["GB"]
       }
     }
     visibility_config {
