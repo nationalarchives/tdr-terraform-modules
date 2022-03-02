@@ -3,16 +3,17 @@ data "github_repository" "repository" {
 }
 
 data "github_team" "team" {
-  slug = var.team_slug
+  count = var.team_slug == "" ? 0 : 1
+  slug  = var.team_slug
 }
 
 resource "github_repository_environment" "environment" {
   environment = var.environment
   repository  = data.github_repository.repository.name
   dynamic "reviewers" {
-    for_each = var.environment == "intg" ? [] : [var.team_slug]
+    for_each = var.environment == "intg" || var.team_slug == "" ? [] : [var.team_slug]
     content {
-      teams = [data.github_team.team.id]
+      teams = [data.github_team.team[0].id]
     }
   }
 }
