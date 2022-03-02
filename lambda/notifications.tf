@@ -61,7 +61,7 @@ resource "aws_cloudwatch_log_group" "notifications_lambda_log_group" {
 
 resource "aws_iam_policy" "notifications_lambda_policy" {
   count  = local.count_notifications
-  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "tdr-secops@nationalarchives.gov.uk", kms_arn = data.aws_kms_key.encryption_key.arn, transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value })
+  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "tdr-secops@nationalarchives.gov.uk", kms_arn = data.aws_kms_key.encryption_key.arn, transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue })
   name   = "${upper(var.project)}NotificationsLambdaPolicy${title(local.environment)}"
 }
 
@@ -100,4 +100,11 @@ resource "aws_sns_topic_subscription" "intg_topic_subscription" {
   endpoint  = aws_lambda_function.notifications_lambda_function.*.arn[0]
   protocol  = "lambda"
   topic_arn = each.value
+}
+
+resource "aws_lambda_event_source_mapping" "transform_engine_retry_sqs_queue_mapping" {
+  count            = local.count_notifications
+  event_source_arn = local.transform_engine_retry_queue
+  function_name    = aws_lambda_function.notifications_lambda_function.*.arn[0]
+  batch_size       = 1
 }
