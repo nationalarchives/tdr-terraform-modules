@@ -49,4 +49,6 @@ locals {
   sign_cookies_arn                          = var.apply_resource == true && var.lambda_sign_cookies == true && length(aws_lambda_function.sign_cookies_lambda_function) > 0 ? aws_lambda_function.sign_cookies_lambda_function.*.arn[0] : ""
   create_keycloak_user_api_arn              = var.apply_resource == true && var.lambda_create_keycloak_user_api == true && length(aws_lambda_function.create_keycloak_users_api_lambda_function) > 0 ? aws_lambda_function.create_keycloak_users_api_lambda_function.*.arn[0] : ""
   create_keycloak_user_s3_arn               = var.apply_resource == true && var.lambda_create_keycloak_user_s3 == true && length(aws_lambda_function.create_keycloak_users_s3_lambda_function) > 0 ? aws_lambda_function.create_keycloak_users_s3_lambda_function.*.arn[0] : ""
+  transform_engine_retry_queue_name         = "${var.project}-transform-engine-retry-${local.environment}"
+  transform_engine_retry_queue              = "arn:aws:sqs:${var.region}:${data.aws_caller_identity.current.account_id}:${local.transform_engine_retry_queue_name}"
 }
