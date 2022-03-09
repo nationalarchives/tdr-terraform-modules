@@ -10,6 +10,21 @@
       },
       "Action": "kms:*",
       "Resource": "*"
+    },
+    {
+      "Sid": "Allow Transform Engine IAM role access to KMS key",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${transform_engine_retry_role}"
+      },
+      "Action": [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey"
+      ],
+      "Resource": "*"
     }
   ]
 }
