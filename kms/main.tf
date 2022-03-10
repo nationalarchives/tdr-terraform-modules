@@ -1,10 +1,5 @@
 data "template_file" "key_policy" {
-  template = file("./tdr-terraform-modules/kms/templates/${var.key_policy}.json.tpl")
-  vars = {
-    account_id                  = data.aws_caller_identity.current.account_id
-    environment                 = var.environment
-    transform_engine_retry_role = data.aws_ssm_parameter.transform_engine_retry_role_arn.value
-  }
+  template = templatefile("${path.module}/templates/${var.key_policy}.json.tpl", merge(var.policy_variables, { account_id = data.aws_caller_identity.current.account_id, environment = var.environment}))
 }
 
 resource "aws_kms_key" "encryption" {

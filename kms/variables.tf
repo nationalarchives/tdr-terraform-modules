@@ -18,3 +18,8 @@ variable "key_policy" {
   description = "key policy within templates folder"
   default     = "root_access"
 }
+
+variable "policy_variables" {
+  default = {}
+  type    = map(string)
+}
