@@ -18,11 +18,8 @@
         "AWS": "${transform_engine_retry_role}"
       },
       "Action": [
-        "kms:Encrypt",
         "kms:Decrypt",
-        "kms:ReEncrypt*",
-        "kms:GenerateDataKey*",
-        "kms:DescribeKey"
+        "kms:GenerateDataKey*"
       ],
       "Resource": "*"
     }

@@ -39,7 +39,7 @@ data "aws_kms_key" "encryption_key_account" {
 }
 
 data "aws_kms_key" "encryption_key" {
-  key_id = "alias/tdr-encryption=${local.environment}"
+  key_id = "alias/tdr-encryption-${local.environment}"
 }
 
 data "aws_ssm_parameter" "slack_webhook" {
