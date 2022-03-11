@@ -33,7 +33,10 @@
       "Action": [
         "kms:Decrypt"
       ],
-      "Resource": "${kms_arn}"
+      "Resource": [
+        "${kms_account_arn}",
+        "${kms_arn}"
+      ]
     },
     {
       "Effect": "Allow",
