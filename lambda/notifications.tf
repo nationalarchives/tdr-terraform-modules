@@ -34,8 +34,12 @@ resource "aws_kms_ciphertext" "environment_vars_notifications" {
   context   = { "LambdaFunctionName" = local.notifications_function_name }
 }
 
-data "aws_kms_key" "encryption_key" {
+data "aws_kms_key" "encryption_key_account" {
   key_id = "alias/tdr-account-${local.environment}"
+}
+
+data "aws_kms_key" "encryption_key" {
+  key_id = "alias/tdr-encryption-${local.environment}"
 }
 
 data "aws_ssm_parameter" "slack_webhook" {
@@ -61,7 +65,7 @@ resource "aws_cloudwatch_log_group" "notifications_lambda_log_group" {
 
 resource "aws_iam_policy" "notifications_lambda_policy" {
   count  = local.count_notifications
-  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "tdr-secops@nationalarchives.gov.uk", kms_arn = data.aws_kms_key.encryption_key.arn, transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue })
+  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "tdr-secops@nationalarchives.gov.uk", kms_arn = data.aws_kms_key.encryption_key.arn, kms_account_arn = data.aws_kms_key.encryption_key_account.arn, transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue })
   name   = "${upper(var.project)}NotificationsLambdaPolicy${title(local.environment)}"
 }
 
