@@ -267,5 +267,6 @@ variable "keycloak_user_management_api_arn" {
 }
 
 variable "judgment_export_s3_bucket_name" {
-  default = ""
+  description = "The "
+  default = "place_holder"
 }

@@ -1,3 +1,10 @@
+locals {
+  //management account does not need the notifications transform engine aws resources
+  transform_engine_count                  = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
+  transform_engine_output_sqs_arn         = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value
+  transform_engine_judgment_export_bucket = local.transform_engine_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
+}
+
 resource "aws_lambda_function" "notifications_lambda_function" {
   count                          = local.count_notifications
   function_name                  = local.notifications_function_name
@@ -25,7 +32,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_notifications" {
-  for_each = local.count_notifications == 0 ? {} : { slack_webhook = data.aws_ssm_parameter.slack_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", muted_vulnerabilities = join(",", var.muted_scan_alerts), transform_engine_output_sqs = data.aws_ssm_parameter.transform_engine_output_sqs_endpoint[0].value, judgment_export_bucket = var.judgment_export_s3_bucket_name }
+  for_each = local.count_notifications == 0 ? {} : { slack_webhook = data.aws_ssm_parameter.slack_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", muted_vulnerabilities = join(",", var.muted_scan_alerts), transform_engine_output_sqs = local.transform_engine_output_sqs_arn, judgment_export_bucket = local.transform_engine_judgment_export_bucket }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
   # created by the terraform environments project as they won't exist when we first run the backend project.
   # This KMS key is created by tdr-accounts which means it will exist when we run the terraform backend project for the first time
@@ -48,12 +55,12 @@ data "aws_ssm_parameter" "slack_webhook" {
 }
 
 data "aws_ssm_parameter" "transform_engine_output_sqs_arn" {
-  count = local.count_notifications
+  count = local.transform_engine_count
   name  = "/${local.environment}/transform_engine/output_sqs/arn"
 }
 
 data "aws_ssm_parameter" "transform_engine_output_sqs_endpoint" {
-  count = local.count_notifications
+  count = local.transform_engine_count
   name  = "/${local.environment}/transform_engine/output_sqs/endpoint"
 }
 
@@ -65,8 +72,13 @@ resource "aws_cloudwatch_log_group" "notifications_lambda_log_group" {
 
 resource "aws_iam_policy" "notifications_lambda_policy" {
   count  = local.count_notifications
-  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "tdr-secops@nationalarchives.gov.uk", kms_arn = data.aws_kms_key.encryption_key.arn, kms_account_arn = data.aws_kms_key.encryption_key_account.arn, transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue })
+  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "tdr-secops@nationalarchives.gov.uk", kms_arn = data.aws_kms_key.encryption_key.arn, kms_account_arn = data.aws_kms_key.encryption_key_account.arn })
   name   = "${upper(var.project)}NotificationsLambdaPolicy${title(local.environment)}"
+}
+
+resource "aws_iam_policy" "transform_engine_notifications_lambda_policy" {
+  count = local.transform_engine_count
+  policy = templatefile("${path.module}/templates/notifications_transform_engine_lambda.json.tpl", { transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue })
 }
 
 resource "aws_iam_role" "notifications_lambda_iam_role" {
@@ -78,6 +90,12 @@ resource "aws_iam_role" "notifications_lambda_iam_role" {
 resource "aws_iam_role_policy_attachment" "notifications_lambda_role_policy" {
   count      = local.count_notifications
   policy_arn = aws_iam_policy.notifications_lambda_policy.*.arn[0]
+  role       = aws_iam_role.notifications_lambda_iam_role.*.name[0]
+}
+
+resource "aws_iam_role_policy_attachment" "transform_engine_notifications_policy" {
+  count      = local.transform_engine_count
+  policy_arn = aws_iam_policy.transform_engine_notifications_lambda_policy.*.arn[0]
   role       = aws_iam_role.notifications_lambda_iam_role.*.name[0]
 }
 
@@ -107,7 +125,7 @@ resource "aws_sns_topic_subscription" "intg_topic_subscription" {
 }
 
 resource "aws_lambda_event_source_mapping" "transform_engine_retry_sqs_queue_mapping" {
-  count            = local.count_notifications
+  count            = local.transform_engine_count
   event_source_arn = local.transform_engine_retry_queue
   function_name    = aws_lambda_function.notifications_lambda_function.*.arn[0]
   batch_size       = 1
