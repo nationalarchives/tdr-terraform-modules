@@ -77,7 +77,7 @@ resource "aws_iam_policy" "notifications_lambda_policy" {
 }
 
 resource "aws_iam_policy" "transform_engine_notifications_lambda_policy" {
-  count = local.transform_engine_count
+  count  = local.transform_engine_count
   policy = templatefile("${path.module}/templates/notifications_transform_engine_lambda.json.tpl", { transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue })
 }
 
