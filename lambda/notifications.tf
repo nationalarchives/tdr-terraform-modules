@@ -1,8 +1,8 @@
 locals {
   //management account does not need the notifications transform engine aws resources
   transform_engine_count                  = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
-  transform_engine_output_sqs_arn         = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value
   transform_engine_judgment_export_bucket = local.transform_engine_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
+  transform_engine_output_sqs_endpoint    = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_output_sqs_endpoint[0].value
 }
 
 resource "aws_lambda_function" "notifications_lambda_function" {
@@ -32,7 +32,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_notifications" {
-  for_each = local.count_notifications == 0 ? {} : { slack_webhook = data.aws_ssm_parameter.slack_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", muted_vulnerabilities = join(",", var.muted_scan_alerts), transform_engine_output_sqs = local.transform_engine_output_sqs_arn, judgment_export_bucket = local.transform_engine_judgment_export_bucket }
+  for_each = local.count_notifications == 0 ? {} : { slack_webhook = data.aws_ssm_parameter.slack_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", muted_vulnerabilities = join(",", var.muted_scan_alerts), transform_engine_output_sqs = local.transform_engine_output_sqs_endpoint, judgment_export_bucket = local.transform_engine_judgment_export_bucket }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
   # created by the terraform environments project as they won't exist when we first run the backend project.
   # This KMS key is created by tdr-accounts which means it will exist when we run the terraform backend project for the first time
