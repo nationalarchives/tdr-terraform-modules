@@ -1,9 +1,9 @@
 locals {
   //management account does not need the notifications transform engine aws resources
-  transform_engine_count                          = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
+  transform_engine_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
   //encryption requires some value, as these are not relevant for management account use placeholder values
-  env_var_judgment_export_bucket                  = local.transform_engine_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
-  env_var_transform_engine_output_sqs_endpoint    = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_output_sqs_endpoint[0].value
+  env_var_judgment_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
+  env_var_transform_engine_output_sqs_endpoint = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_output_sqs_endpoint[0].value
 }
 
 resource "aws_lambda_function" "notifications_lambda_function" {
