@@ -11,7 +11,7 @@ resource "github_repository_environment" "environment" {
   environment = var.environment
   repository  = data.github_repository.repository.name
   dynamic "reviewers" {
-    for_each = var.environment == "intg" || var.team_slug == "" ? [] : [var.team_slug]
+    for_each = var.environment == "intg" ? var.integration_team_slug : [var.team_slug]
     content {
       teams = [data.github_team.team[0].id]
     }
