@@ -9,7 +9,7 @@ variable "engine" {
   default = "aurora-postgresql"
 }
 variable "engine_version" {
-  default = "11.9"
+  default = "11.13"
 }
 variable "environment" {}
 variable "instance_class" {
