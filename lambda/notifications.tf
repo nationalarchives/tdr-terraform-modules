@@ -52,7 +52,7 @@ data "aws_kms_key" "encryption_key" {
 
 data "aws_ssm_parameter" "slack_webhook" {
   count = local.count_notifications
-  name  = "/${local.environment}/slack/notification/webhook"
+  name  = "/${local.environment}/release/slack/webhook"
 }
 
 data "aws_ssm_parameter" "transform_engine_output_sqs_arn" {
