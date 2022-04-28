@@ -16,7 +16,7 @@ resource "github_repository_environment" "environment" {
   environment = var.environment
   repository  = data.github_repository.repository.name
   reviewers {
-    teams = var.environment ==  "intg" ? data.github_team.integration_team.*.id : data.github_team.team.*.id
+    teams = var.environment == "intg" ? data.github_team.integration_team.*.id : data.github_team.team.*.id
   }
 }
 
