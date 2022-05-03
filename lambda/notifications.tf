@@ -20,7 +20,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
   environment {
     variables = {
       SLACK_WEBHOOK               = aws_kms_ciphertext.environment_vars_notifications["slack_webhook"].ciphertext_blob
-      SLACK_JUDGMENT_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_webhook"].ciphertext_blob
+      SLACK_JUDGMENT_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_judgment_webhook"].ciphertext_blob
       TO_EMAIL                    = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
       MUTED_VULNERABILITIES       = aws_kms_ciphertext.environment_vars_notifications["muted_vulnerabilities"].ciphertext_blob
       TRANSFORM_ENGINE_OUTPUT_SQS = aws_kms_ciphertext.environment_vars_notifications["transform_engine_output_sqs"].ciphertext_blob
