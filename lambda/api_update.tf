@@ -3,7 +3,7 @@ resource "aws_lambda_function" "lambda_api_update_function" {
   function_name                  = local.api_update_function_name
   handler                        = "uk.gov.nationalarchives.api.update.Lambda::update"
   role                           = aws_iam_role.lambda_api_update_iam_role.*.arn[0]
-  runtime                        = "java8"
+  runtime                        = "java11"
   filename                       = "${path.module}/functions/api-update.jar"
   timeout                        = var.timeout_seconds
   memory_size                    = 512
