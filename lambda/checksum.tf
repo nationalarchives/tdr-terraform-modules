@@ -3,7 +3,7 @@ resource "aws_lambda_function" "checksum_lambda_function" {
   function_name                  = local.checksum_function_name
   handler                        = "uk.gov.nationalarchives.checksum.Lambda::process"
   role                           = aws_iam_role.checksum_lambda_iam_role.*.arn[0]
-  runtime                        = "java8"
+  runtime                        = "java11"
   filename                       = "${path.module}/functions/checksum.jar"
   timeout                        = var.timeout_seconds
   memory_size                    = 1024
