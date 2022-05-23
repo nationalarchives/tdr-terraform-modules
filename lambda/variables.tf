@@ -72,6 +72,11 @@ variable "lambda_sign_cookies" {
   default     = false
 }
 
+variable "lambda_signed_cookies" {
+  description = "deploy Lambda function for the signed cookies API endpoint"
+  default     = false
+}
+
 variable "target_s3_bucket" {
   description = "Target S3 bucket ARN used for the Lambda log data function"
   default     = ""
@@ -267,5 +272,9 @@ variable "keycloak_user_management_api_arn" {
 }
 
 variable "judgment_export_s3_bucket_name" {
+  default = ""
+}
+
+variable "environment_full" {
   default = ""
 }
