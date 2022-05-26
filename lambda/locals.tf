@@ -10,7 +10,6 @@ locals {
   count_download_files                      = var.apply_resource == true && var.lambda_download_files == true ? 1 : 0
   count_notifications                       = var.apply_resource == true && var.lambda_ecr_scan_notifications == true ? 1 : 0
   count_ecr_scan                            = var.apply_resource == true && var.lambda_ecr_scan == true ? 1 : 0
-  count_sign_cookies                        = var.apply_resource == true && var.lambda_sign_cookies == true ? 1 : 0
   count_signed_cookies                      = var.apply_resource == true && var.lambda_signed_cookies == true ? 1 : 0
   count_efs                                 = var.apply_resource == true && var.use_efs ? 1 : 0
   count_create_db_users                     = var.apply_resource == true && var.lambda_create_db_users ? 1 : 0
@@ -48,7 +47,7 @@ locals {
   file_format_queue                         = "arn:aws:sqs:${var.region}:${data.aws_caller_identity.current.account_id}:${var.project}-file-format-${local.environment}"
   file_format_queue_url                     = "https://sqs.${var.region}.amazonaws.com/${data.aws_caller_identity.current.account_id}/${var.project}-file-format-${local.environment}"
   export_api_authoriser_arn                 = var.apply_resource == true && var.lambda_export_authoriser == true && length(aws_lambda_function.export_api_authoriser_lambda_function) > 0 ? aws_lambda_function.export_api_authoriser_lambda_function.*.arn[0] : ""
-  sign_cookies_arn                          = var.apply_resource == true && var.lambda_sign_cookies == true && length(aws_lambda_function.sign_cookies_lambda_function) > 0 ? aws_lambda_function.sign_cookies_lambda_function.*.arn[0] : ""
+  signed_cookies_arn                        = var.apply_resource == true && var.lambda_signed_cookies == true && length(aws_lambda_function.signed_cookies_lambda_function) > 0 ? aws_lambda_function.signed_cookies_lambda_function.*.arn[0] : ""
   create_keycloak_user_api_arn              = var.apply_resource == true && var.lambda_create_keycloak_user_api == true && length(aws_lambda_function.create_keycloak_users_api_lambda_function) > 0 ? aws_lambda_function.create_keycloak_users_api_lambda_function.*.arn[0] : ""
   create_keycloak_user_s3_arn               = var.apply_resource == true && var.lambda_create_keycloak_user_s3 == true && length(aws_lambda_function.create_keycloak_users_s3_lambda_function) > 0 ? aws_lambda_function.create_keycloak_users_s3_lambda_function.*.arn[0] : ""
   transform_engine_retry_queue_name         = "${var.project}-transform-engine-retry-${local.environment}"

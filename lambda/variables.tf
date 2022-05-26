@@ -67,11 +67,6 @@ variable "lambda_service_unavailable" {
   default     = false
 }
 
-variable "lambda_sign_cookies" {
-  description = "deploy Lambda function for the sign cookies API endpoint"
-  default     = false
-}
-
 variable "lambda_signed_cookies" {
   description = "deploy Lambda function for the signed cookies API endpoint"
   default     = false

@@ -11,11 +11,12 @@ resource "aws_lambda_function" "signed_cookies_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      PRIVATE_KEY  = aws_kms_ciphertext.environment_vars_signed_cookies["private_key"].ciphertext_blob
-      FRONTEND_URL = var.frontend_url
-      AUTH_URL     = var.auth_url
-      ENVIRONMENT  = var.environment_full
-      KEY_PAIR_ID  = aws_kms_ciphertext.environment_vars_signed_cookies["key_pair_id"].ciphertext_blob,
+      PRIVATE_KEY   = aws_kms_ciphertext.environment_vars_signed_cookies["private_key"].ciphertext_blob
+      FRONTEND_URL  = var.frontend_url
+      AUTH_URL      = var.auth_url
+      UPLOAD_DOMAIN = var.upload_domain
+      ENVIRONMENT   = var.environment_full
+      KEY_PAIR_ID   = aws_kms_ciphertext.environment_vars_signed_cookies["key_pair_id"].ciphertext_blob,
     }
   }
 
@@ -33,7 +34,7 @@ resource "aws_lambda_function" "signed_cookies_lambda_function" {
 
 resource "aws_kms_ciphertext" "environment_vars_signed_cookies" {
   for_each = local.count_signed_cookies == 0 ? {} : {
-    private_key = data.aws_ssm_parameter.cloudfront_private_key[0].value,
+    private_key = data.aws_ssm_parameter.cloudfront_private_key_pem[0].value,
     key_pair_id = var.cloudfront_key_pair_id
   }
   key_id    = var.kms_key_arn

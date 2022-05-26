@@ -26,8 +26,8 @@ output "export_api_authoriser_arn" {
   value = local.export_api_authoriser_arn
 }
 
-output "sign_cookies_arn" {
-  value = local.sign_cookies_arn
+output "signed_cookies_arn" {
+  value = local.signed_cookies_arn
 }
 
 output "create_users_lambda_security_group_id" {
