@@ -1,9 +1,9 @@
 resource "aws_lambda_function" "signed_cookies_lambda_function" {
   count                          = local.count_signed_cookies
   function_name                  = local.signed_cookies_function_name
-  handler                        = "uk.gov.nationalarchives.SignedCookies.Lambda::handleRequest"
+  handler                        = "signed_cookies.handler"
   role                           = aws_iam_role.signed_cookies_lambda_iam_role.*.arn[0]
-  runtime                        = "java11"
+  runtime                        = "python3.8"
   filename                       = "${path.module}/functions/signed-cookies.zip"
   timeout                        = var.timeout_seconds
   memory_size                    = 1024
@@ -11,11 +11,11 @@ resource "aws_lambda_function" "signed_cookies_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      PRIVATE_KEY   = aws_kms_ciphertext.environment_vars_signed_cookies["private_key"].ciphertext_blob
-      FRONTEND_URL  = var.frontend_url
-      AUTH_URL      = var.auth_url
-      ENVIRONMENT   = var.environment_full
-      KEY_PAIR_ID   = aws_kms_ciphertext.environment_vars_signed_cookies["key_pair_id"].ciphertext_blob,
+      PRIVATE_KEY  = aws_kms_ciphertext.environment_vars_signed_cookies["private_key"].ciphertext_blob
+      FRONTEND_URL = var.frontend_url
+      AUTH_URL     = var.auth_url
+      ENVIRONMENT  = var.environment_full
+      KEY_PAIR_ID  = aws_kms_ciphertext.environment_vars_signed_cookies["key_pair_id"].ciphertext_blob,
     }
   }
 
@@ -33,12 +33,8 @@ resource "aws_lambda_function" "signed_cookies_lambda_function" {
 
 resource "aws_kms_ciphertext" "environment_vars_signed_cookies" {
   for_each = local.count_signed_cookies == 0 ? {} : {
-    private_key   = data.aws_ssm_parameter.cloudfront_private_key[0].value,
-    auth_url      = var.auth_url,
-    frontend_url  = var.frontend_url,
-    environment   = local.environment,
-    upload_domain = var.upload_domain
-    key_pair_id   = var.cloudfront_key_pair_id
+    private_key = data.aws_ssm_parameter.cloudfront_private_key[0].value,
+    key_pair_id = var.cloudfront_key_pair_id
   }
   key_id    = var.kms_key_arn
   plaintext = each.value
@@ -96,7 +92,7 @@ resource "aws_security_group_rule" "allow_https_lambda_signed_cookies_rule" {
 
 resource "aws_lambda_permission" "signed_cookies_lambda_permissions" {
   count         = local.count_signed_cookies
-  statement_id  = "AllowExecutionFromSignedCookiesApi"
+  statement_id  = "AllowExecutionFromPythonSignedCookiesApi"
   action        = "lambda:InvokeFunction"
   function_name = local.signed_cookies_function_name
   principal     = "apigateway.amazonaws.com"
