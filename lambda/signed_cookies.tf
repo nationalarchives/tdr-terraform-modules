@@ -90,7 +90,6 @@ resource "aws_security_group_rule" "allow_https_lambda_signed_cookies_rule" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-
 resource "aws_lambda_permission" "signed_cookies_lambda_permissions" {
   count         = local.count_signed_cookies
   statement_id  = "AllowExecutionFromPythonSignedCookiesApi"
