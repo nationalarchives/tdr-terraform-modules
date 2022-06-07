@@ -67,8 +67,8 @@ variable "lambda_service_unavailable" {
   default     = false
 }
 
-variable "lambda_sign_cookies" {
-  description = "deploy Lambda function for the sign cookies API endpoint"
+variable "lambda_signed_cookies" {
+  description = "deploy Lambda function for the signed cookies API endpoint"
   default     = false
 }
 
@@ -267,5 +267,9 @@ variable "keycloak_user_management_api_arn" {
 }
 
 variable "judgment_export_s3_bucket_name" {
+  default = ""
+}
+
+variable "environment_full" {
   default = ""
 }
