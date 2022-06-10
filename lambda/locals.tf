@@ -11,6 +11,7 @@ locals {
   count_notifications                       = var.apply_resource == true && var.lambda_ecr_scan_notifications == true ? 1 : 0
   count_ecr_scan                            = var.apply_resource == true && var.lambda_ecr_scan == true ? 1 : 0
   count_signed_cookies                      = var.apply_resource == true && var.lambda_signed_cookies == true ? 1 : 0
+  count_reporting                           = var.apply_resource == true && var.lambda_reporting == true ? 1 : 0
   count_efs                                 = var.apply_resource == true && var.use_efs ? 1 : 0
   count_create_db_users                     = var.apply_resource == true && var.lambda_create_db_users ? 1 : 0
   count_create_keycloak_db_user             = var.apply_resource == true && var.lambda_create_keycloak_db_users ? 1 : 0
@@ -33,6 +34,7 @@ locals {
   notifications_function_name               = "${var.project}-notifications-${local.environment}"
   sign_cookies_function_name                = "${var.project}-sign-cookies-${local.environment}"
   signed_cookies_function_name              = "${var.project}-signed-cookies-${local.environment}"
+  reporting_function_name                   = "${var.project}-reporting-${local.environment}"
   service_unavailable_function_name         = "${var.project}-service-unavailable-${local.environment}"
   yara_av_function_name                     = "${var.project}-yara-av-${local.environment}"
   api_update_queue_name                     = "${var.project}-api-update-${local.environment}"

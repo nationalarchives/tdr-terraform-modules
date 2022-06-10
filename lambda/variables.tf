@@ -72,6 +72,11 @@ variable "lambda_signed_cookies" {
   default     = false
 }
 
+variable "lambda_reporting" {
+  description = "deploy Lambda function for the reporting"
+  default     = false
+}
+
 variable "target_s3_bucket" {
   description = "Target S3 bucket ARN used for the Lambda log data function"
   default     = ""
@@ -104,6 +109,16 @@ variable "cloudfront_key_pair_id" {
 
 variable "api_url" {
   description = "The url of the graphql api"
+  default     = ""
+}
+
+variable "keycloak_reporting_client_id" {
+  description = "Keycloak backend checks client id"
+  default     = ""
+}
+
+variable "keycloak_reporting_client_secret" {
+  description = "Keycloak backend checks client secret"
   default     = ""
 }
 
