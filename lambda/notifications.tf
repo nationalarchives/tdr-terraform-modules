@@ -22,7 +22,6 @@ resource "aws_lambda_function" "notifications_lambda_function" {
       SLACK_WEBHOOK               = aws_kms_ciphertext.environment_vars_notifications["slack_webhook"].ciphertext_blob
       SLACK_JUDGMENT_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_judgment_webhook"].ciphertext_blob
       TO_EMAIL                    = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
-      MUTED_VULNERABILITIES       = aws_kms_ciphertext.environment_vars_notifications["muted_vulnerabilities"].ciphertext_blob
       TRANSFORM_ENGINE_OUTPUT_SQS = aws_kms_ciphertext.environment_vars_notifications["transform_engine_output_sqs"].ciphertext_blob
       JUDGMENT_EXPORT_BUCKET      = aws_kms_ciphertext.environment_vars_notifications["judgment_export_bucket"].ciphertext_blob
     }
@@ -34,7 +33,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_notifications" {
-  for_each = local.count_notifications == 0 ? {} : { slack_webhook = data.aws_ssm_parameter.slack_webhook[0].value, slack_judgment_webhook = data.aws_ssm_parameter.slack_judgment_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", muted_vulnerabilities = join(",", var.muted_scan_alerts), transform_engine_output_sqs = local.env_var_transform_engine_output_sqs_endpoint, judgment_export_bucket = local.env_var_judgment_export_bucket }
+  for_each = local.count_notifications == 0 ? {} : { slack_webhook = data.aws_ssm_parameter.slack_webhook[0].value, slack_judgment_webhook = data.aws_ssm_parameter.slack_judgment_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", transform_engine_output_sqs = local.env_var_transform_engine_output_sqs_endpoint, judgment_export_bucket = local.env_var_judgment_export_bucket }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
   # created by the terraform environments project as they won't exist when we first run the backend project.
   # This KMS key is created by tdr-accounts which means it will exist when we run the terraform backend project for the first time
