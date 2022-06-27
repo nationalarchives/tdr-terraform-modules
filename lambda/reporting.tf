@@ -31,7 +31,7 @@ resource "aws_lambda_function" "reporting_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_reporting" {
-  for_each = local.count_reporting == 0 ? {} : { client_secret = var.keycloak_reporting_client_secret }
+  for_each  = local.count_reporting == 0 ? {} : { client_secret = var.keycloak_reporting_client_secret }
   key_id    = var.kms_key_arn
   plaintext = each.value
   context   = { "LambdaFunctionName" = local.reporting_function_name }
@@ -44,11 +44,11 @@ resource "aws_cloudwatch_log_group" "reporting_lambda_log_group" {
 }
 
 resource "aws_iam_policy" "reporting_lambda_policy" {
-  count  = local.count_reporting
+  count = local.count_reporting
   policy = templatefile("${path.module}/templates/reporting_policy.json.tpl", {
     account_id = data.aws_caller_identity.current.account_id, environment = local.environment, kms_arn = var.kms_key_arn
   })
-  name   = "${upper(var.project)}ReportingLambdaPolicy"
+  name = "${upper(var.project)}ReportingLambdaPolicy"
 }
 
 resource "aws_iam_role" "reporting_lambda_iam_role" {
