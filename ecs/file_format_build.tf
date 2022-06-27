@@ -61,7 +61,7 @@ resource "aws_iam_policy" "file_format_ecs_task_policy" {
 resource "aws_iam_policy" "file_format_ecs_execution_policy" {
   count  = local.count_file_format_build
   name   = "${upper(var.project)}FileFormatECSExecutionPolicy${title(local.environment)}"
-  policy = templatefile("${path.module}/templates/file_format_execution_policy.json.tpl", { log_group_arn = "${aws_cloudwatch_log_group.file_format_build_log_group[count.index].arn}:*", file_system_arn = data.aws_efs_file_system.efs_file_system.arn, management_account_number = local.ecs_account_number })
+  policy = templatefile("${path.module}/templates/file_format_execution_policy.json.tpl", { log_group_arn = "${aws_cloudwatch_log_group.file_format_build_log_group[count.index].arn}:*", file_system_arn = data.aws_efs_file_system.efs_file_system[count.index].arn, management_account_number = local.ecs_account_number })
 }
 
 resource "aws_iam_role_policy_attachment" "file_format_task_policy_attachment" {
