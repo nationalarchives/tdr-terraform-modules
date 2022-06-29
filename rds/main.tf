@@ -1,5 +1,5 @@
 resource "random_password" "password" {
-  length  = 16
+  length  = 64
   special = false
 }
 
@@ -22,21 +22,23 @@ resource "aws_db_subnet_group" "user_subnet_group" {
 }
 
 resource "aws_rds_cluster" "database" {
-  cluster_identifier_prefix       = "keycloak-db-postgres-${var.environment}"
-  engine                          = var.engine
-  engine_version                  = var.engine_version
-  availability_zones              = var.database_availability_zones
-  database_name                   = var.database_name
-  master_username                 = var.admin_username
-  master_password                 = random_password.password.result
-  final_snapshot_identifier       = "${var.database_name}-db-final-snapshot-${random_string.snapshot_prefix.result}-${var.environment}"
-  storage_encrypted               = true
-  kms_key_id                      = var.kms_key_id
-  vpc_security_group_ids          = var.security_group_ids
-  db_subnet_group_name            = aws_db_subnet_group.user_subnet_group.name
-  enabled_cloudwatch_logs_exports = var.cloudwatch_log_exports
-  backup_retention_period         = 7
-  deletion_protection             = true
+  cluster_identifier_prefix           = "keycloak-db-postgres-${var.environment}"
+  engine                              = var.engine
+  engine_version                      = var.engine_version
+  availability_zones                  = var.database_availability_zones
+  database_name                       = var.database_name
+  master_username                     = var.admin_username
+  master_password                     = random_password.password.result
+  final_snapshot_identifier           = "${var.database_name}-db-final-snapshot-${random_string.snapshot_prefix.result}-${var.environment}"
+  storage_encrypted                   = true
+  kms_key_id                          = var.kms_key_id
+  vpc_security_group_ids              = var.security_group_ids
+  db_subnet_group_name                = aws_db_subnet_group.user_subnet_group.name
+  enabled_cloudwatch_logs_exports     = var.cloudwatch_log_exports
+  backup_retention_period             = 7
+  deletion_protection                 = true
+  iam_database_authentication_enabled = var.iam_database_authentication_enabled
+  apply_immediately                   = true
   tags = merge(
     var.common_tags,
     tomap(

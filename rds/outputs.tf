@@ -13,3 +13,7 @@ output "db_password" {
 output "db_url" {
   value = aws_rds_cluster.database.endpoint
 }
+
+output "cluster_resource_id" {
+  value = aws_rds_cluster.database.cluster_resource_id
+}
