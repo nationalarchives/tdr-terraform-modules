@@ -21,3 +21,6 @@ variable "instance_count" {
 variable "kms_key_id" {}
 variable "private_subnets" {}
 variable "security_group_ids" {}
+variable "iam_database_authentication_enabled" {
+  default = true
+}
