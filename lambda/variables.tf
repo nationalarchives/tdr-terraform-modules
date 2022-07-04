@@ -112,6 +112,11 @@ variable "api_url" {
   default     = ""
 }
 
+variable "slack_bot_token" {
+  description = "Slack bot token"
+  default     = ""
+}
+
 variable "keycloak_reporting_client_id" {
   description = "Keycloak backend checks client id"
   default     = ""
