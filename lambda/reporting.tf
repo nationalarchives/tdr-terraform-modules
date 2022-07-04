@@ -15,6 +15,7 @@ resource "aws_lambda_function" "reporting_lambda_function" {
       CONSIGNMENT_API_URL = var.api_url
       CLIENT_ID           = var.keycloak_reporting_client_id
       CLIENT_SECRET       = aws_kms_ciphertext.environment_vars_reporting["client_secret"].ciphertext_blob
+      SLACK_BOT_TOKEN     = aws_kms_ciphertext.environment_vars_reporting["slack_bot_token"].ciphertext_blob
     }
   }
 
@@ -31,7 +32,10 @@ resource "aws_lambda_function" "reporting_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_reporting" {
-  for_each  = local.count_reporting == 0 ? {} : { client_secret = var.keycloak_reporting_client_secret }
+  for_each  = local.count_reporting == 0 ? {} : {
+    slack_bot_token = var.slack_bot_token,
+    client_secret = var.keycloak_reporting_client_secret
+  }
   key_id    = var.kms_key_arn
   plaintext = each.value
   context   = { "LambdaFunctionName" = local.reporting_function_name }
