@@ -32,9 +32,9 @@ resource "aws_lambda_function" "reporting_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_reporting" {
-  for_each  = local.count_reporting == 0 ? {} : {
+  for_each = local.count_reporting == 0 ? {} : {
     slack_bot_token = var.slack_bot_token,
-    client_secret = var.keycloak_reporting_client_secret
+    client_secret   = var.keycloak_reporting_client_secret
   }
   key_id    = var.kms_key_arn
   plaintext = each.value
