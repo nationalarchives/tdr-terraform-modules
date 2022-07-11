@@ -1,7 +1,7 @@
 resource "aws_lambda_function" "reporting_lambda_function" {
   count                          = local.count_reporting
   function_name                  = local.reporting_function_name
-  handler                        = "report.handler"
+  handler                        = "app.report.handler"
   role                           = aws_iam_role.reporting_lambda_iam_role.*.arn[0]
   runtime                        = "python3.8"
   filename                       = "${path.module}/functions/reporting.zip"
