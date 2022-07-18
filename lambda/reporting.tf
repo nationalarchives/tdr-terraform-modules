@@ -51,7 +51,7 @@ resource "aws_cloudwatch_log_group" "reporting_lambda_log_group" {
 resource "aws_iam_policy" "reporting_lambda_policy" {
   count = local.count_reporting
   policy = templatefile("${path.module}/templates/reporting_policy.json.tpl", {
-    account_id = data.aws_caller_identity.current.account_id, environment = local.environment, kms_arn = var.kms_key_arn
+    account_id = data.aws_caller_identity.current.account_id, environment = local.environment, kms_arn = var.kms_key_arn, parameter_name = var.backend_checks_client_secret_path
   })
   name = "${upper(var.project)}ReportingLambdaPolicy"
 }

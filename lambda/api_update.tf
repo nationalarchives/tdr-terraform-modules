@@ -51,7 +51,7 @@ resource "aws_cloudwatch_log_group" "lambda_api_update_log_group" {
 
 resource "aws_iam_policy" "lambda_api_update_policy" {
   count  = local.count_api_update
-  policy = templatefile("${path.module}/templates/api_update.json.tpl", { environment = local.environment, account_id = data.aws_caller_identity.current.account_id, input_sqs_arn = local.api_update_queue, kms_arn = var.kms_key_arn })
+  policy = templatefile("${path.module}/templates/api_update.json.tpl", { environment = local.environment, account_id = data.aws_caller_identity.current.account_id, input_sqs_arn = local.api_update_queue, kms_arn = var.kms_key_arn, parameter_name = var.backend_checks_client_secret_path })
   name   = "${upper(var.project)}ApiUpdatePolicy"
 }
 

@@ -62,7 +62,7 @@ resource "aws_cloudwatch_log_group" "download_files_lambda_log_group" {
 
 resource "aws_iam_policy" "download_files_lambda_policy" {
   count  = local.count_download_files
-  policy = templatefile("${path.module}/templates/download_files_lambda.json.tpl", { environment = local.environment, account_id = data.aws_caller_identity.current.account_id, antivirus_queue = local.antivirus_queue, checksum_queue = local.checksum_queue, file_format_queue = local.file_format_queue, download_files_queue = local.download_files_queue, file_system_id = var.file_system_id, kms_arn = var.kms_key_arn })
+  policy = templatefile("${path.module}/templates/download_files_lambda.json.tpl", { environment = local.environment, account_id = data.aws_caller_identity.current.account_id, antivirus_queue = local.antivirus_queue, checksum_queue = local.checksum_queue, file_format_queue = local.file_format_queue, download_files_queue = local.download_files_queue, file_system_id = var.file_system_id, kms_arn = var.kms_key_arn, parameter_name = var.backend_checks_client_secret_path })
   name   = "${upper(var.project)}DownloadFilesPolicy"
 }
 

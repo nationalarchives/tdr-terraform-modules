@@ -29,6 +29,13 @@
         "kms:GenerateDataKey"
       ],
       "Resource": "${kms_arn}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssm:GetParameter"
+      ],
+      "Resource": "arn:aws:ssm:eu-west-2:${account_id}:parameter${parameter_name}"
     }
   ]
 }

@@ -41,7 +41,7 @@ resource "aws_cloudwatch_log_group" "create_keycloak_users_api_lambda_log_group"
 
 resource "aws_iam_policy" "create_keycloak_users_api_lambda_policy" {
   count  = local.count_create_keycloak_users_api
-  policy = templatefile("${path.module}/templates/create_keycloak_users_api_lambda.json.tpl", { function_name = local.create_keycloak_user_api_function_name, account_id = data.aws_caller_identity.current.account_id, kms_arn = var.kms_key_arn })
+  policy = templatefile("${path.module}/templates/create_keycloak_users_api_lambda.json.tpl", { function_name = local.create_keycloak_user_api_function_name, account_id = data.aws_caller_identity.current.account_id, kms_arn = var.kms_key_arn, parameter_name = var.user_admin_client_secret_path })
   name   = "${upper(var.project)}CreateKeycloakUsersApiPolicy${title(local.environment)}"
 }
 
