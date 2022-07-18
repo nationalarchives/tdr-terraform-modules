@@ -11,11 +11,12 @@ resource "aws_lambda_function" "lambda_api_update_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      API_URL       = aws_kms_ciphertext.environment_vars_api_update["api_url"].ciphertext_blob
-      AUTH_URL      = aws_kms_ciphertext.environment_vars_api_update["auth_url"].ciphertext_blob
-      CLIENT_ID     = aws_kms_ciphertext.environment_vars_api_update["client_id"].ciphertext_blob
-      CLIENT_SECRET = aws_kms_ciphertext.environment_vars_api_update["client_secret"].ciphertext_blob
-      QUEUE_URL     = aws_kms_ciphertext.environment_vars_api_update["queue_url"].ciphertext_blob
+      CLIENT_SECRET_PATH = var.backend_checks_client_secret_path
+      API_URL            = aws_kms_ciphertext.environment_vars_api_update["api_url"].ciphertext_blob
+      AUTH_URL           = aws_kms_ciphertext.environment_vars_api_update["auth_url"].ciphertext_blob
+      CLIENT_ID          = aws_kms_ciphertext.environment_vars_api_update["client_id"].ciphertext_blob
+      CLIENT_SECRET      = aws_kms_ciphertext.environment_vars_api_update["client_secret"].ciphertext_blob
+      QUEUE_URL          = aws_kms_ciphertext.environment_vars_api_update["queue_url"].ciphertext_blob
     }
   }
 

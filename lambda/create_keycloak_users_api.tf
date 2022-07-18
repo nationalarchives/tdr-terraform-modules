@@ -11,8 +11,9 @@ resource "aws_lambda_function" "create_keycloak_users_api_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      AUTH_URL                 = aws_kms_ciphertext.environment_vars_create_keycloak_users_api["auth_url"].ciphertext_blob
-      USER_ADMIN_CLIENT_SECRET = aws_kms_ciphertext.environment_vars_create_keycloak_users_api["user_admin_client_secret"].ciphertext_blob
+      AUTH_URL                      = aws_kms_ciphertext.environment_vars_create_keycloak_users_api["auth_url"].ciphertext_blob
+      USER_ADMIN_CLIENT_SECRET      = aws_kms_ciphertext.environment_vars_create_keycloak_users_api["user_admin_client_secret"].ciphertext_blob
+      USER_ADMIN_CLIENT_SECRET_PATH = var.user_admin_client_secret_path
     }
   }
   vpc_config {
