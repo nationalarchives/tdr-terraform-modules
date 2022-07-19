@@ -15,7 +15,7 @@ resource "aws_lambda_function" "reporting_lambda_function" {
       CONSIGNMENT_API_URL = var.api_url
       CLIENT_ID           = var.keycloak_reporting_client_id
       CLIENT_SECRET       = aws_kms_ciphertext.environment_vars_reporting["client_secret"].ciphertext_blob
-      CLIENT_SECRET_PATH  = var.backend_checks_client_secret_path
+      CLIENT_SECRET_PATH  = var.reporting_client_secret_path
       SLACK_BOT_TOKEN     = aws_kms_ciphertext.environment_vars_reporting["slack_bot_token"].ciphertext_blob
     }
   }
@@ -51,7 +51,7 @@ resource "aws_cloudwatch_log_group" "reporting_lambda_log_group" {
 resource "aws_iam_policy" "reporting_lambda_policy" {
   count = local.count_reporting
   policy = templatefile("${path.module}/templates/reporting_policy.json.tpl", {
-    account_id = data.aws_caller_identity.current.account_id, environment = local.environment, kms_arn = var.kms_key_arn, parameter_name = var.backend_checks_client_secret_path
+    account_id = data.aws_caller_identity.current.account_id, environment = local.environment, kms_arn = var.kms_key_arn, parameter_name = var.reporting_client_secret_path
   })
   name = "${upper(var.project)}ReportingLambdaPolicy"
 }
