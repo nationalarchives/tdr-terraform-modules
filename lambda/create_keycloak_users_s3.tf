@@ -11,8 +11,9 @@ resource "aws_lambda_function" "create_keycloak_users_s3_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      AUTH_URL                 = aws_kms_ciphertext.environment_vars_create_keycloak_users_s3["auth_url"].ciphertext_blob
-      USER_ADMIN_CLIENT_SECRET = aws_kms_ciphertext.environment_vars_create_keycloak_users_s3["user_admin_client_secret"].ciphertext_blob
+      AUTH_URL                      = aws_kms_ciphertext.environment_vars_create_keycloak_users_s3["auth_url"].ciphertext_blob
+      USER_ADMIN_CLIENT_SECRET      = aws_kms_ciphertext.environment_vars_create_keycloak_users_s3["user_admin_client_secret"].ciphertext_blob
+      USER_ADMIN_CLIENT_SECRET_PATH = var.user_admin_client_secret_path
     }
   }
   vpc_config {
@@ -49,7 +50,7 @@ resource "aws_cloudwatch_log_group" "create_keycloak_users_s3_lambda_log_group" 
 
 resource "aws_iam_policy" "create_keycloak_users_s3_lambda_policy" {
   count  = local.count_create_keycloak_users_s3
-  policy = templatefile("${path.module}/templates/create_keycloak_users_s3_lambda.json.tpl", { function_name = local.create_keycloak_user_s3_function_name, account_id = data.aws_caller_identity.current.account_id, kms_arn = var.kms_key_arn, environment = local.environment })
+  policy = templatefile("${path.module}/templates/create_keycloak_users_s3_lambda.json.tpl", { function_name = local.create_keycloak_user_s3_function_name, account_id = data.aws_caller_identity.current.account_id, kms_arn = var.kms_key_arn, environment = local.environment, parameter_name = var.user_admin_client_secret_path })
   name   = "${upper(var.project)}CreateKeycloakUsersS3Policy${title(local.environment)}"
 }
 

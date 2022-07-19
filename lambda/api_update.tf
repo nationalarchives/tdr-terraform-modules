@@ -11,11 +11,12 @@ resource "aws_lambda_function" "lambda_api_update_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      API_URL       = aws_kms_ciphertext.environment_vars_api_update["api_url"].ciphertext_blob
-      AUTH_URL      = aws_kms_ciphertext.environment_vars_api_update["auth_url"].ciphertext_blob
-      CLIENT_ID     = aws_kms_ciphertext.environment_vars_api_update["client_id"].ciphertext_blob
-      CLIENT_SECRET = aws_kms_ciphertext.environment_vars_api_update["client_secret"].ciphertext_blob
-      QUEUE_URL     = aws_kms_ciphertext.environment_vars_api_update["queue_url"].ciphertext_blob
+      CLIENT_SECRET_PATH = var.backend_checks_client_secret_path
+      API_URL            = aws_kms_ciphertext.environment_vars_api_update["api_url"].ciphertext_blob
+      AUTH_URL           = aws_kms_ciphertext.environment_vars_api_update["auth_url"].ciphertext_blob
+      CLIENT_ID          = aws_kms_ciphertext.environment_vars_api_update["client_id"].ciphertext_blob
+      CLIENT_SECRET      = aws_kms_ciphertext.environment_vars_api_update["client_secret"].ciphertext_blob
+      QUEUE_URL          = aws_kms_ciphertext.environment_vars_api_update["queue_url"].ciphertext_blob
     }
   }
 
@@ -50,7 +51,7 @@ resource "aws_cloudwatch_log_group" "lambda_api_update_log_group" {
 
 resource "aws_iam_policy" "lambda_api_update_policy" {
   count  = local.count_api_update
-  policy = templatefile("${path.module}/templates/api_update.json.tpl", { environment = local.environment, account_id = data.aws_caller_identity.current.account_id, input_sqs_arn = local.api_update_queue, kms_arn = var.kms_key_arn })
+  policy = templatefile("${path.module}/templates/api_update.json.tpl", { environment = local.environment, account_id = data.aws_caller_identity.current.account_id, input_sqs_arn = local.api_update_queue, kms_arn = var.kms_key_arn, parameter_name = var.backend_checks_client_secret_path })
   name   = "${upper(var.project)}ApiUpdatePolicy"
 }
 

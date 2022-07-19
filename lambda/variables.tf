@@ -293,3 +293,15 @@ variable "judgment_export_s3_bucket_name" {
 variable "environment_full" {
   default = ""
 }
+
+variable "backend_checks_client_secret_path" {
+  default = ""
+}
+
+variable "user_admin_client_secret_path" {
+  default = ""
+}
+
+variable "reporting_client_secret_path" {
+  default = ""
+}
