@@ -65,3 +65,7 @@ output "create_keycloak_users_api_lambda_arn" {
 output "create_keycloak_users_s3_lambda_arn" {
   value = local.create_keycloak_user_s3_arn
 }
+
+output "rotate_keycloak_secrets_lambda_arn" {
+  value = local.rotate_keycloak_secrets_arn
+}

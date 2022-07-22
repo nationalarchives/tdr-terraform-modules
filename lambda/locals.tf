@@ -10,6 +10,7 @@ locals {
   count_download_files                      = var.apply_resource == true && var.lambda_download_files == true ? 1 : 0
   count_notifications                       = var.apply_resource == true && var.lambda_ecr_scan_notifications == true ? 1 : 0
   count_ecr_scan                            = var.apply_resource == true && var.lambda_ecr_scan == true ? 1 : 0
+  count_rotate_keycloak_secrets             = var.apply_resource == true && var.lambda_rotate_keycloak_secrets == true ? 1 : 0
   count_signed_cookies                      = var.apply_resource == true && var.lambda_signed_cookies == true ? 1 : 0
   count_reporting                           = var.apply_resource == true && var.lambda_reporting == true ? 1 : 0
   count_efs                                 = var.apply_resource == true && var.use_efs ? 1 : 0
@@ -35,6 +36,7 @@ locals {
   sign_cookies_function_name                = "${var.project}-sign-cookies-${local.environment}"
   signed_cookies_function_name              = "${var.project}-signed-cookies-${local.environment}"
   reporting_function_name                   = "${var.project}-reporting-${local.environment}"
+  rotate_keycloak_secrets_function_name     = "${var.project}-rotate-keycloak-secrets-${local.environment}"
   service_unavailable_function_name         = "${var.project}-service-unavailable-${local.environment}"
   yara_av_function_name                     = "${var.project}-yara-av-${local.environment}"
   api_update_queue_name                     = "${var.project}-api-update-${local.environment}"
@@ -53,6 +55,7 @@ locals {
   reporting_arn                             = var.apply_resource == true && var.lambda_reporting == true && length(aws_lambda_function.reporting_lambda_function) > 0 ? aws_lambda_function.reporting_lambda_function.*.arn[0] : ""
   create_keycloak_user_api_arn              = var.apply_resource == true && var.lambda_create_keycloak_user_api == true && length(aws_lambda_function.create_keycloak_users_api_lambda_function) > 0 ? aws_lambda_function.create_keycloak_users_api_lambda_function.*.arn[0] : ""
   create_keycloak_user_s3_arn               = var.apply_resource == true && var.lambda_create_keycloak_user_s3 == true && length(aws_lambda_function.create_keycloak_users_s3_lambda_function) > 0 ? aws_lambda_function.create_keycloak_users_s3_lambda_function.*.arn[0] : ""
+  rotate_keycloak_secrets_arn               = var.apply_resource == true && var.lambda_rotate_keycloak_secrets == true && length(aws_lambda_function.rotate_keycloak_secrets_lambda_function) > 0 ? aws_lambda_function.rotate_keycloak_secrets_lambda_function.*.arn[0] : ""
   transform_engine_retry_queue_name         = "${var.project}-transform-engine-retry-${local.environment}"
   transform_engine_retry_queue              = "arn:aws:sqs:${var.region}:${data.aws_caller_identity.current.account_id}:${local.transform_engine_retry_queue_name}"
 }

@@ -170,6 +170,10 @@ variable "sns_topic_arns" {
   default = []
 }
 
+variable "notifications_topic" {
+  default = ""
+}
+
 variable "periodic_ecr_image_scan_event_arn" {
   default = ""
 }
@@ -303,5 +307,17 @@ variable "user_admin_client_secret_path" {
 }
 
 variable "reporting_client_secret_path" {
+  default = ""
+}
+
+variable "lambda_rotate_keycloak_secrets" {
+  default = false
+}
+
+variable "rotate_secrets_client_path" {
+  default = ""
+}
+
+variable "rotate_keycloak_secrets_event_arn" {
   default = ""
 }
