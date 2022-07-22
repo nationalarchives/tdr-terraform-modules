@@ -67,5 +67,5 @@ output "create_keycloak_users_s3_lambda_arn" {
 }
 
 output "rotate_keycloak_secrets_lambda_arn" {
-  value = local.rotate_keycloak_secrets_arn
+  value = aws_lambda_function.rotate_keycloak_secrets_lambda_function.*.arn
 }
