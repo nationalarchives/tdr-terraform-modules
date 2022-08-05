@@ -77,7 +77,7 @@ resource "aws_security_group_rule" "allow_https_lambda_rotate_keycloak_secrets_r
 }
 
 resource "aws_lambda_permission" "rotate_secrets_lambda_allow_event" {
-  count         = local.count_ecr_scan
+  count         = local.count_rotate_keycloak_secrets
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.rotate_keycloak_secrets_lambda_function[count.index].function_name
