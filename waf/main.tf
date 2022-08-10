@@ -90,7 +90,7 @@ resource "aws_wafv2_web_acl" "acl" {
     }
     statement {
       rate_based_statement {
-        limit = 100
+        limit = 5000
       }
     }
     visibility_config {
