@@ -81,7 +81,24 @@ resource "aws_wafv2_web_acl" "acl" {
   default_action {
     block {}
   }
+  rule {
 
+    name     = "rate-based-rule"
+    priority = 0
+    action {
+      block {}
+    }
+    statement {
+      rate_based_statement {
+        limit = 5000
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "acl-rule-metric"
+      sampled_requests_enabled   = false
+    }
+  }
   rule {
     name     = "acl-rule"
     priority = 1

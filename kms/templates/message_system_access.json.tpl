@@ -21,7 +21,7 @@
         "kms:Decrypt",
         "kms:GenerateDataKey*"
       ],
-     "Resource": "*"
+      "Resource": "*"
     },
     {
       "Effect": "Allow",
@@ -38,7 +38,6 @@
           "kms:EncryptionContext:aws:sqs:arn": [
             "arn:aws:sqs:eu-west-2:${account_id}:tdr-backend-check-failure-${environment}",
             "arn:aws:sqs:eu-west-2:${account_id}:tdr-download-files-${environment}"
-
           ]
         }
       }
@@ -60,6 +59,17 @@
           ]
         }
       }
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudwatch.amazonaws.com"
+      },
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey*"
+      ],
+      "Resource": "*"
     }
   ]
 }
