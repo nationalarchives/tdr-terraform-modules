@@ -9,3 +9,7 @@ output "database_user" {
 output "database_url" {
   value = aws_db_instance.db_instance.address
 }
+
+output "resource_id" {
+  value = aws_db_instance.db_instance.resource_id
+}

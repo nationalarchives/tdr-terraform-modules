@@ -10,7 +10,7 @@ resource "random_password" "password" {
 }
 
 resource "aws_db_subnet_group" "user_subnet_group" {
-  name       = "${var.database_name}-main-${var.environment}"
+  name       = "${var.database_name}-instance-main-${var.environment}"
   subnet_ids = var.private_subnets
 
   tags = merge(
