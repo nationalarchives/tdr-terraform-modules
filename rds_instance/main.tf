@@ -6,7 +6,8 @@ resource "random_string" "identifier_string" {
 }
 
 resource "random_password" "password" {
-  length = 60
+  length  = 60
+  special = false
 }
 
 resource "aws_db_subnet_group" "user_subnet_group" {
@@ -34,8 +35,8 @@ resource "aws_db_instance" "db_instance" {
   password                              = random_password.password.result
   vpc_security_group_ids                = var.security_group_ids
   db_subnet_group_name                  = aws_db_subnet_group.user_subnet_group.name
-  multi_az                              = false
-  availability_zone                     = var.availability_zone
+  multi_az                              = var.multi_az
+  availability_zone                     = var.multi_az == true ? null : var.availability_zone
   auto_minor_version_upgrade            = true
   tags                                  = var.common_tags
   iam_database_authentication_enabled   = true

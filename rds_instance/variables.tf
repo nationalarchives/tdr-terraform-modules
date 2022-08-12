@@ -17,3 +17,5 @@ variable "private_subnets" {}
 variable "common_tags" {}
 
 variable "availability_zone" {}
+
+variable "multi_az" {}
