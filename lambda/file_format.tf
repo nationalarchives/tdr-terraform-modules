@@ -11,10 +11,15 @@ resource "aws_lambda_function" "file_format_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      ENVIRONMENT    = aws_kms_ciphertext.environment_vars_file_format["environment"].ciphertext_blob
-      INPUT_QUEUE    = aws_kms_ciphertext.environment_vars_file_format["input_queue"].ciphertext_blob
-      OUTPUT_QUEUE   = aws_kms_ciphertext.environment_vars_file_format["output_queue"].ciphertext_blob
-      ROOT_DIRECTORY = aws_kms_ciphertext.environment_vars_file_format["root_directory"].ciphertext_blob
+      ENVIRONMENT                 = aws_kms_ciphertext.environment_vars_file_format["environment"].ciphertext_blob
+      INPUT_QUEUE                 = aws_kms_ciphertext.environment_vars_file_format["input_queue"].ciphertext_blob
+      OUTPUT_QUEUE                = aws_kms_ciphertext.environment_vars_file_format["output_queue"].ciphertext_blob
+      ROOT_DIRECTORY              = aws_kms_ciphertext.environment_vars_file_format["root_directory"].ciphertext_blob
+      S3_BUCKET                   = var.upload_bucket
+      OUTPUT_SQS_QUEUE            = local.api_update_queue_url
+      INPUT_SQS_QUEUE             = local.file_format_queue_url
+      CONTAINER_SIGNATURE_VERSION = "20220704"
+      DROID_SIGNATURE_VERSION     = "V107"
     }
   }
   file_system_config {
