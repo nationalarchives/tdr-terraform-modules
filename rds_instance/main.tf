@@ -44,6 +44,7 @@ resource "aws_db_instance" "db_instance" {
   performance_insights_retention_period = 7
   enabled_cloudwatch_logs_exports       = ["postgresql"]
   deletion_protection                   = true
+  backup_retention_period               = 7
 }
 
 resource "aws_ssm_parameter" "database_username" {
