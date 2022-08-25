@@ -321,3 +321,7 @@ variable "rotate_secrets_client_path" {
 variable "rotate_keycloak_secrets_event_arn" {
   default = ""
 }
+
+variable "upload_bucket" {
+  default = ""
+}
