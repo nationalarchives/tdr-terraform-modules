@@ -22,6 +22,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
       SLACK_WEBHOOK               = aws_kms_ciphertext.environment_vars_notifications["slack_notifications_webhook"].ciphertext_blob
       SLACK_JUDGMENT_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_judgment_webhook"].ciphertext_blob
       SLACK_TDR_WEBHOOK           = aws_kms_ciphertext.environment_vars_notifications["slack_tdr_webhook"].ciphertext_blob
+      SLACK_EXPORT_WEBHOOK        = aws_kms_ciphertext.environment_vars_notifications["slack_export_webhook"].ciphertext_blob
       TO_EMAIL                    = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
       TRANSFORM_ENGINE_OUTPUT_SQS = aws_kms_ciphertext.environment_vars_notifications["transform_engine_output_sqs"].ciphertext_blob
       JUDGMENT_EXPORT_BUCKET      = aws_kms_ciphertext.environment_vars_notifications["judgment_export_bucket"].ciphertext_blob
@@ -34,7 +35,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_notifications" {
-  for_each = local.count_notifications == 0 ? {} : { slack_tdr_webhook = data.aws_ssm_parameter.slack_webhook[0].value, slack_judgment_webhook = data.aws_ssm_parameter.slack_judgment_webhook[0].value, slack_notifications_webhook = data.aws_ssm_parameter.slack_notifications_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", transform_engine_output_sqs = local.env_var_transform_engine_output_sqs_endpoint, judgment_export_bucket = local.env_var_judgment_export_bucket }
+  for_each = local.count_notifications == 0 ? {} : { slack_tdr_webhook = data.aws_ssm_parameter.slack_webhook[0].value, slack_judgment_webhook = data.aws_ssm_parameter.slack_judgment_webhook[0].value, slack_notifications_webhook = data.aws_ssm_parameter.slack_notifications_webhook[0].value, slack_export_webhook = data.aws_ssm_parameter.slack_export_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", transform_engine_output_sqs = local.env_var_transform_engine_output_sqs_endpoint, judgment_export_bucket = local.env_var_judgment_export_bucket }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
   # created by the terraform environments project as they won't exist when we first run the backend project.
   # This KMS key is created by tdr-accounts which means it will exist when we run the terraform backend project for the first time
@@ -60,6 +61,11 @@ data "aws_ssm_parameter" "slack_judgment_webhook" {
 data "aws_ssm_parameter" "slack_notifications_webhook" {
   count = local.count_notifications
   name  = "/${local.environment}/slack/notifications/webhook"
+}
+
+data "aws_ssm_parameter" "slack_export_webhook" {
+  count = local.count_notifications
+  name  = "/${local.environment}/slack/export/webhook"
 }
 
 data "aws_ssm_parameter" "transform_engine_output_sqs_arn" {
