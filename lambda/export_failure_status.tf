@@ -11,12 +11,9 @@ resource "aws_lambda_function" "export_failure_status_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      PRIVATE_KEY   = aws_kms_ciphertext.environment_vars_export_failure_status["private_key"].ciphertext_blob
-      FRONTEND_URL  = var.frontend_url
       AUTH_URL      = var.auth_url
-      UPLOAD_DOMAIN = var.upload_domain
-      ENVIRONMENT   = var.environment_full
-      KEY_PAIR_ID   = aws_kms_ciphertext.environment_vars_export_failure_status["key_pair_id"].ciphertext_blob,
+      API_URL       = var.api_url
+      CLIENT_SECRET_PATH = var.backend_checks_client_secret_path
     }
   }
 
@@ -30,16 +27,6 @@ resource "aws_lambda_function" "export_failure_status_lambda_function" {
   }
 }
 
-resource "aws_kms_ciphertext" "environment_vars_export_failure_status" {
-  for_each = local.count_export_failure_status == 0 ? {} : {
-    private_key = data.aws_ssm_parameter.cloudfront_private_key_pem[0].value,
-    key_pair_id = var.cloudfront_key_pair_id
-  }
-  key_id    = var.kms_key_arn
-  plaintext = each.value
-  context   = { "LambdaFunctionName" = local.export_failure_status_function_name }
-}
-
 resource "aws_cloudwatch_log_group" "export_failure_status_lambda_log_group" {
   count = local.count_export_failure_status
   name  = "/aws/lambda/${aws_lambda_function.export_failure_status_lambda_function.*.function_name[0]}"
@@ -50,7 +37,8 @@ resource "aws_iam_policy" "export_failure_status_lambda_policy" {
   count  = local.count_export_failure_status
   policy = templatefile("${path.module}/templates/export_failure_status_policy.json.tpl", {
     account_id = data.aws_caller_identity.current.account_id,
-    environment = local.environment, kms_arn = var.kms_key_arn
+    environment = local.environment, kms_arn = var.kms_key_arn,
+    parameter_name = var.backend_checks_client_secret_path
   })
   name   = "${upper(var.project)}ExportFailureStatusLambdaPolicy${title(local.environment)}"
 }
