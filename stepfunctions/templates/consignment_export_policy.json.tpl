@@ -67,6 +67,15 @@
         "kms:Decrypt"
       ],
       "Resource": "${kms_key_arn}"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+      "lambda:InvokeFunction"
+      ],
+      "Resource": [
+      "arn:aws:lambda:eu-west-2:${account_id}:function:tdr-export-failure-status-${environment}"
+      ]
     }
   ]
 }
