@@ -11,8 +11,8 @@ resource "aws_lambda_function" "export_failure_status_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      AUTH_URL      = var.auth_url
-      API_URL       = var.api_url
+      AUTH_URL           = var.auth_url
+      API_URL            = var.api_url
       CLIENT_SECRET_PATH = var.backend_checks_client_secret_path
     }
   }
@@ -34,13 +34,13 @@ resource "aws_cloudwatch_log_group" "export_failure_status_lambda_log_group" {
 }
 
 resource "aws_iam_policy" "export_failure_status_lambda_policy" {
-  count  = local.count_export_failure_status
+  count = local.count_export_failure_status
   policy = templatefile("${path.module}/templates/export_failure_status_policy.json.tpl", {
-    account_id = data.aws_caller_identity.current.account_id,
-    environment = local.environment, kms_arn = var.kms_key_arn,
+    account_id     = data.aws_caller_identity.current.account_id,
+    environment    = local.environment, kms_arn = var.kms_key_arn,
     parameter_name = var.backend_checks_client_secret_path
   })
-  name   = "${upper(var.project)}ExportFailureStatusLambdaPolicy${title(local.environment)}"
+  name = "${upper(var.project)}ExportFailureStatusLambdaPolicy${title(local.environment)}"
 }
 
 resource "aws_iam_role" "export_failure_status_lambda_iam_role" {
