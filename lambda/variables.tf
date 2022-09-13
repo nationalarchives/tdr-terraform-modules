@@ -72,8 +72,8 @@ variable "lambda_signed_cookies" {
   default     = false
 }
 
-variable "lambda_export_failure" {
-  description = "deploy Lambda function for the export failure status API endpoint"
+variable "lambda_export_status_update" {
+  description = "deploy Lambda function for the export status update API endpoint"
   default     = false
 }
 
