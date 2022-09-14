@@ -12,7 +12,7 @@ locals {
   count_ecr_scan                            = var.apply_resource == true && var.lambda_ecr_scan == true ? 1 : 0
   count_rotate_keycloak_secrets             = var.apply_resource == true && var.lambda_rotate_keycloak_secrets == true ? 1 : 0
   count_signed_cookies                      = var.apply_resource == true && var.lambda_signed_cookies == true ? 1 : 0
-  count_export_failure_status               = var.apply_resource == true && var.lambda_export_failure == true ? 1 : 0
+  count_export_status_update                = var.apply_resource == true && var.lambda_export_status_update == true ? 1 : 0
   count_reporting                           = var.apply_resource == true && var.lambda_reporting == true ? 1 : 0
   count_efs                                 = var.apply_resource == true && var.use_efs ? 1 : 0
   count_create_db_users                     = var.apply_resource == true && var.lambda_create_db_users ? 1 : 0
@@ -31,7 +31,7 @@ locals {
   create_keycloak_user_api_function_name    = "${var.project}-create-keycloak-user-api-${local.environment}"
   create_keycloak_user_s3_function_name     = "${var.project}-create-keycloak-user-s3-${local.environment}"
   export_api_authoriser_function_name       = "${var.project}-export-api-authoriser-${local.environment}"
-  export_failure_status_function_name       = "${var.project}-export-failure-status-${local.environment}"
+  export_status_update_function_name        = "${var.project}-export-status-update-${local.environment}"
   file_format_function_name                 = "${var.project}-file-format-${local.environment}"
   log_data_function_name                    = "${var.project}-log-data-${local.environment}"
   notifications_function_name               = "${var.project}-notifications-${local.environment}"

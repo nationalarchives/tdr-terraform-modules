@@ -8,8 +8,8 @@
         "logs:PutLogEvents"
       ],
       "Resource": [
-        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-export-failure-status-${environment}",
-        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-export-failure-status-${environment}:log-stream:*"
+        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-export-status-update-${environment}",
+        "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-export-status-update-${environment}:log-stream:*"
       ]
     },
     {

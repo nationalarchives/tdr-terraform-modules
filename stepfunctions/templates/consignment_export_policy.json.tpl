@@ -74,7 +74,7 @@
       "lambda:InvokeFunction"
       ],
       "Resource": [
-      "arn:aws:lambda:eu-west-2:${account_id}:function:tdr-export-failure-status-${environment}"
+      "arn:aws:lambda:eu-west-2:${account_id}:function:tdr-export-status-update-${environment}"
       ]
     }
   ]
