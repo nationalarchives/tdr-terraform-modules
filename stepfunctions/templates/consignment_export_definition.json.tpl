@@ -101,7 +101,7 @@
         },
         "TopicArn": "${sns_topic}"
       },
-      "Next": "Fail State"
+      "Next": "Export Status Update"
     },
     "Task timed out notification": {
       "Type": "Task",
@@ -114,6 +114,14 @@
           "failureCause": "The export task has timed out"
         },
         "TopicArn": "${sns_topic}"
+      },
+      "Next": "Export Status Update"
+    },
+    "Export Status Update": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:eu-west-2:${account_id}:function:tdr-export-status-update-${environment}",
+      "Parameters": {
+        "consignmentId.$": "$$.Execution.Input.consignmentId"
       },
       "Next": "Fail State"
     },
