@@ -8,3 +8,9 @@ resource "github_actions_secret" "repository_secret" {
   secret_name     = each.key
   plaintext_value = each.value
 }
+
+resource "github_repository_collaborator" "collaborators" {
+  for_each   = var.collaborators
+  repository = data.github_repository.repository.name
+  username   = each.value
+}
