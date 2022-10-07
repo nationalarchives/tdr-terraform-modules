@@ -1,11 +1,3 @@
-variable "sns_topics" {
-  type = set(object({
-    arn = string
-  }))
-  default   = []
-  sensitive = true
-}
-
 variable "event_pattern" {
   default     = ""
   description = "The event pattern for the rule. Cannot be used with schedule"
