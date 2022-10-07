@@ -4,6 +4,7 @@ variable "parameters" {
     type        = string
     value       = string
     description = string
+    tier        = optional(string)
   }))
   default = []
 }
@@ -14,6 +15,7 @@ variable "random_parameters" {
     type        = string
     value       = string
     description = string
+    tier        = optional(string)
   }))
   default   = []
   sensitive = true
@@ -27,6 +29,7 @@ resource "aws_ssm_parameter" "ssm_parameter" {
   type        = each.value.type
   value       = each.value.value
   description = each.value.description
+  tier        = each.value.tier
   overwrite   = true
   tags        = var.common_tags
 }
@@ -37,6 +40,7 @@ resource "aws_ssm_parameter" "ssm_parameter_ignore_value" {
   type        = each.value.type
   value       = each.value.value
   description = each.value.description
+  tier        = each.value.tier
   overwrite   = true
   tags        = var.common_tags
   lifecycle {
