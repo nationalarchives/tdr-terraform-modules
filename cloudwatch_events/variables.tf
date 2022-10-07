@@ -8,7 +8,12 @@ variable "log_group_event_target_arn" {
 }
 variable "lambda_event_target_arn" {
   description = "A Lambda ARN to attach to the event"
-  type        = list(string)
+  type        = set(string)
+  default     = []
+}
+variable "sns_topic_event_target_arn" {
+  description = "A SNS topic ARNs to attach to the event"
+  type        = set(string)
   default     = []
 }
 variable "rule_name" {}
