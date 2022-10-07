@@ -1,3 +1,11 @@
+variable "sns_topics" {
+  type = set(object({
+    arn = string
+  }))
+  default   = []
+  sensitive = true
+}
+
 variable "event_pattern" {
   default     = ""
   description = "The event pattern for the rule. Cannot be used with schedule"
@@ -8,7 +16,12 @@ variable "log_group_event_target_arn" {
 }
 variable "lambda_event_target_arn" {
   description = "A Lambda ARN to attach to the event"
-  type        = list(string)
+  type        = set(string)
+  default     = []
+}
+variable "sns_topic_event_target_arn" {
+  description = "A SNS topic ARNs to attach to the event"
+  type        = set(string)
   default     = []
 }
 variable "rule_name" {}
