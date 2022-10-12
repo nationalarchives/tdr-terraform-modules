@@ -70,6 +70,18 @@
         "kms:GenerateDataKey*"
       ],
       "Resource": "*"
+    },
+    {
+      "Sid": "Allow EventBridge access to the KMS key",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "events.amazonaws.com"
+      },
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey"
+      ],
+      "Resource": "*"
     }
   ]
 }
