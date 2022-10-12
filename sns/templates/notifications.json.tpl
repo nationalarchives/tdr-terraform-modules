@@ -25,6 +25,15 @@
           "AWS:SourceOwner": "${account_id}"
         }
       }
+    },
+    {
+      "Sid": "allow_eventbridge_access_to_topic",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "events.amazonaws.com"
+      },
+      "Action": "sns:Publish",
+      "Resource": "arn:aws:sns:${region}:${account_id}:${sns_topic_name}"
     }
   ]
 }
