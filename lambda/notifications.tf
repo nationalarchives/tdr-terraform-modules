@@ -5,7 +5,7 @@ locals {
   env_var_judgment_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
   env_var_standard_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.standard_export_s3_bucket_name
   env_var_transform_engine_output_sqs_endpoint = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_output_sqs_endpoint[0].value
-  env_var_transform_engine_v2_sns_topic_in = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_v2_input_sns_arn[0].value
+  env_var_transform_engine_v2_sns_topic_in     = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_v2_input_sns_arn[0].value
 }
 
 resource "aws_lambda_function" "notifications_lambda_function" {
@@ -21,15 +21,15 @@ resource "aws_lambda_function" "notifications_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      SLACK_WEBHOOK               = aws_kms_ciphertext.environment_vars_notifications["slack_notifications_webhook"].ciphertext_blob
-      SLACK_JUDGMENT_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_judgment_webhook"].ciphertext_blob
-      SLACK_TDR_WEBHOOK           = aws_kms_ciphertext.environment_vars_notifications["slack_tdr_webhook"].ciphertext_blob
-      SLACK_EXPORT_WEBHOOK        = aws_kms_ciphertext.environment_vars_notifications["slack_export_webhook"].ciphertext_blob
-      TO_EMAIL                    = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
-      TRANSFORM_ENGINE_OUTPUT_SQS = aws_kms_ciphertext.environment_vars_notifications["transform_engine_output_sqs"].ciphertext_blob
+      SLACK_WEBHOOK                    = aws_kms_ciphertext.environment_vars_notifications["slack_notifications_webhook"].ciphertext_blob
+      SLACK_JUDGMENT_WEBHOOK           = aws_kms_ciphertext.environment_vars_notifications["slack_judgment_webhook"].ciphertext_blob
+      SLACK_TDR_WEBHOOK                = aws_kms_ciphertext.environment_vars_notifications["slack_tdr_webhook"].ciphertext_blob
+      SLACK_EXPORT_WEBHOOK             = aws_kms_ciphertext.environment_vars_notifications["slack_export_webhook"].ciphertext_blob
+      TO_EMAIL                         = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
+      TRANSFORM_ENGINE_OUTPUT_SQS      = aws_kms_ciphertext.environment_vars_notifications["transform_engine_output_sqs"].ciphertext_blob
       TRANSFORM_ENGINE_V2_SNS_TOPIC_IN = aws_kms_ciphertext.environment_vars_notifications["transform_engine_v2_sns_topic_in"].ciphertext_blob
-      JUDGMENT_EXPORT_BUCKET      = aws_kms_ciphertext.environment_vars_notifications["judgment_export_bucket"].ciphertext_blob
-      STANDARD_EXPORT_BUCKET      = aws_kms_ciphertext.environment_vars_notifications["standard_export_bucket"].ciphertext_blob
+      JUDGMENT_EXPORT_BUCKET           = aws_kms_ciphertext.environment_vars_notifications["judgment_export_bucket"].ciphertext_blob
+      STANDARD_EXPORT_BUCKET           = aws_kms_ciphertext.environment_vars_notifications["standard_export_bucket"].ciphertext_blob
     }
   }
 
