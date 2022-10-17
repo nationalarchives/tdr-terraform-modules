@@ -22,6 +22,26 @@
       "Resource": [
         "${transform_engine_retry_queue_arn}"
       ]
+    },
+    {
+      "Sid":"AllowPublishToTreIn",
+      "Effect":"Allow",
+      "Action":"sns:Publish",
+      "Resource": "${transform_engine_in_topic_arn}"
+    },
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "VisualEditor0",
+          "Effect": "Allow",
+          "Action": [
+            "kms:Decrypt",
+            "kms:GenerateDataKey*"
+          ],
+          "Resource": "${transform_engine_kms_key_arn}"
+        }
+      ]
     }
   ]
 }

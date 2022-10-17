@@ -5,7 +5,7 @@ locals {
   env_var_judgment_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
   env_var_standard_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.standard_export_s3_bucket_name
   env_var_transform_engine_output_sqs_endpoint = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_output_sqs_endpoint[0].value
-  env_var_transform_engine_v2_sns_topic_in = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_v2_output_sns_arn[0].value
+  env_var_transform_engine_v2_sns_topic_in = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_v2_input_sns_arn[0].value
 }
 
 resource "aws_lambda_function" "notifications_lambda_function" {
@@ -77,9 +77,14 @@ data "aws_ssm_parameter" "transform_engine_output_sqs_arn" {
   name  = "/${local.environment}/transform_engine/output_sqs/arn"
 }
 
-data "aws_ssm_parameter" "transform_engine_v2_output_sns_arn" {
+data "aws_ssm_parameter" "transform_engine_v2_input_sns_arn" {
   count = local.transform_engine_count
   name  = "/${local.environment}/transform_engine_v2/tre-in/arn"
+}
+
+data "aws_ssm_parameter" "transform_engine_v2_kms_key_arn" {
+  count = local.transform_engine_count
+  name  = "/${local.environment}/transform_engine_v2/kms/key_arn"
 }
 
 data "aws_ssm_parameter" "transform_engine_output_sqs_endpoint" {
@@ -101,7 +106,7 @@ resource "aws_iam_policy" "notifications_lambda_policy" {
 
 resource "aws_iam_policy" "transform_engine_notifications_lambda_policy" {
   count  = local.transform_engine_count
-  policy = templatefile("${path.module}/templates/notifications_transform_engine_lambda.json.tpl", { transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue })
+  policy = templatefile("${path.module}/templates/notifications_transform_engine_lambda.json.tpl", { transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue, transform_engine_in_topic_arn = data.aws_ssm_parameter.transform_engine_v2_input_sns_arn[0].value, transform_engine_kms_key_arn = data.aws_ssm_parameter.transform_engine_v2_kms_key_arn[0].value })
   name   = "${upper(var.project)}NotificationsTransformEngineLambdaPolicy${title(local.environment)}"
 }
 
