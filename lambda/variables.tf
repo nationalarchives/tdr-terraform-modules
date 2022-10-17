@@ -299,6 +299,10 @@ variable "judgment_export_s3_bucket_name" {
   default = ""
 }
 
+variable "standard_export_s3_bucket_name" {
+  default = ""
+}
+
 variable "environment_full" {
   default = ""
 }

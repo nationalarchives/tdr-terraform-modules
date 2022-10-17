@@ -3,7 +3,9 @@ locals {
   transform_engine_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
   //encryption requires some value, as these are not relevant for management account use placeholder values
   env_var_judgment_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
+  env_var_standard_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.standard_export_s3_bucket_name
   env_var_transform_engine_output_sqs_endpoint = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_output_sqs_endpoint[0].value
+  env_var_transform_engine_v2_sns_topic_in     = local.transform_engine_count == 0 ? "not_applicable" : data.aws_ssm_parameter.transform_engine_v2_input_sns_arn[0].value
 }
 
 resource "aws_lambda_function" "notifications_lambda_function" {
@@ -19,13 +21,15 @@ resource "aws_lambda_function" "notifications_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      SLACK_WEBHOOK               = aws_kms_ciphertext.environment_vars_notifications["slack_notifications_webhook"].ciphertext_blob
-      SLACK_JUDGMENT_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_judgment_webhook"].ciphertext_blob
-      SLACK_TDR_WEBHOOK           = aws_kms_ciphertext.environment_vars_notifications["slack_tdr_webhook"].ciphertext_blob
-      SLACK_EXPORT_WEBHOOK        = aws_kms_ciphertext.environment_vars_notifications["slack_export_webhook"].ciphertext_blob
-      TO_EMAIL                    = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
-      TRANSFORM_ENGINE_OUTPUT_SQS = aws_kms_ciphertext.environment_vars_notifications["transform_engine_output_sqs"].ciphertext_blob
-      JUDGMENT_EXPORT_BUCKET      = aws_kms_ciphertext.environment_vars_notifications["judgment_export_bucket"].ciphertext_blob
+      SLACK_WEBHOOK                    = aws_kms_ciphertext.environment_vars_notifications["slack_notifications_webhook"].ciphertext_blob
+      SLACK_JUDGMENT_WEBHOOK           = aws_kms_ciphertext.environment_vars_notifications["slack_judgment_webhook"].ciphertext_blob
+      SLACK_TDR_WEBHOOK                = aws_kms_ciphertext.environment_vars_notifications["slack_tdr_webhook"].ciphertext_blob
+      SLACK_EXPORT_WEBHOOK             = aws_kms_ciphertext.environment_vars_notifications["slack_export_webhook"].ciphertext_blob
+      TO_EMAIL                         = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
+      TRANSFORM_ENGINE_OUTPUT_SQS      = aws_kms_ciphertext.environment_vars_notifications["transform_engine_output_sqs"].ciphertext_blob
+      TRANSFORM_ENGINE_V2_SNS_TOPIC_IN = aws_kms_ciphertext.environment_vars_notifications["transform_engine_v2_sns_topic_in"].ciphertext_blob
+      JUDGMENT_EXPORT_BUCKET           = aws_kms_ciphertext.environment_vars_notifications["judgment_export_bucket"].ciphertext_blob
+      STANDARD_EXPORT_BUCKET           = aws_kms_ciphertext.environment_vars_notifications["standard_export_bucket"].ciphertext_blob
     }
   }
 
@@ -35,7 +39,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_notifications" {
-  for_each = local.count_notifications == 0 ? {} : { slack_tdr_webhook = data.aws_ssm_parameter.slack_webhook[0].value, slack_judgment_webhook = data.aws_ssm_parameter.slack_judgment_webhook[0].value, slack_notifications_webhook = data.aws_ssm_parameter.slack_notifications_webhook[0].value, slack_export_webhook = data.aws_ssm_parameter.slack_export_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", transform_engine_output_sqs = local.env_var_transform_engine_output_sqs_endpoint, judgment_export_bucket = local.env_var_judgment_export_bucket }
+  for_each = local.count_notifications == 0 ? {} : { slack_tdr_webhook = data.aws_ssm_parameter.slack_webhook[0].value, slack_judgment_webhook = data.aws_ssm_parameter.slack_judgment_webhook[0].value, slack_notifications_webhook = data.aws_ssm_parameter.slack_notifications_webhook[0].value, slack_export_webhook = data.aws_ssm_parameter.slack_export_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", transform_engine_output_sqs = local.env_var_transform_engine_output_sqs_endpoint, transform_engine_v2_sns_topic_in = local.env_var_transform_engine_v2_sns_topic_in, judgment_export_bucket = local.env_var_judgment_export_bucket, standard_export_bucket = local.env_var_standard_export_bucket }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
   # created by the terraform environments project as they won't exist when we first run the backend project.
   # This KMS key is created by tdr-accounts which means it will exist when we run the terraform backend project for the first time
@@ -73,6 +77,16 @@ data "aws_ssm_parameter" "transform_engine_output_sqs_arn" {
   name  = "/${local.environment}/transform_engine/output_sqs/arn"
 }
 
+data "aws_ssm_parameter" "transform_engine_v2_input_sns_arn" {
+  count = local.transform_engine_count
+  name  = "/${local.environment}/transform_engine_v2/tre-in/arn"
+}
+
+data "aws_ssm_parameter" "transform_engine_v2_kms_key_arn" {
+  count = local.transform_engine_count
+  name  = "/${local.environment}/transform_engine_v2/kms/key_arn"
+}
+
 data "aws_ssm_parameter" "transform_engine_output_sqs_endpoint" {
   count = local.transform_engine_count
   name  = "/${local.environment}/transform_engine/output_sqs/endpoint"
@@ -92,7 +106,7 @@ resource "aws_iam_policy" "notifications_lambda_policy" {
 
 resource "aws_iam_policy" "transform_engine_notifications_lambda_policy" {
   count  = local.transform_engine_count
-  policy = templatefile("${path.module}/templates/notifications_transform_engine_lambda.json.tpl", { transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue })
+  policy = templatefile("${path.module}/templates/notifications_transform_engine_lambda.json.tpl", { transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue, transform_engine_in_topic_arn = data.aws_ssm_parameter.transform_engine_v2_input_sns_arn[0].value, transform_engine_kms_key_arn = data.aws_ssm_parameter.transform_engine_v2_kms_key_arn[0].value })
   name   = "${upper(var.project)}NotificationsTransformEngineLambdaPolicy${title(local.environment)}"
 }
 
