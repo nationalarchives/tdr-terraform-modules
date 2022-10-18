@@ -30,18 +30,13 @@
       "Resource": "${transform_engine_in_topic_arn}"
     },
     {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Sid": "AllowAccessToTreKmsKey",
-          "Effect": "Allow",
-          "Action": [
-            "kms:Decrypt",
-            "kms:GenerateDataKey*"
-          ],
-          "Resource": "${transform_engine_kms_key_arn}"
-        }
-      ]
+      "Sid": "AllowAccessToTreKmsKey",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey*"
+      ],
+      "Resource": "${transform_engine_kms_key_arn}"
     }
   ]
 }
