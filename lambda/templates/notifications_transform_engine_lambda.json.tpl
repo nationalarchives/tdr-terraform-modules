@@ -20,7 +20,8 @@
         "sqs:SendMessage"
       ],
       "Resource": [
-        "${transform_engine_retry_queue_arn}"
+        "${transform_engine_retry_queue_arn}",
+        "${transform_engine_v2_retry_queue_arn}"
       ]
     },
     {
