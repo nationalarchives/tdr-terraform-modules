@@ -1,9 +1,9 @@
 {
   "Version": "2012-10-17",
-  "Id": "default_policy",
+  "Id": "transform_engine_v2_policy",
   "Statement": [
     {
-      "Sid": "default_statement",
+      "Sid": "transform_engine_v2_policy",
       "Effect": "Allow",
       "Principal": {
         "AWS": "*"
