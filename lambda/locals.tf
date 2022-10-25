@@ -60,4 +60,6 @@ locals {
   rotate_keycloak_secrets_arn               = var.apply_resource == true && var.lambda_rotate_keycloak_secrets == true && length(aws_lambda_function.rotate_keycloak_secrets_lambda_function) > 0 ? aws_lambda_function.rotate_keycloak_secrets_lambda_function.*.arn[0] : ""
   transform_engine_retry_queue_name         = "${var.project}-transform-engine-retry-${local.environment}"
   transform_engine_retry_queue              = "arn:aws:sqs:${var.region}:${data.aws_caller_identity.current.account_id}:${local.transform_engine_retry_queue_name}"
+  transform_engine_v2_out_queue_name        = "${var.project}-transform-engine-v2-retry-${local.environment}"
+  transform_engine_v2_out_queue             = "arn:aws:sqs:${var.region}:${data.aws_caller_identity.current.account_id}:${local.transform_engine_v2_out_queue_name}"
 }

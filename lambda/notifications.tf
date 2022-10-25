@@ -1,6 +1,7 @@
 locals {
   //management account does not need the notifications transform engine aws resources
-  transform_engine_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
+  transform_engine_count    = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
+  transform_engine_v2_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
   //encryption requires some value, as these are not relevant for management account use placeholder values
   env_var_judgment_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
   env_var_standard_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.standard_export_s3_bucket_name
@@ -106,7 +107,7 @@ resource "aws_iam_policy" "notifications_lambda_policy" {
 
 resource "aws_iam_policy" "transform_engine_notifications_lambda_policy" {
   count  = local.transform_engine_count
-  policy = templatefile("${path.module}/templates/notifications_transform_engine_lambda.json.tpl", { transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue, transform_engine_in_topic_arn = data.aws_ssm_parameter.transform_engine_v2_input_sns_arn[0].value, transform_engine_kms_key_arn = data.aws_ssm_parameter.transform_engine_v2_kms_key_arn[0].value })
+  policy = templatefile("${path.module}/templates/notifications_transform_engine_lambda.json.tpl", { transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue, transform_engine_v2_out_queue_arn = local.transform_engine_v2_out_queue, transform_engine_v2_in_topic_arn = data.aws_ssm_parameter.transform_engine_v2_input_sns_arn[0].value, transform_engine_v2_kms_key_arn = data.aws_ssm_parameter.transform_engine_v2_kms_key_arn[0].value })
   name   = "${upper(var.project)}NotificationsTransformEngineLambdaPolicy${title(local.environment)}"
 }
 
@@ -156,6 +157,13 @@ resource "aws_sns_topic_subscription" "intg_topic_subscription" {
 resource "aws_lambda_event_source_mapping" "transform_engine_retry_sqs_queue_mapping" {
   count            = local.transform_engine_count
   event_source_arn = local.transform_engine_retry_queue
+  function_name    = aws_lambda_function.notifications_lambda_function.*.arn[0]
+  batch_size       = 1
+}
+
+resource "aws_lambda_event_source_mapping" "transform_engine_v2_out_sqs_queue_mapping" {
+  count            = local.transform_engine_v2_count
+  event_source_arn = local.transform_engine_v2_out_queue
   function_name    = aws_lambda_function.notifications_lambda_function.*.arn[0]
   batch_size       = 1
 }

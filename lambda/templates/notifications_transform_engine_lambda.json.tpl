@@ -20,14 +20,15 @@
         "sqs:SendMessage"
       ],
       "Resource": [
-        "${transform_engine_retry_queue_arn}"
+        "${transform_engine_retry_queue_arn}",
+        "${transform_engine_v2_out_queue_arn}"
       ]
     },
     {
       "Sid":"AllowPublishToTreIn",
       "Effect":"Allow",
       "Action":"sns:Publish",
-      "Resource": "${transform_engine_in_topic_arn}"
+      "Resource": "${transform_engine_v2_in_topic_arn}"
     },
     {
       "Sid": "AllowAccessToTreKmsKey",
@@ -36,7 +37,7 @@
         "kms:Decrypt",
         "kms:GenerateDataKey*"
       ],
-      "Resource": "${transform_engine_kms_key_arn}"
+      "Resource": "${transform_engine_v2_kms_key_arn}"
     }
   ]
 }
