@@ -16,6 +16,19 @@
         "SQS:SendMessage"
       ],
       "Resource": "arn:aws:sqs:${region}:${account_id}:${sqs_name}"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "sns.amazonaws.com"
+      },
+      "Action": "sqs:SendMessage",
+      "Resource": "arn:aws:sqs:${region}:${account_id}:${sqs_name}",
+      "Condition": {
+        "ArnEquals": {
+          "aws:SourceArn": ${jsonencode(topic_arns)}
+        }
+      }
     }
   ]
 }
