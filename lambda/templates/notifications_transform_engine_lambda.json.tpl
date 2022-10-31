@@ -31,6 +31,12 @@
       "Resource": "${transform_engine_v2_in_topic_arn}"
     },
     {
+      "Sid": "AllowAccessToTdrKmsKey",
+      "Effect": "Allow",
+      "Action": "kms:*",
+      "Resource": "${kms_arn}"
+    },
+    {
       "Sid": "AllowAccessToTreKmsKey",
       "Effect": "Allow",
       "Action": [
