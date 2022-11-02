@@ -138,12 +138,12 @@ resource "aws_lambda_permission" "lambda_permissions" {
   source_arn    = each.value
 }
 
-resource "aws_lambda_permission" "lambda_permissions_sns" {
-  for_each      = var.sns_topic_arns
-  statement_id  = "AllowExecutionFromSNS${split(":", each.key)[5]}"
+resource "aws_lambda_permission" "lambda_permissions_principals" {
+  for_each      = local.principal_arns
+  statement_id  = "AllowExecutionFrom${split(":", upper(each.key))[2]}${split(":", each.key)[5]}"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.notifications_lambda_function.*.arn[0]
-  principal     = "sns.amazonaws.com"
+  principal     = "${split(":", (each.key))[2]}.amazonaws.com"
   source_arn    = each.value
 }
 
