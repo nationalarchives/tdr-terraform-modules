@@ -175,6 +175,11 @@ variable "sns_topic_arns" {
   default = []
 }
 
+variable "sqs_queue_arns" {
+  type    = set(string)
+  default = []
+}
+
 variable "notifications_topic" {
   default = ""
 }

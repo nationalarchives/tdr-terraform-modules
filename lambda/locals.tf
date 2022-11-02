@@ -62,4 +62,5 @@ locals {
   transform_engine_retry_queue              = "arn:aws:sqs:${var.region}:${data.aws_caller_identity.current.account_id}:${local.transform_engine_retry_queue_name}"
   transform_engine_v2_out_queue_name        = "${var.project}-transform-engine-v2-retry-${local.environment}"
   transform_engine_v2_out_queue             = "arn:aws:sqs:${var.region}:${data.aws_caller_identity.current.account_id}:${local.transform_engine_v2_out_queue_name}"
+  principal_arns                            = setunion(var.sns_topic_arns, var.sqs_queue_arns)
 }
