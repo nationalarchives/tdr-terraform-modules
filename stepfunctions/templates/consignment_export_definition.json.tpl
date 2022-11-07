@@ -6,7 +6,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::ecs:runTask.waitForTaskToken",
       "HeartbeatSeconds": 60,
-      "TimeoutSeconds": 600,
+      "TimeoutSeconds": 1800,
       "Retry": [
         {
           "ErrorEquals": [
