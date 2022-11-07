@@ -90,7 +90,16 @@ resource "aws_wafv2_web_acl" "acl" {
     }
     statement {
       rate_based_statement {
-        limit = 5000
+        limit = 15000
+        scope_down_statement {
+          not_statement {
+            statement {
+              ip_set_reference_statement {
+                arn = aws_wafv2_ip_set.trusted[0].arn
+              }
+            }
+          }
+        }
       }
     }
     visibility_config {
