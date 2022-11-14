@@ -138,3 +138,8 @@ resource "aws_wafv2_web_acl_association" "association" {
   resource_arn = var.alb_target_groups[count.index]
   web_acl_arn  = aws_wafv2_web_acl.acl.arn
 }
+
+resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
+  log_destination_configs = var.log_destinations
+  resource_arn            = aws_wafv2_web_acl.acl.arn
+}
