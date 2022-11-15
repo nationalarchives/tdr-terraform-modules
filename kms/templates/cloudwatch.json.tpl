@@ -24,6 +24,18 @@
         "kms:GenerateDataKey*"
       ],
       "Resource": "*"
+    },
+    {
+      "Sid": "Allow_EventBridge_for_CMK",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "events.amazonaws.com"
+      },
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey*"
+      ],
+      "Resource": "*"
     }
   ]
 }
