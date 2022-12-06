@@ -24,3 +24,22 @@ resource "aws_iam_group_policy_attachment" "support_policy_attach" {
   group      = aws_iam_group.support.*.name[0]
   policy_arn = "arn:aws:iam::aws:policy/AWSSupportAccess"
 }
+
+# group with permissions to undertake security audit and penetration testing tasks
+resource "aws_iam_group" "security_audit" {
+  count = var.security_audit == true ? 1 : 0
+  name  = var.security_audit_group
+  path  = "/group/"
+}
+
+resource "aws_iam_group_policy_attachment" "security_audit_policy_attach" {
+  count      = var.security_audit == true ? 1 : 0
+  group      = aws_iam_group.security_audit.*.name[0]
+  policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
+}
+
+resource "aws_iam_group_policy_attachment" "read_only_policy_attach" {
+  count      = var.security_audit == true ? 1 : 0
+  group      = aws_iam_group.security_audit.*.name[0]
+  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+}
