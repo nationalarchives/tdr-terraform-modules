@@ -17,3 +17,6 @@ variable "security_audit_group" {
   description = "group giving 'read only' and 'security audit' permissions"
   default     = "security-audit"
 }
+
+variable "environment" {
+}
