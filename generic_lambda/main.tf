@@ -61,7 +61,7 @@ resource "aws_lambda_event_source_mapping" "sqs_queue_mappings" {
   batch_size       = 1
 }
 
-resource "aws_lambda_permission" "export_api_lambda_permissions" {
+resource "aws_lambda_permission" "lambda_permissions" {
   for_each      = var.lambda_invoke_permissions
   statement_id  = "AllowExecutionFrom${title(split(".", each.key)[0])}"
   action        = "lambda:InvokeFunction"
