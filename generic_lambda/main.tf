@@ -12,7 +12,7 @@ resource "aws_lambda_function" "lambda_function" {
   }
 
   reserved_concurrent_executions = var.reserved_concurrency
-  tags                           = var.common_tags
+  tags                           = var.tags
   environment {
     variables = local.all_env_vars
   }
@@ -39,7 +39,7 @@ resource "aws_lambda_function" "lambda_function" {
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
   name = "/aws/lambda/${aws_lambda_function.lambda_function.*.function_name[0]}"
-  tags = var.common_tags
+  tags = var.tags
 }
 
 locals {
@@ -69,7 +69,6 @@ resource "aws_lambda_permission" "export_api_lambda_permissions" {
   principal     = each.key
   source_arn    = each.value
 }
-
 
 resource "aws_iam_role" "lambda_iam_role" {
   assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", {})

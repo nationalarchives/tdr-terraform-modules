@@ -39,7 +39,7 @@ variable "reserved_concurrency" {
   default = 1
 }
 
-variable "common_tags" {}
+variable "tags" {}
 
 variable "efs_access_points" {
   type = list(object({
