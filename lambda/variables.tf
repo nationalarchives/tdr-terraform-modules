@@ -196,6 +196,10 @@ variable "api_gateway_arn" {
   default = ""
 }
 
+variable "backend_checks_api_arn" {
+  default = ""
+}
+
 variable "backend_checks_client_secret" {
   default = ""
 }
