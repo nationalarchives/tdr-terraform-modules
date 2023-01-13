@@ -65,6 +65,15 @@ resource "aws_lambda_permission" "export_api_lambda_permissions" {
   source_arn    = "${var.api_gateway_arn}/authorizers/*"
 }
 
+resource "aws_lambda_permission" "backend_checks_api_lambda_permissions" {
+  count         = local.count_export_api_authoriser
+  statement_id  = "AllowExecutionFromBackendChecksApi"
+  action        = "lambda:InvokeFunction"
+  function_name = "${var.project}-export-api-authoriser-${local.environment}"
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${var.backend_checks_api_arn}/authorizers/*"
+}
+
 resource "aws_security_group" "lambda_export_api_authoriser" {
   count       = local.count_export_api_authoriser
   name        = "allow-https-outbound-export-api-authoriser"
