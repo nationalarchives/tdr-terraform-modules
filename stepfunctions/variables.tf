@@ -1,17 +1,8 @@
-variable "common_tags" {}
+variable "tags" {}
 variable "step_function_name" {}
-variable "environment" {}
-variable "definition_variables" {
-  default = {}
-  type    = map(string)
-}
 variable "definition" {}
+variable "policy" {
+  description = "A policy in json format to be attached to the step function role"
+}
+variable "environment" {}
 variable "project" {}
-variable "policy" {}
-variable "policy_variables" {
-  default = {}
-  type    = map(string)
-}
-variable "notification_sns_topic" {
-  default = ""
-}
