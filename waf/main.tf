@@ -59,7 +59,7 @@ resource "aws_wafv2_rule_group" "rule_group" {
     }
     statement {
       geo_match_statement {
-        country_codes = var.environment == "intg" || var.environment == "staging" ? ["GB", "US"] : ["GB"]
+        country_codes = var.environment == "intg" || var.environment == "staging" ? ["GB", "US", "DE"] : ["GB"]
       }
     }
     visibility_config {
@@ -81,7 +81,33 @@ resource "aws_wafv2_web_acl" "acl" {
   default_action {
     block {}
   }
+  rule {
 
+    name     = "rate-based-rule"
+    priority = 0
+    action {
+      block {}
+    }
+    statement {
+      rate_based_statement {
+        limit = 15000
+        scope_down_statement {
+          not_statement {
+            statement {
+              ip_set_reference_statement {
+                arn = aws_wafv2_ip_set.trusted[0].arn
+              }
+            }
+          }
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "acl-rule-metric"
+      sampled_requests_enabled   = false
+    }
+  }
   rule {
     name     = "acl-rule"
     priority = 1
@@ -111,4 +137,9 @@ resource "aws_wafv2_web_acl_association" "association" {
   count        = length(var.alb_target_groups)
   resource_arn = var.alb_target_groups[count.index]
   web_acl_arn  = aws_wafv2_web_acl.acl.arn
+}
+
+resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
+  log_destination_configs = var.log_destinations
+  resource_arn            = aws_wafv2_web_acl.acl.arn
 }

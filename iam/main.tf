@@ -11,6 +11,11 @@ resource "aws_iam_account_password_policy" "cis_benchmark" {
   allow_users_to_change_password = true
 }
 
+resource "aws_iam_policy" "manage_credentials" {
+  name   = "TDRIAMUserManageCredentialsPolicy${title(var.environment)}"
+  policy = templatefile("${path.module}/templates/iam_user_manage_credentials.json.tpl", {})
+}
+
 # ensures compliance with CIS AWS Foundation Benchmark requirement for support role to be attached
 resource "aws_iam_group" "support" {
   count = var.aws_account_level == true ? 1 : 0
@@ -24,3 +29,29 @@ resource "aws_iam_group_policy_attachment" "support_policy_attach" {
   group      = aws_iam_group.support.*.name[0]
   policy_arn = "arn:aws:iam::aws:policy/AWSSupportAccess"
 }
+
+# group with permissions to undertake security audit and penetration testing tasks
+resource "aws_iam_group" "security_audit" {
+  count = var.security_audit == true ? 1 : 0
+  name  = var.security_audit_group
+  path  = "/group/"
+}
+
+resource "aws_iam_group_policy_attachment" "security_audit_policy_attach" {
+  count      = var.security_audit == true ? 1 : 0
+  group      = aws_iam_group.security_audit.*.name[0]
+  policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
+}
+
+resource "aws_iam_group_policy_attachment" "read_only_policy_attach" {
+  count      = var.security_audit == true ? 1 : 0
+  group      = aws_iam_group.security_audit.*.name[0]
+  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "manage_credentials" {
+  count      = var.security_audit == true ? 1 : 0
+  group      = aws_iam_group.security_audit.*.name[0]
+  policy_arn = aws_iam_policy.manage_credentials.arn
+}
+

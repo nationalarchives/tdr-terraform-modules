@@ -21,7 +21,7 @@
         "kms:Decrypt",
         "kms:GenerateDataKey*"
       ],
-     "Resource": "*"
+      "Resource": "*"
     },
     {
       "Effect": "Allow",
@@ -37,8 +37,8 @@
         "StringLike": {
           "kms:EncryptionContext:aws:sqs:arn": [
             "arn:aws:sqs:eu-west-2:${account_id}:tdr-backend-check-failure-${environment}",
-            "arn:aws:sqs:eu-west-2:${account_id}:tdr-download-files-${environment}"
-
+            "arn:aws:sqs:eu-west-2:${account_id}:tdr-download-files-${environment}",
+            "arn:aws:sqs:eu-west-2:${account_id}:tdr-transform-engine-v2-retry-${environment}"
           ]
         }
       }
@@ -60,6 +60,29 @@
           ]
         }
       }
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudwatch.amazonaws.com"
+      },
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "Allow EventBridge access to the KMS key",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "events.amazonaws.com"
+      },
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey"
+      ],
+      "Resource": "*"
     }
   ]
 }

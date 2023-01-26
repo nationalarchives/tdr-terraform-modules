@@ -67,8 +67,18 @@ variable "lambda_service_unavailable" {
   default     = false
 }
 
-variable "lambda_sign_cookies" {
-  description = "deploy Lambda function for the sign cookies API endpoint"
+variable "lambda_signed_cookies" {
+  description = "deploy Lambda function for the signed cookies API endpoint"
+  default     = false
+}
+
+variable "lambda_export_status_update" {
+  description = "deploy Lambda function for the export status update API endpoint"
+  default     = false
+}
+
+variable "lambda_reporting" {
+  description = "deploy Lambda function for the reporting"
   default     = false
 }
 
@@ -104,6 +114,21 @@ variable "cloudfront_key_pair_id" {
 
 variable "api_url" {
   description = "The url of the graphql api"
+  default     = ""
+}
+
+variable "slack_bot_token" {
+  description = "Slack bot token"
+  default     = ""
+}
+
+variable "keycloak_reporting_client_id" {
+  description = "Keycloak backend checks client id"
+  default     = ""
+}
+
+variable "keycloak_reporting_client_secret" {
+  description = "Keycloak backend checks client secret"
   default     = ""
 }
 
@@ -150,6 +175,15 @@ variable "sns_topic_arns" {
   default = []
 }
 
+variable "sqs_queue_arns" {
+  type    = set(string)
+  default = []
+}
+
+variable "notifications_topic" {
+  default = ""
+}
+
 variable "periodic_ecr_image_scan_event_arn" {
   default = ""
 }
@@ -159,6 +193,10 @@ variable "private_subnet_ids" {
 }
 
 variable "api_gateway_arn" {
+  default = ""
+}
+
+variable "backend_checks_api_arn" {
   default = ""
 }
 
@@ -267,5 +305,41 @@ variable "keycloak_user_management_api_arn" {
 }
 
 variable "judgment_export_s3_bucket_name" {
+  default = ""
+}
+
+variable "standard_export_s3_bucket_name" {
+  default = ""
+}
+
+variable "environment_full" {
+  default = ""
+}
+
+variable "backend_checks_client_secret_path" {
+  default = ""
+}
+
+variable "user_admin_client_secret_path" {
+  default = ""
+}
+
+variable "reporting_client_secret_path" {
+  default = ""
+}
+
+variable "lambda_rotate_keycloak_secrets" {
+  default = false
+}
+
+variable "rotate_secrets_client_path" {
+  default = ""
+}
+
+variable "rotate_keycloak_secrets_event_arn" {
+  default = ""
+}
+
+variable "upload_bucket" {
   default = ""
 }

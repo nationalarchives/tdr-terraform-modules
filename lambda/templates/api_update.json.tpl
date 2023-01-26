@@ -42,6 +42,23 @@
         "elasticfilesystem:ClientWrite"
       ],
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:CreateNetworkInterface",
+        "ec2:DescribeNetworkInterfaces",
+        "ec2:DeleteNetworkInterface",
+        "elasticfilesystem:ClientWrite"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssm:GetParameter"
+      ],
+      "Resource": "arn:aws:ssm:eu-west-2:${account_id}:parameter${parameter_name}"
     }
   ]
 }

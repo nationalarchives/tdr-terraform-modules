@@ -19,7 +19,13 @@ resource "aws_cloudwatch_event_target" "sqs_event_target" {
 }
 
 resource "aws_cloudwatch_event_target" "lambda_event_target" {
-  count = local.count_lambda_event_target
-  rule  = local.event_rule_name
-  arn   = var.lambda_event_target_arn[count.index]
+  for_each = var.lambda_event_target_arn
+  rule     = local.event_rule_name
+  arn      = each.value
+}
+
+resource "aws_cloudwatch_event_target" "sns_topic_event_target" {
+  for_each = var.sns_topic_event_target_arn
+  rule     = local.event_rule_name
+  arn      = each.value
 }

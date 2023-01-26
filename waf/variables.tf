@@ -32,3 +32,9 @@ variable "geo_match" {
   description = "Country codes in csv format"
   default     = ""
 }
+
+variable "log_destinations" {
+  description = "A list of destinations to send the waf logs to"
+  type        = list(string)
+  default     = []
+}

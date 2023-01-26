@@ -1,9 +1,5 @@
-variable "template_params" {
-  default = {}
-  type    = map(string)
-}
-variable "api_template" {
-  description = "The name of a json template file with the swagger json for the api definition"
+variable "api_definition" {
+  description = "The json definition of the API"
 }
 variable "api_name" {}
 variable "environment" {}

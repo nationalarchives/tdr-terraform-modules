@@ -7,19 +7,36 @@
       "Principal": {
         "AWS": "${cloudfront_oai}"
       },
-      "Action": "s3:PutObject",
+      "Action": [
+        "s3:PutObject",
+        "s3:PutObjectTagging"
+      ],
       "Resource": "arn:aws:s3:::${bucket_name}/*"
     },
     {
       "Effect": "Allow",
       "Principal": {
         "AWS": [
-          "arn:aws:iam::${account_id}:role/TDRDownloadFilesRole",
-          "arn:aws:iam::${account_id}:role/TDRYaraAvRole"
+          "arn:aws:iam::${account_id}:role/TDRYaraAVV2LambdaRole${title_environment}"
         ]
       },
       "Action": "s3:GetObject",
       "Resource": "arn:aws:s3:::tdr-upload-files-cloudfront-dirty-${environment}/*"
+    },
+    {
+      "Sid": "AllowSSLRequestsOnly",
+      "Action": "s3:*",
+      "Effect": "Deny",
+      "Resource": [
+        "arn:aws:s3:::${bucket_name}",
+        "arn:aws:s3:::${bucket_name}/*"
+      ],
+      "Condition": {
+        "Bool": {
+          "aws:SecureTransport": "false"
+        }
+      },
+      "Principal": "*"
     }
   ]
 }

@@ -20,9 +20,9 @@ data "aws_ssm_parameter" "prod_account_number" {
   name  = "/mgmt/prod_account"
 }
 
-data "aws_ssm_parameter" "cloudfront_private_key" {
-  count = var.project == "tdr" && local.environment != "mgmt" && local.environment != "sandbox" ? 1 : 0
-  name  = "/${local.environment}/cloudfront/key/private"
+data "aws_ssm_parameter" "cloudfront_private_key_pem" {
+  count = var.project == "tdr" && local.environment != "mgmt" && local.environment != "sbox" ? 1 : 0
+  name  = "/${local.environment}/cloudfront/key/private/pem"
 }
 
 data "aws_availability_zones" "available" {}
