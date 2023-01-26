@@ -17,8 +17,7 @@
       "Effect": "Allow",
       "Principal": {
         "AWS": [
-          "arn:aws:iam::${account_id}:role/TDRDownloadFilesRole",
-          "arn:aws:iam::${account_id}:role/TDRYaraAvRole"
+          "arn:aws:iam::${account_id}:role/TDRYaraAVV2LambdaRole${title_environment}"
         ]
       },
       "Action": "s3:GetObject",
