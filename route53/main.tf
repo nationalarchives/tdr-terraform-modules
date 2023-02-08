@@ -38,3 +38,23 @@ resource "aws_route53_record" "hosted_zone_ns" {
     "${local.hosted_zone_name_servers.3}.",
   ]
 }
+
+resource "aws_route53_key_signing_key" "signing_key" {
+  count                      = local.dnssec_count
+  hosted_zone_id             = aws_route53_zone.hosted_zone[count.index].id
+  key_management_service_arn = var.kms_key_arn
+  name                       = "${var.project}-signing-key-${var.environment_full_name}"
+}
+
+resource "aws_route53_hosted_zone_dnssec" "dns_sec" {
+  count = local.dnssec_count
+  depends_on = [
+    aws_route53_key_signing_key.signing_key
+  ]
+  hosted_zone_id = aws_route53_key_signing_key.signing_key[count.index].hosted_zone_id
+}
+
+resource "aws_route53_resolver_dnssec_config" "dnssec_config" {
+  count = local.dnssec_count
+  resource_id = var.vpc_id
+}

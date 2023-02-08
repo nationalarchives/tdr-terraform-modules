@@ -3,9 +3,11 @@ data "template_file" "key_policy" {
 }
 
 resource "aws_kms_key" "encryption" {
-  description         = "KMS key for encryption within ${var.environment} environment"
-  enable_key_rotation = true
-  policy              = data.template_file.key_policy.rendered
+  description              = "KMS key for encryption within ${var.environment} environment"
+  enable_key_rotation      = var.enable_key_rotation
+  policy                   = data.template_file.key_policy.rendered
+  key_usage                = var.key_usage
+  customer_master_key_spec = var.customer_master_key_spec
   tags = merge(
     var.common_tags,
     tomap(

@@ -52,3 +52,12 @@ variable "hosted_zone_id" {
 variable "hosted_zone_name_servers" {
   default = ""
 }
+
+variable "kms_key_arn" {
+  description = "The KMS Key ARN to enable DNSSEC on the hosted zone. It is optional because not all calls to this module create the hosted zone."
+  default     = ""
+}
+
+variable "vpc_id" {
+  default = ""
+}
