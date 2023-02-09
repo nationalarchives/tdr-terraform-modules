@@ -19,3 +19,7 @@ variable "common_tags" {}
 variable "availability_zone" {}
 
 variable "multi_az" {}
+
+variable "backup_retention_period" {
+  default = 7
+}
