@@ -3,7 +3,7 @@ resource "aws_instance" "instance" {
   instance_type          = var.instance_type
   iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
   subnet_id              = var.subnet_id
-  user_data              = var.user_data != "" ? templatefile("${path.module}/templates/${var.user_data}.sh.tpl", var.user_data_variables) : ""
+  user_data              = var.user_data
   vpc_security_group_ids = [var.security_group_id]
   key_name               = local.key_count == 0 ? "" : "bastion_key"
   private_ip             = var.private_ip == "" ? null : var.private_ip

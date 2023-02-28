@@ -12,13 +12,7 @@ variable "ami_id" {}
 
 variable "user_data" {
   default     = ""
-  description = "The template name for the shell script which will be run when the instance starts"
-}
-
-variable "user_data_variables" {
-  default     = {}
-  type        = map(string)
-  description = "The variables map to be passed into the user data template."
+  description = "The shell script text to be run when the instance starts"
 }
 
 variable "security_group_id" {
