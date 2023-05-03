@@ -6,6 +6,9 @@ resource "aws_sfn_state_machine" "state_machine" {
   name       = "${upper(var.project)}${var.step_function_name}${title(var.environment)}"
   role_arn   = aws_iam_role.state_machine_role.arn
   tags       = var.tags
+  tracing_configuration {
+    enabled = true
+  }
 }
 
 resource "aws_iam_role" "state_machine_role" {
