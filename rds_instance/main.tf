@@ -24,7 +24,7 @@ resource "aws_db_subnet_group" "user_subnet_group" {
 
 resource "aws_db_instance" "db_instance" {
   instance_class                        = var.instance_class
-  name                                  = var.database_name
+  db_name                               = var.database_name
   identifier                            = "${var.database_name}-${random_string.identifier_string.result}"
   storage_encrypted                     = true
   kms_key_id                            = var.kms_key_id
