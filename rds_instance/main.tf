@@ -30,7 +30,7 @@ resource "aws_db_instance" "db_instance" {
   kms_key_id                            = var.kms_key_id
   allocated_storage                     = 60
   engine                                = "postgres"
-  engine_version                        = "14.4"
+  engine_version                        = var.database_version
   username                              = var.admin_username
   password                              = random_password.password.result
   vpc_security_group_ids                = var.security_group_ids
