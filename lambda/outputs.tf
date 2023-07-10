@@ -37,3 +37,7 @@ output "create_keycloak_users_s3_lambda_arn" {
 output "rotate_keycloak_secrets_lambda_arn" {
   value = aws_lambda_function.rotate_keycloak_secrets_lambda_function.*.arn
 }
+
+output "notifications_lambda_role_arn" {
+  value = aws_iam_role.notifications_lambda_iam_role.*.arn
+}
