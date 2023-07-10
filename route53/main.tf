@@ -10,6 +10,11 @@ resource "aws_route53_zone" "hosted_zone" {
   )
 }
 
+data "aws_route53_zone" "hosted_zone" {
+  count = var.create_hosted_zone == true ? 0 : 1
+  name  = var.environment_full_name == "production" ? "${var.project}.${var.domain}" : "${var.project}-${var.environment_full_name}.${var.domain}"
+}
+
 resource "aws_route53_record" "dns" {
   count   = var.a_record_name == "" ? 0 : 1
   zone_id = local.hosted_zone_id
