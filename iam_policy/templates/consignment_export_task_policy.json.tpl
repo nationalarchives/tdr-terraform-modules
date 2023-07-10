@@ -31,6 +31,15 @@
       ]
     },
     {
+      "Sid": "KMSs3ExportBucketPermission",
+      "Action": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey"
+      ],
+      "Effect": "Allow",
+      "Resource": "${kms_export_bucket_key_arn}"
+    },
+    {
       "Effect": "Allow",
       "Action": [
         "s3:PutObject"

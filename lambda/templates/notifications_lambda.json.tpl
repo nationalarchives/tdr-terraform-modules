@@ -35,7 +35,8 @@
       ],
       "Resource": [
         "${kms_account_arn}",
-        "${kms_arn}"
+        "${kms_arn}",
+        "${kms_export_bucket_key_arn}"
       ]
     },
     {
