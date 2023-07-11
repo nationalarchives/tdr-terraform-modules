@@ -23,3 +23,7 @@ variable "multi_az" {}
 variable "backup_retention_period" {
   default = 7
 }
+
+variable "database_version" {
+  default = "14.4"
+}

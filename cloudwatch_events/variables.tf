@@ -6,6 +6,10 @@ variable "log_group_event_target_arn" {
   description = "A Cloudwatch log group ARN to attach to the event"
   default     = ""
 }
+variable "log_group_ecs_task_events_target_arn" {
+  description = "A Cloudwatch log group ARN to attach to the ecs stopped task events"
+  default     = ""
+}
 variable "lambda_event_target_arn" {
   description = "A Lambda ARN to attach to the event"
   type        = set(string)
