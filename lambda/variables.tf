@@ -343,3 +343,8 @@ variable "rotate_keycloak_secrets_event_arn" {
 variable "upload_bucket" {
   default = ""
 }
+
+variable "kms_export_bucket_key_arn" {
+  description = "s3 export buckets KMS key arn"
+  default     = ""
+}
