@@ -107,9 +107,9 @@ resource "aws_iam_policy" "notifications_lambda_policy" {
 }
 
 resource "aws_iam_policy" "notifications_kms_bucket_key_policy" {
-  count = local.kms_export_bucket_encryption_count
+  count  = local.kms_export_bucket_encryption_count
   policy = templatefile("${path.module}/templates/notifications_lambda_kms_bucket_key_policy.json.tpl", { kms_export_bucket_key_arn = var.kms_export_bucket_key_arn })
-  name = "${upper(var.project)}NotificationsLambdaKMSBucketKeyPolicy${title(local.environment)}"
+  name   = "${upper(var.project)}NotificationsLambdaKMSBucketKeyPolicy${title(local.environment)}"
 }
 
 resource "aws_iam_policy" "transform_engine_notifications_lambda_policy" {
@@ -131,9 +131,9 @@ resource "aws_iam_role_policy_attachment" "notifications_lambda_role_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "notifications_kms_bucket_key_policy" {
-  count = local.kms_export_bucket_encryption_count
+  count      = local.kms_export_bucket_encryption_count
   policy_arn = aws_iam_policy.notifications_kms_bucket_key_policy.*.arn[0]
-  role = aws_iam_role.notifications_lambda_iam_role.*.name[0]
+  role       = aws_iam_role.notifications_lambda_iam_role.*.name[0]
 }
 
 resource "aws_iam_role_policy_attachment" "transform_engine_notifications_policy" {
