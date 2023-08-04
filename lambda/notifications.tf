@@ -1,7 +1,8 @@
 locals {
   //management account does not need the notifications transform engine aws resources
-  transform_engine_count    = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
-  transform_engine_v2_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
+  transform_engine_count             = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
+  transform_engine_v2_count          = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
+  kms_export_bucket_encryption_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
   //encryption requires some value, as these are not relevant for management account use placeholder values
   env_var_judgment_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
   env_var_standard_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.standard_export_s3_bucket_name
@@ -101,8 +102,14 @@ resource "aws_cloudwatch_log_group" "notifications_lambda_log_group" {
 
 resource "aws_iam_policy" "notifications_lambda_policy" {
   count  = local.count_notifications
-  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "tdr-secops@nationalarchives.gov.uk", kms_arn = var.kms_key_arn, kms_account_arn = data.aws_kms_key.encryption_key_account.arn, kms_export_bucket_key_arn = var.kms_export_bucket_key_arn })
+  policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", { account_id = data.aws_caller_identity.current.account_id, environment = local.environment, email = "tdr-secops@nationalarchives.gov.uk", kms_arn = var.kms_key_arn, kms_account_arn = data.aws_kms_key.encryption_key_account.arn })
   name   = "${upper(var.project)}NotificationsLambdaPolicy${title(local.environment)}"
+}
+
+resource "aws_iam_policy" "notifications_kms_bucket_key_policy" {
+  count  = local.kms_export_bucket_encryption_count
+  policy = templatefile("${path.module}/templates/notifications_lambda_kms_bucket_key_policy.json.tpl", { kms_export_bucket_key_arn = var.kms_export_bucket_key_arn })
+  name   = "${upper(var.project)}NotificationsLambdaKMSBucketKeyPolicy${title(local.environment)}"
 }
 
 resource "aws_iam_policy" "transform_engine_notifications_lambda_policy" {
@@ -120,6 +127,12 @@ resource "aws_iam_role" "notifications_lambda_iam_role" {
 resource "aws_iam_role_policy_attachment" "notifications_lambda_role_policy" {
   count      = local.count_notifications
   policy_arn = aws_iam_policy.notifications_lambda_policy.*.arn[0]
+  role       = aws_iam_role.notifications_lambda_iam_role.*.name[0]
+}
+
+resource "aws_iam_role_policy_attachment" "notifications_kms_bucket_key_policy" {
+  count      = local.kms_export_bucket_encryption_count
+  policy_arn = aws_iam_policy.notifications_kms_bucket_key_policy.*.arn[0]
   role       = aws_iam_role.notifications_lambda_iam_role.*.name[0]
 }
 
