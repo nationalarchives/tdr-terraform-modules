@@ -348,3 +348,13 @@ variable "kms_export_bucket_key_arn" {
   description = "s3 export buckets KMS key arn"
   default     = ""
 }
+
+variable "da_event_bus_arn" {
+  description = "Digital Archiving event bus arn"
+  default     = ""
+}
+
+variable "da_event_bus_kms_key_arn" {
+  description = "Digital Archiving event bus kms encryption arn"
+  default     = ""
+}
