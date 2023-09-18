@@ -44,17 +44,17 @@ resource "aws_lambda_function" "notifications_lambda_function" {
 
 resource "aws_kms_ciphertext" "environment_vars_notifications" {
   for_each = local.count_notifications == 0 ? {} : {
-    slack_tdr_webhook = data.aws_ssm_parameter.slack_webhook[0].value,
-    slack_judgment_webhook = data.aws_ssm_parameter.slack_judgment_webhook[0].value,
-    slack_notifications_webhook = data.aws_ssm_parameter.slack_notifications_webhook[0].value,
-    slack_export_webhook = data.aws_ssm_parameter.slack_export_webhook[0].value,
-    to_email = "tdr-secops@nationalarchives.gov.uk",
-    transform_engine_output_sqs = local.env_var_transform_engine_output_sqs_endpoint,
+    slack_tdr_webhook                = data.aws_ssm_parameter.slack_webhook[0].value,
+    slack_judgment_webhook           = data.aws_ssm_parameter.slack_judgment_webhook[0].value,
+    slack_notifications_webhook      = data.aws_ssm_parameter.slack_notifications_webhook[0].value,
+    slack_export_webhook             = data.aws_ssm_parameter.slack_export_webhook[0].value,
+    to_email                         = "tdr-secops@nationalarchives.gov.uk",
+    transform_engine_output_sqs      = local.env_var_transform_engine_output_sqs_endpoint,
     transform_engine_v2_sns_topic_in = local.env_var_transform_engine_v2_sns_topic_in,
-    judgment_export_bucket = local.env_var_judgment_export_bucket,
-    standard_export_bucket = local.env_var_standard_export_bucket,
-    da_event_bus           = var.da_event_bus_arn,
-    da_event_bus_kms_key   = var.da_event_bus_kms_key_arn
+    judgment_export_bucket           = local.env_var_judgment_export_bucket,
+    standard_export_bucket           = local.env_var_standard_export_bucket,
+    da_event_bus                     = var.da_event_bus_arn,
+    da_event_bus_kms_key             = var.da_event_bus_kms_key_arn
   }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
   # created by the terraform environments project as they won't exist when we first run the backend project.
