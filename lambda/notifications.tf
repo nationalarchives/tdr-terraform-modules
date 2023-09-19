@@ -32,6 +32,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
       TRANSFORM_ENGINE_V2_SNS_TOPIC_IN = aws_kms_ciphertext.environment_vars_notifications["transform_engine_v2_sns_topic_in"].ciphertext_blob
       JUDGMENT_EXPORT_BUCKET           = aws_kms_ciphertext.environment_vars_notifications["judgment_export_bucket"].ciphertext_blob
       STANDARD_EXPORT_BUCKET           = aws_kms_ciphertext.environment_vars_notifications["standard_export_bucket"].ciphertext_blob
+      DA_EVENT_BUS                     = aws_kms_ciphertext.environment_vars_notifications["da_event_bus"].ciphertext_blob
     }
   }
 
@@ -41,7 +42,18 @@ resource "aws_lambda_function" "notifications_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_notifications" {
-  for_each = local.count_notifications == 0 ? {} : { slack_tdr_webhook = data.aws_ssm_parameter.slack_webhook[0].value, slack_judgment_webhook = data.aws_ssm_parameter.slack_judgment_webhook[0].value, slack_notifications_webhook = data.aws_ssm_parameter.slack_notifications_webhook[0].value, slack_export_webhook = data.aws_ssm_parameter.slack_export_webhook[0].value, to_email = "tdr-secops@nationalarchives.gov.uk", transform_engine_output_sqs = local.env_var_transform_engine_output_sqs_endpoint, transform_engine_v2_sns_topic_in = local.env_var_transform_engine_v2_sns_topic_in, judgment_export_bucket = local.env_var_judgment_export_bucket, standard_export_bucket = local.env_var_standard_export_bucket }
+  for_each = local.count_notifications == 0 ? {} : {
+    slack_tdr_webhook                = data.aws_ssm_parameter.slack_webhook[0].value,
+    slack_judgment_webhook           = data.aws_ssm_parameter.slack_judgment_webhook[0].value,
+    slack_notifications_webhook      = data.aws_ssm_parameter.slack_notifications_webhook[0].value,
+    slack_export_webhook             = data.aws_ssm_parameter.slack_export_webhook[0].value,
+    to_email                         = "tdr-secops@nationalarchives.gov.uk",
+    transform_engine_output_sqs      = local.env_var_transform_engine_output_sqs_endpoint,
+    transform_engine_v2_sns_topic_in = local.env_var_transform_engine_v2_sns_topic_in,
+    judgment_export_bucket           = local.env_var_judgment_export_bucket,
+    standard_export_bucket           = local.env_var_standard_export_bucket,
+    da_event_bus                     = var.da_event_bus_arn
+  }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
   # created by the terraform environments project as they won't exist when we first run the backend project.
   # This KMS key is created by tdr-accounts which means it will exist when we run the terraform backend project for the first time
