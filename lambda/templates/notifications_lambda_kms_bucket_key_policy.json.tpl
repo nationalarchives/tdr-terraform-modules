@@ -5,7 +5,8 @@
       "Sid": "DecryptS3Bucket",
       "Effect": "Allow",
       "Action": [
-        "kms:Decrypt"
+        "kms:Decrypt",
+        "kms:GenerateDataKey*"
       ],
       "Resource": [
         "${kms_export_bucket_key_arn}"
