@@ -50,6 +50,23 @@
         "arn:aws:s3:::tdr-consignment-export-judgment-${environment}",
         "arn:aws:s3:::tdr-consignment-export-judgment-${environment}/*"
       ]
+    },
+    {
+      "Sid": "Allow TRE to use this KMS key",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+          "${da_event_bus_kms_key_arn}"
+        ]
+      },
+      "Action": [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey"
+      ],
+      "Resource": "*"
     }
   ]
 }
