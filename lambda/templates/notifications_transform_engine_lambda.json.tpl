@@ -25,19 +25,22 @@
       ]
     },
     {
-      "Sid":"AllowPublishToTreIn",
+      "Sid":"AllowPublishToDaEventBus",
       "Effect":"Allow",
       "Action":"sns:Publish",
-      "Resource": "${transform_engine_v2_in_topic_arn}"
+      "Resource": "${da_event_bus_arn}"
     },
     {
-      "Sid": "AllowAccessToTreKmsKey",
+      "Sid": "AllowAccessToDaEventBusKmsKey",
       "Effect": "Allow",
       "Action": [
+        "kms:Encrypt",
         "kms:Decrypt",
-        "kms:GenerateDataKey*"
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey"
       ],
-      "Resource": "${transform_engine_v2_kms_key_arn}"
+      "Resource": "${da_event_bus_kms_key_arn}"
     }
   ]
 }
