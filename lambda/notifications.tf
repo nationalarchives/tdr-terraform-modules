@@ -125,9 +125,15 @@ resource "aws_iam_policy" "notifications_kms_bucket_key_policy" {
 }
 
 resource "aws_iam_policy" "transform_engine_notifications_lambda_policy" {
-  count  = local.transform_engine_count
-  policy = templatefile("${path.module}/templates/notifications_transform_engine_lambda.json.tpl", { transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value, transform_engine_retry_queue_arn = local.transform_engine_retry_queue, transform_engine_v2_out_queue_arn = local.transform_engine_v2_out_queue, transform_engine_v2_in_topic_arn = data.aws_ssm_parameter.transform_engine_v2_input_sns_arn[0].value, transform_engine_v2_kms_key_arn = data.aws_ssm_parameter.transform_engine_v2_kms_key_arn[0].value })
-  name   = "${upper(var.project)}NotificationsTransformEngineLambdaPolicy${title(local.environment)}"
+  count = local.transform_engine_count
+  policy = templatefile("${path.module}/templates/notifications_transform_engine_lambda.json.tpl", {
+    transform_engine_output_queue_arn = data.aws_ssm_parameter.transform_engine_output_sqs_arn[0].value,
+    transform_engine_retry_queue_arn  = local.transform_engine_retry_queue,
+    transform_engine_v2_out_queue_arn = local.transform_engine_v2_out_queue,
+    da_event_bus_arn                  = var.da_event_bus_arn,
+    da_event_bus_kms_key_arn          = var.da_event_bus_kms_key_arn
+  })
+  name = "${upper(var.project)}NotificationsTransformEngineLambdaPolicy${title(local.environment)}"
 }
 
 resource "aws_iam_role" "notifications_lambda_iam_role" {
