@@ -1,7 +1,6 @@
 locals {
   //management account does not need the notifications transform engine aws resources
   transform_engine_count             = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
-  transform_engine_v2_count          = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
   kms_export_bucket_encryption_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
   //encryption requires some value, as these are not relevant for management account use placeholder values
   env_var_judgment_export_bucket               = local.transform_engine_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
@@ -188,13 +187,6 @@ resource "aws_sns_topic_subscription" "intg_topic_subscription" {
 resource "aws_lambda_event_source_mapping" "transform_engine_retry_sqs_queue_mapping" {
   count            = local.transform_engine_count
   event_source_arn = local.transform_engine_retry_queue
-  function_name    = aws_lambda_function.notifications_lambda_function.*.arn[0]
-  batch_size       = 1
-}
-
-resource "aws_lambda_event_source_mapping" "transform_engine_v2_out_sqs_queue_mapping" {
-  count            = local.transform_engine_v2_count
-  event_source_arn = local.transform_engine_v2_out_queue
   function_name    = aws_lambda_function.notifications_lambda_function.*.arn[0]
   batch_size       = 1
 }
