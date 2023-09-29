@@ -38,6 +38,7 @@
         "kms:Decrypt",
         "kms:ReEncrypt*",
         "kms:GenerateDataKey*",
+        "kms:GenerateDataKey",
         "kms:DescribeKey"
       ],
       "Resource": "${da_event_bus_kms_key_arn}"
