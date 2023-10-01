@@ -4,15 +4,6 @@ resource "aws_s3_bucket" "log_bucket" {
   bucket        = "${local.bucket_name}-logs"
   force_destroy = var.force_destroy
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm     = var.kms_key_id == "" ? "AES256" : "aws:kms"
-        kms_master_key_id = var.kms_key_id == "" ? null : var.kms_key_id
-      }
-    }
-  }
-
   versioning {
     enabled = true
   }
@@ -23,6 +14,17 @@ resource "aws_s3_bucket" "log_bucket" {
       { "Name" = "${local.bucket_name}-logs" }
     )
   )
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "log_bucket" {
+  bucket = aws_s3_bucket.log_bucket.*.id[0]
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = var.kms_key_id == "" ? "AES256" : "aws:kms"
+      kms_master_key_id = var.kms_key_id == "" ? null : var.kms_key_id
+    }
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "log_bucket" {
