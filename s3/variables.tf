@@ -69,6 +69,11 @@ variable "kms_key_id" {
   default     = ""
 }
 
+variable "bucket_key_enabled" {
+  description = "Enable bucket key"
+  default     = false
+}
+
 variable "cors_urls" {
   description = "frontend URLs that are allowed to make cross-origin request to the bucket"
   type        = list(string)
