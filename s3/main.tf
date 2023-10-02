@@ -60,14 +60,6 @@ resource "aws_s3_bucket" "bucket" {
   acl           = length(var.canonical_user_grants) == 0 ? var.acl : null
   force_destroy = var.force_destroy
 
-#  server_side_encryption_configuration {
-#    rule {
-#      apply_server_side_encryption_by_default {
-#        sse_algorithm = "AES256"
-#      }
-#    }
-#  }
-
   dynamic "grant" {
     for_each = var.canonical_user_grants
     content {
