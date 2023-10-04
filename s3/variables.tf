@@ -74,6 +74,10 @@ variable "bucket_key_enabled" {
   default     = false
 }
 
+variable "tre_role_arn" {
+  default = ""
+}
+
 variable "cors_urls" {
   description = "frontend URLs that are allowed to make cross-origin request to the bucket"
   type        = list(string)
