@@ -21,6 +21,7 @@ variable "availability_zone" {}
 variable "multi_az" {}
 
 variable "ca_cert_identifier" {
+  default     = "rds-ca-rsa2048-g1"
   description = "Allows you to modify the underlying RDS certificate"
 }
 
