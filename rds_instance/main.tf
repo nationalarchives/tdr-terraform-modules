@@ -45,6 +45,7 @@ resource "aws_db_instance" "db_instance" {
   enabled_cloudwatch_logs_exports       = ["postgresql"]
   deletion_protection                   = true
   backup_retention_period               = var.backup_retention_period
+  ca_cert_identifier                    = var.ca_cert_identifier
 }
 
 resource "aws_ssm_parameter" "database_username" {

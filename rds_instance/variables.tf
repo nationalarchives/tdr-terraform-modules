@@ -20,6 +20,10 @@ variable "availability_zone" {}
 
 variable "multi_az" {}
 
+variable "ca_cert_identifier" {
+  description = "Allows you to modify the underlying RDS certificate"
+}
+
 variable "backup_retention_period" {
   default = 7
 }
