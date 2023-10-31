@@ -35,5 +35,5 @@ variable "database_version" {
 
 variable "apply_immediately" {
   default     = false
-  description = "Should modifications be applied immediately? Otherwise they are applied at next maintenance window"
+  description = "Apply modifications immediately or wait for next maintenance window"
 }
