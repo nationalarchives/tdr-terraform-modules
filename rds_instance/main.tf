@@ -46,6 +46,7 @@ resource "aws_db_instance" "db_instance" {
   deletion_protection                   = true
   backup_retention_period               = var.backup_retention_period
   ca_cert_identifier                    = var.ca_cert_identifier
+  apply_immediately                     = var.apply_immediately
 }
 
 resource "aws_ssm_parameter" "database_username" {

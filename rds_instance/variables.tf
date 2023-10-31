@@ -32,3 +32,8 @@ variable "backup_retention_period" {
 variable "database_version" {
   default = "14.4"
 }
+
+variable "apply_immediately" {
+  default     = false
+  description = "Should modifications be applied immediately? Otherwise they are applied at next maintenance window"
+}
