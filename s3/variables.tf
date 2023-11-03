@@ -74,8 +74,9 @@ variable "bucket_key_enabled" {
   default     = false
 }
 
-variable "tre_role_arn" {
-  default = ""
+variable "read_access_role_arns" {
+  description = "IAM roles requiring read access to bucket"
+  default     = []
 }
 
 variable "cors_urls" {
