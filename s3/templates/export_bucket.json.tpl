@@ -18,10 +18,10 @@
       "Principal": "*"
     },
     {
-      "Sid": "AllowTreReadAccess",
+      "Sid": "AllowReadAccess",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "${tre_role_arn}"
+        "AWS": ${jsonencode(read_access_roles)}
       },
       "Action": [
         "s3:GetObject"
