@@ -358,3 +358,8 @@ variable "da_event_bus_kms_key_arn" {
   description = "Digital Archiving event bus kms encryption arn"
   default     = ""
 }
+
+variable "user_session_timeout_mins" {
+  description = "Timeout for a user session in minutes"
+  default     = 60
+}

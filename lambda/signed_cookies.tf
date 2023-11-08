@@ -11,12 +11,13 @@ resource "aws_lambda_function" "signed_cookies_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      PRIVATE_KEY   = aws_kms_ciphertext.environment_vars_signed_cookies["private_key"].ciphertext_blob
-      FRONTEND_URL  = var.frontend_url
-      AUTH_URL      = var.auth_url
-      UPLOAD_DOMAIN = var.upload_domain
-      ENVIRONMENT   = var.environment_full
-      KEY_PAIR_ID   = aws_kms_ciphertext.environment_vars_signed_cookies["key_pair_id"].ciphertext_blob,
+      PRIVATE_KEY           = aws_kms_ciphertext.environment_vars_signed_cookies["private_key"].ciphertext_blob
+      FRONTEND_URL          = var.frontend_url
+      AUTH_URL              = var.auth_url
+      UPLOAD_DOMAIN         = var.upload_domain
+      ENVIRONMENT           = var.environment_full
+      KEY_PAIR_ID           = aws_kms_ciphertext.environment_vars_signed_cookies["key_pair_id"].ciphertext_blob,
+      COOKIE_EXPIRY_MINUTES = var.user_session_timeout_mins
     }
   }
 
