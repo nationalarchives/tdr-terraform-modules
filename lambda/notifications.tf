@@ -122,7 +122,7 @@ resource "aws_iam_role_policy_attachment" "notifications_kms_bucket_key_policy" 
   role       = aws_iam_role.notifications_lambda_iam_role.*.name[0]
 }
 
-resource "aws_iam_role_policy_attachment" "transform_engine_notifications_policy" {
+resource "aws_iam_role_policy_attachment" "da_event_bus_notifications_policy" {
   count      = local.da_event_bus_count
   policy_arn = aws_iam_policy.da_event_bus_notifications_lambda_policy.*.arn[0]
   role       = aws_iam_role.notifications_lambda_iam_role.*.name[0]
