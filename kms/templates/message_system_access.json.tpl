@@ -12,18 +12,6 @@
       "Resource": "*"
     },
     {
-      "Sid": "Allow Transform Engine IAM role access to KMS key",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "${transform_engine_retry_role}"
-      },
-      "Action": [
-        "kms:Decrypt",
-        "kms:GenerateDataKey*"
-      ],
-      "Resource": "*"
-    },
-    {
       "Effect": "Allow",
       "Principal": {
         "Service": "sns.amazonaws.com"
@@ -37,8 +25,7 @@
         "StringLike": {
           "kms:EncryptionContext:aws:sqs:arn": [
             "arn:aws:sqs:eu-west-2:${account_id}:tdr-backend-check-failure-${environment}",
-            "arn:aws:sqs:eu-west-2:${account_id}:tdr-download-files-${environment}",
-            "arn:aws:sqs:eu-west-2:${account_id}:tdr-transform-engine-v2-retry-${environment}"
+            "arn:aws:sqs:eu-west-2:${account_id}:tdr-download-files-${environment}"
           ]
         }
       }

@@ -1,10 +1,10 @@
 locals {
   //management account does not need the notifications transform engine aws resources
-  transform_engine_count             = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
+  da_event_bus_count                 = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
   kms_export_bucket_encryption_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
   //encryption requires some value, as these are not relevant for management account use placeholder values
-  env_var_judgment_export_bucket = local.transform_engine_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
-  env_var_standard_export_bucket = local.transform_engine_count == 0 ? "not_applicable" : var.standard_export_s3_bucket_name
+  env_var_judgment_export_bucket = local.da_event_bus_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
+  env_var_standard_export_bucket = local.da_event_bus_count == 0 ? "not_applicable" : var.standard_export_s3_bucket_name
 }
 
 resource "aws_lambda_function" "notifications_lambda_function" {
@@ -102,8 +102,8 @@ resource "aws_iam_policy" "notifications_kms_bucket_key_policy" {
   name   = "${upper(var.project)}NotificationsLambdaKMSBucketKeyPolicy${title(local.environment)}"
 }
 
-resource "aws_iam_policy" "transform_engine_notifications_lambda_policy" {
-  count = local.transform_engine_count
+resource "aws_iam_policy" "da_event_bus_notifications_lambda_policy" {
+  count = local.da_event_bus_count
   policy = templatefile("${path.module}/templates/notifications_lambda_da_event_bus_policy.json.tpl", {
     da_event_bus_arn         = var.da_event_bus_arn,
     da_event_bus_kms_key_arn = var.da_event_bus_kms_key_arn
@@ -130,8 +130,8 @@ resource "aws_iam_role_policy_attachment" "notifications_kms_bucket_key_policy" 
 }
 
 resource "aws_iam_role_policy_attachment" "transform_engine_notifications_policy" {
-  count      = local.transform_engine_count
-  policy_arn = aws_iam_policy.transform_engine_notifications_lambda_policy.*.arn[0]
+  count      = local.da_event_bus_count
+  policy_arn = aws_iam_policy.da_event_bus_notifications_lambda_policy.*.arn[0]
   role       = aws_iam_role.notifications_lambda_iam_role.*.name[0]
 }
 
