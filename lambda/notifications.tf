@@ -104,7 +104,7 @@ resource "aws_iam_policy" "notifications_kms_bucket_key_policy" {
 
 resource "aws_iam_policy" "transform_engine_notifications_lambda_policy" {
   count = local.transform_engine_count
-  policy = templatefile("${path.module}/templates/notifications_transform_engine_lambda.json.tpl", {
+  policy = templatefile("${path.module}/templates/notifications_lambda_da_event_bus_policy.json.tpl", {
     da_event_bus_arn         = var.da_event_bus_arn,
     da_event_bus_kms_key_arn = var.da_event_bus_kms_key_arn
   })
