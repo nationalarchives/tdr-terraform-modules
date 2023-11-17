@@ -1,10 +1,7 @@
 locals {
-  //management account does not need the notifications transform engine aws resources
+  //management account does not need the notifications digital archiving event bus aws resources
   da_event_bus_count                 = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
   kms_export_bucket_encryption_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
-  //encryption requires some value, as these are not relevant for management account use placeholder values
-  env_var_judgment_export_bucket = local.da_event_bus_count == 0 ? "not_applicable" : var.judgment_export_s3_bucket_name
-  env_var_standard_export_bucket = local.da_event_bus_count == 0 ? "not_applicable" : var.standard_export_s3_bucket_name
 }
 
 resource "aws_lambda_function" "notifications_lambda_function" {
@@ -25,8 +22,6 @@ resource "aws_lambda_function" "notifications_lambda_function" {
       SLACK_TDR_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_tdr_webhook"].ciphertext_blob
       SLACK_EXPORT_WEBHOOK   = aws_kms_ciphertext.environment_vars_notifications["slack_export_webhook"].ciphertext_blob
       TO_EMAIL               = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
-      JUDGMENT_EXPORT_BUCKET = aws_kms_ciphertext.environment_vars_notifications["judgment_export_bucket"].ciphertext_blob
-      STANDARD_EXPORT_BUCKET = aws_kms_ciphertext.environment_vars_notifications["standard_export_bucket"].ciphertext_blob
       DA_EVENT_BUS           = aws_kms_ciphertext.environment_vars_notifications["da_event_bus"].ciphertext_blob
     }
   }
@@ -43,8 +38,6 @@ resource "aws_kms_ciphertext" "environment_vars_notifications" {
     slack_notifications_webhook = data.aws_ssm_parameter.slack_notifications_webhook[0].value,
     slack_export_webhook        = data.aws_ssm_parameter.slack_export_webhook[0].value,
     to_email                    = "tdr-secops@nationalarchives.gov.uk",
-    judgment_export_bucket      = local.env_var_judgment_export_bucket,
-    standard_export_bucket      = local.env_var_standard_export_bucket,
     da_event_bus                = var.da_event_bus_arn
   }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
