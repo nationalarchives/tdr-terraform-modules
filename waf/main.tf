@@ -6,8 +6,16 @@ resource "aws_wafv2_ip_set" "trusted" {
   scope              = "REGIONAL"
 }
 
+resource "aws_wafv2_ip_set" "blocked" {
+  count              = var.blocked_ips == "" ? 0 : 1
+  name               = "${var.project}-${var.function}-${var.environment}-blockedlist"
+  addresses          = var.blocked_ips
+  ip_address_version = "IPV4"
+  scope              = "REGIONAL"
+}
+
 resource "aws_wafv2_rule_group" "rule_group" {
-  capacity = 12
+  capacity = 24
   name     = "waf-rule-group"
   scope    = "REGIONAL"
   rule {
@@ -68,12 +76,59 @@ resource "aws_wafv2_rule_group" "rule_group" {
       sampled_requests_enabled   = false
     }
   }
+
+  rule {
+    name     = "waf-block-ip-addresses"
+    priority = 0
+    action {
+      block {}
+    }
+    statement {
+      ip_set_reference_statement {
+        arn = aws_wafv2_ip_set.blocked[0].arn
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "waf-blocked-ip-addresses"
+      sampled_requests_enabled   = false
+    }
+  }
+
   visibility_config {
     cloudwatch_metrics_enabled = false
     metric_name                = "geo-match-metric"
     sampled_requests_enabled   = false
   }
 }
+
+#resource "aws_wafv2_rule_group" "rule_group_block" {
+#  capacity = 12
+#  name     = "waf-rule-group-block"
+#  scope    = "REGIONAL"
+#  rule {
+#    name     = "waf-block-ip-addresses"
+#    priority = 0
+#    action {
+#      block {}
+#    }
+#    statement {
+#      ip_set_reference_statement {
+#        arn = aws_wafv2_ip_set.blocked[0].arn
+#      }
+#    }
+#    visibility_config {
+#      cloudwatch_metrics_enabled = false
+#      metric_name                = "waf-blocked-ip-addresses"
+#      sampled_requests_enabled   = false
+#    }
+#  }
+#  visibility_config {
+#    cloudwatch_metrics_enabled = false
+#    metric_name                = "waf-blocked-ip-addresses-metric"
+#    sampled_requests_enabled   = false
+#  }
+#}
 
 resource "aws_wafv2_web_acl" "acl" {
   name  = "${var.project}-${var.function}-${var.environment}-restricted-uri"

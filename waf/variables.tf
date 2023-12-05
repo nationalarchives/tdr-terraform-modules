@@ -23,6 +23,11 @@ variable "trusted_ips" {
   default     = ""
 }
 
+variable "blocked_ips" {
+  description = "blocked IP addresses in CSV format"
+  default     = ""
+}
+
 variable "restricted_uri" {
   description = "Resricted URI"
   default     = ""
