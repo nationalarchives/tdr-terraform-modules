@@ -5,7 +5,3 @@ output "ip_set_arn" {
 output "rule_group_arn" {
   value = aws_wafv2_rule_group.rule_group.arn
 }
-
-output "web_acl_arn" {
-  value = aws_wafv2_web_acl.acl.arn
-}
