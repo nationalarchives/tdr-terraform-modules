@@ -126,6 +126,28 @@ resource "aws_wafv2_web_acl" "acl" {
     }
   }
 
+  dynamic "rule" {
+    for_each = toset(var.aws_managed_rules)
+    content {
+      name     = rule.value.name
+      priority = rule.value.priority
+      override_action {
+        none {}
+      }
+      statement {
+        managed_rule_group_statement {
+          name        = rule.value.managed_rule_group_statement_name
+          vendor_name = rule.value.managed_rule_group_statement_vendor_name
+        }
+      }
+      visibility_config {
+        cloudwatch_metrics_enabled = false
+        metric_name                = rule.value.metric_name
+        sampled_requests_enabled   = false
+      }
+    }
+  }
+
   visibility_config {
     cloudwatch_metrics_enabled = false
     metric_name                = "restricted-uri"
