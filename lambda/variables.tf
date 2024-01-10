@@ -132,6 +132,11 @@ variable "keycloak_reporting_client_secret" {
   default     = ""
 }
 
+variable "reporting_slack_channel_id" {
+  description = "Slack channel id where TDR reports will be sent"
+  default     = ""
+}
+
 variable "keycloak_backend_checks_client_secret" {
   description = "Keycloak backend checks client secret"
   default     = ""
