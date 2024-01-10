@@ -17,7 +17,7 @@ resource "aws_lambda_function" "reporting_lambda_function" {
       CLIENT_SECRET            = aws_kms_ciphertext.environment_vars_reporting["client_secret"].ciphertext_blob
       CLIENT_SECRET_PATH       = var.reporting_client_secret_path
       SLACK_BOT_TOKEN          = aws_kms_ciphertext.environment_vars_reporting["slack_bot_token"].ciphertext_blob
-      TDR_REPORTING_CHANNEL_ID = aws_kms_ciphertext.environment_vars_reporting["tdr_reporting_channel_id"].ciphertext_blob
+      TDR_REPORTING_SLACK_CHANNEL_ID = aws_kms_ciphertext.environment_vars_reporting["tdr_reporting_slack_channel_id"].ciphertext_blob
     }
   }
 
@@ -37,7 +37,7 @@ resource "aws_kms_ciphertext" "environment_vars_reporting" {
   for_each = local.count_reporting == 0 ? {} : {
     slack_bot_token          = var.slack_bot_token,
     client_secret            = var.keycloak_reporting_client_secret
-    tdr_reporting_channel_id = var.reporting_slack_channel_id
+    tdr_reporting_slack_channel_id = var.tdr_reporting_slack_channel_id
   }
   key_id    = var.kms_key_arn
   plaintext = each.value
