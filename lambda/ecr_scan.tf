@@ -25,9 +25,10 @@ resource "aws_lambda_permission" "lambda_allow_event" {
 }
 
 resource "aws_cloudwatch_log_group" "ecr_scan_lambda_log_group" {
-  count = local.count_ecr_scan
-  name  = "/aws/lambda/${aws_lambda_function.ecr_scan_lambda_function.*.function_name[0]}"
-  tags  = var.common_tags
+  count             = local.count_ecr_scan
+  name              = "/aws/lambda/${aws_lambda_function.ecr_scan_lambda_function.*.function_name[0]}"
+  retention_in_days = var.cloudwatch_log_retention_in_days
+  tags              = var.common_tags
 }
 
 resource "aws_iam_policy" "ecr_scan_lambda_policy" {

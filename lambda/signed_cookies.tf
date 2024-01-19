@@ -44,9 +44,10 @@ resource "aws_kms_ciphertext" "environment_vars_signed_cookies" {
 }
 
 resource "aws_cloudwatch_log_group" "signed_cookies_lambda_log_group" {
-  count = local.count_signed_cookies
-  name  = "/aws/lambda/${aws_lambda_function.signed_cookies_lambda_function.*.function_name[0]}"
-  tags  = var.common_tags
+  count             = local.count_signed_cookies
+  name              = "/aws/lambda/${aws_lambda_function.signed_cookies_lambda_function.*.function_name[0]}"
+  retention_in_days = var.cloudwatch_log_retention_in_days
+  tags              = var.common_tags
 }
 
 resource "aws_iam_policy" "signed_cookies_lambda_policy" {

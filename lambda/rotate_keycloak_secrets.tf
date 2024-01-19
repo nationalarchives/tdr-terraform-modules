@@ -29,9 +29,10 @@ resource "aws_lambda_function" "rotate_keycloak_secrets_lambda_function" {
 }
 
 resource "aws_cloudwatch_log_group" "rotate_keycloak_secrets_lambda_log_group" {
-  count = local.count_rotate_keycloak_secrets
-  name  = "/aws/lambda/${aws_lambda_function.rotate_keycloak_secrets_lambda_function.*.function_name[0]}"
-  tags  = var.common_tags
+  count             = local.count_rotate_keycloak_secrets
+  name              = "/aws/lambda/${aws_lambda_function.rotate_keycloak_secrets_lambda_function.*.function_name[0]}"
+  retention_in_days = var.cloudwatch_log_retention_in_days
+  tags              = var.common_tags
 }
 
 resource "aws_iam_policy" "rotate_keycloak_secrets_lambda_policy" {
