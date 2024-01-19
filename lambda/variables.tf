@@ -363,3 +363,8 @@ variable "user_session_timeout_mins" {
   description = "Timeout for a user session in minutes"
   default     = 60
 }
+
+variable "cloudwatch_log_retention_in_days" {
+  description = "Number of days to retain logs. '0' equals indefinite retention"
+  default     = 0
+}
