@@ -45,9 +45,10 @@ resource "aws_kms_ciphertext" "environment_vars_reporting" {
 }
 
 resource "aws_cloudwatch_log_group" "reporting_lambda_log_group" {
-  count = local.count_reporting
-  name  = "/aws/lambda/${aws_lambda_function.reporting_lambda_function.*.function_name[0]}"
-  tags  = var.common_tags
+  count             = local.count_reporting
+  name              = "/aws/lambda/${aws_lambda_function.reporting_lambda_function.*.function_name[0]}"
+  tags              = var.common_tags
+  retention_in_days = var.cloudwatch_log_retention_in_days
 }
 
 resource "aws_iam_policy" "reporting_lambda_policy" {

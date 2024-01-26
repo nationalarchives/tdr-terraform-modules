@@ -36,9 +36,10 @@ resource "aws_kms_ciphertext" "environment_vars_create_db_users" {
 }
 
 resource "aws_cloudwatch_log_group" "create_db_users_lambda_log_group" {
-  count = local.count_create_db_users
-  name  = "/aws/lambda/${aws_lambda_function.create_db_users_lambda_function.*.function_name[0]}"
-  tags  = var.common_tags
+  count             = local.count_create_db_users
+  name              = "/aws/lambda/${aws_lambda_function.create_db_users_lambda_function.*.function_name[0]}"
+  retention_in_days = var.cloudwatch_log_retention_in_days
+  tags              = var.common_tags
 }
 
 resource "aws_iam_policy" "create_db_users_lambda_policy" {
