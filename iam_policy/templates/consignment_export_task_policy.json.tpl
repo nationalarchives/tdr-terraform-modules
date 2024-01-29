@@ -37,7 +37,7 @@
         "kms:GenerateDataKey"
       ],
       "Effect": "Allow",
-      "Resource": ${kms_key_arns}
+      "Resource": ${kms_bucket_key_arns}
     },
     {
       "Effect": "Allow",
