@@ -73,9 +73,10 @@ data "aws_ssm_parameter" "slack_export_webhook" {
 }
 
 resource "aws_cloudwatch_log_group" "notifications_lambda_log_group" {
-  count = local.count_notifications
-  name  = "/aws/lambda/${aws_lambda_function.notifications_lambda_function.*.function_name[0]}"
-  tags  = var.common_tags
+  count             = local.count_notifications
+  name              = "/aws/lambda/${aws_lambda_function.notifications_lambda_function.*.function_name[0]}"
+  retention_in_days = var.cloudwatch_log_retention_in_days
+  tags              = var.common_tags
 }
 
 resource "aws_iam_policy" "notifications_lambda_policy" {

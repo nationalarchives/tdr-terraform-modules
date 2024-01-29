@@ -33,9 +33,10 @@ resource "aws_kms_ciphertext" "environment_vars_export_api_authoriser" {
 }
 
 resource "aws_cloudwatch_log_group" "export_api_authoriser_lambda_log_group" {
-  count = local.count_export_api_authoriser
-  name  = "/aws/lambda/${aws_lambda_function.export_api_authoriser_lambda_function.*.function_name[0]}"
-  tags  = var.common_tags
+  count             = local.count_export_api_authoriser
+  name              = "/aws/lambda/${aws_lambda_function.export_api_authoriser_lambda_function.*.function_name[0]}"
+  retention_in_days = var.cloudwatch_log_retention_in_days
+  tags              = var.common_tags
 }
 
 resource "aws_iam_role" "export_api_authoriser_lambda_iam_role" {
