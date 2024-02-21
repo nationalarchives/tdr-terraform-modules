@@ -118,7 +118,23 @@ resource "aws_s3_bucket" "bucket" {
 resource "aws_s3_bucket_policy" "bucket" {
   count      = var.apply_resource == true ? 1 : 0
   bucket     = aws_s3_bucket.bucket.*.id[0]
-  policy     = local.environment == "mgmt" && contains(["log-data", "lambda_update"], var.bucket_policy) ? templatefile("./tdr-terraform-modules/s3/templates/${var.bucket_policy}.json.tpl", { bucket_name = aws_s3_bucket.bucket.*.id[0], account_id = data.aws_caller_identity.current.account_id, external_account_1 = data.aws_ssm_parameter.intg_account_number.*.value[0], external_account_2 = data.aws_ssm_parameter.staging_account_number.*.value[0], external_account_3 = data.aws_ssm_parameter.prod_account_number.*.value[0] }) : templatefile("./tdr-terraform-modules/s3/templates/${var.bucket_policy}.json.tpl", { bucket_name = aws_s3_bucket.bucket.*.id[0], aws_elb_account = data.aws_ssm_parameter.aws_elb_account_number.value, cloudfront_oai = var.cloudfront_oai, account_id = data.aws_caller_identity.current.account_id, environment = local.environment, title_environment = title(local.environment), read_access_roles = var.read_access_role_arns })
+  policy     = local.environment == "mgmt" && contains(["log-data", "lambda_update"], var.bucket_policy) ? templatefile("./tdr-terraform-modules/s3/templates/${var.bucket_policy}.json.tpl", 
+    { 
+      bucket_name = aws_s3_bucket.bucket.*.id[0], 
+      account_id = data.aws_caller_identity.current.account_id, 
+      external_account_1 = data.aws_ssm_parameter.intg_account_number.*.value[0], 
+      external_account_2 = data.aws_ssm_parameter.staging_account_number.*.value[0], 
+      external_account_3 = data.aws_ssm_parameter.prod_account_number.*.value[0] 
+    }) : templatefile("./tdr-terraform-modules/s3/templates/${var.bucket_policy}.json.tpl", 
+    { 
+      bucket_name = aws_s3_bucket.bucket.*.id[0], 
+      aws_elb_account = data.aws_ssm_parameter.aws_elb_account_number.value, 
+      cloudfront_oai = var.cloudfront_oai, 
+      account_id = data.aws_caller_identity.current.account_id, 
+      environment = local.environment, title_environment = title(local.environment), 
+      read_access_roles = var.read_access_role_arns, 
+      cloudfront_distribution_arns = jsonencode(var.cloudfront_distribution_arns)
+    })
   depends_on = [aws_s3_bucket_public_access_block.bucket]
 }
 

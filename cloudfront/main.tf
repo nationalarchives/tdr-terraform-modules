@@ -1,3 +1,11 @@
+resource "aws_cloudfront_origin_access_control" "oac" {
+  name                              = "oac-test"
+  description                       = "Testing configuration of oac"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
+
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
 }
 
@@ -54,6 +62,12 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
     }
+  }
+
+  origin {
+    domain_name              = var.s3_regional_domain_name
+    origin_id                = "files_oac"
+    origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
   }
 
   origin {

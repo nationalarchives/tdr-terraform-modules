@@ -24,6 +24,23 @@
       "Resource": "arn:aws:s3:::tdr-upload-files-cloudfront-dirty-${environment}/*"
     },
     {
+        "Effect": "Allow",
+        "Principal": {
+            "Service": [
+                "cloudfront.amazonaws.com"
+            ]
+        },
+        "Action": [
+            "s3:PutObject",
+            "s3:PutObjectTagging"
+        ],
+        "Condition": {
+            "StringEquals": {
+                "AWS:SourceArn": ${cloudfront_distribution_arns}
+            }
+        }
+    },
+    {
       "Sid": "AllowSSLRequestsOnly",
       "Action": "s3:*",
       "Effect": "Deny",

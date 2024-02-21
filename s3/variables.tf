@@ -134,3 +134,8 @@ variable "lambda_arn" {
   description = "The lambda arn to send S3 event messages to"
   default     = ""
 }
+
+variable "cloudfront_distribution_arns" {
+  description = "ARNs of Cloudfront distributions interacting with the bucket"
+  default = []
+}
