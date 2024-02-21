@@ -137,5 +137,5 @@ variable "lambda_arn" {
 
 variable "cloudfront_distribution_arns" {
   description = "ARNs of Cloudfront distributions interacting with the bucket"
-  default = []
+  default     = []
 }
