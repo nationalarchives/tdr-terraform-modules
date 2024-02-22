@@ -34,6 +34,10 @@
             "s3:PutObject",
             "s3:PutObjectTagging"
         ],
+        "Resource": [
+            "arn:aws:s3:::${bucket_name}",
+            "arn:aws:s3:::${bucket_name}/*"
+        ],
         "Condition": {
             "StringEquals": {
                 "AWS:SourceArn": ${cloudfront_distribution_arns}
