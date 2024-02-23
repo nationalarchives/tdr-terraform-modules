@@ -1,6 +1,5 @@
 resource "aws_cloudfront_origin_access_control" "oac" {
-  name                              = "oac-test"
-  description                       = "Testing configuration of oac"
+  name                              = "S3CloudFrontOAC"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
@@ -49,7 +48,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
       "HEAD",
       "GET"
     ]
-    target_origin_id         = "files_oac"
+    target_origin_id         = var.environment == "intg" ? local.s3_origin_id_oac : local.s3_origin_id_oai
     viewer_protocol_policy   = "https-only"
     cache_policy_id          = data.aws_cloudfront_cache_policy.caching_disabled.id
     origin_request_policy_id = aws_cloudfront_origin_request_policy.request_policy.id
@@ -58,7 +57,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
 
   origin {
     domain_name = var.s3_regional_domain_name
-    origin_id   = local.s3_origin_id
+    origin_id   = local.s3_origin_id_oai
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
     }
@@ -66,7 +65,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
 
   origin {
     domain_name              = var.s3_regional_domain_name
-    origin_id                = "files_oac"
+    origin_id                = local.s3_origin_id_oac
     origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
   }
 
