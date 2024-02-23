@@ -48,7 +48,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
       "HEAD",
       "GET"
     ]
-    target_origin_id         = var.environment == "intg" ? local.s3_origin_id_oac : local.s3_origin_id_oai
+    target_origin_id         = var.sse_kms_enabled ? local.s3_origin_id_oac : local.s3_origin_id_oai
     viewer_protocol_policy   = "https-only"
     cache_policy_id          = data.aws_cloudfront_cache_policy.caching_disabled.id
     origin_request_policy_id = aws_cloudfront_origin_request_policy.request_policy.id
