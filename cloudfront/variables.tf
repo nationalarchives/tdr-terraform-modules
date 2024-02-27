@@ -19,3 +19,9 @@ variable "certificate_arn" {
 variable "api_gateway_url" {
   description = "The API gateway URL to create an origin for"
 }
+
+variable "sse_kms_enabled" {
+  description = "Is server side encryption by customer managed KMS key enabled"
+  type        = bool
+  default     = false
+}
