@@ -29,6 +29,13 @@ resource "aws_lambda_function" "notifications_lambda_function" {
   lifecycle {
     ignore_changes = [filename]
   }
+  dynamic "vpc_config" {
+    for_each = var.vpc_config
+    content {
+      subnet_ids         = vpc_config.value.subnet_ids
+      security_group_ids = vpc_config.value.security_group_ids
+    }
+  }
 }
 
 resource "aws_kms_ciphertext" "environment_vars_notifications" {
