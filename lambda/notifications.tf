@@ -36,7 +36,7 @@ resource "aws_kms_ciphertext" "environment_vars_notifications" {
   for_each = local.count_notifications == 0 ? {} : {
     slack_tdr_webhook           = data.aws_ssm_parameter.slack_webhook[0].value,
     slack_judgment_webhook      = data.aws_ssm_parameter.slack_judgment_webhook[0].value,
-    slack_standrd_webhook       = data.aws_ssm_parameter.slack_standard_webhook[0].value,
+    slack_standard_webhook      = data.aws_ssm_parameter.slack_standard_webhook[0].value,
     slack_notifications_webhook = data.aws_ssm_parameter.slack_notifications_webhook[0].value,
     slack_export_webhook        = data.aws_ssm_parameter.slack_export_webhook[0].value,
     to_email                    = "tdr-secops@nationalarchives.gov.uk",
