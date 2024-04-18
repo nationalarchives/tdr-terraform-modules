@@ -19,6 +19,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
     variables = {
       SLACK_WEBHOOK          = aws_kms_ciphertext.environment_vars_notifications["slack_notifications_webhook"].ciphertext_blob
       SLACK_JUDGMENT_WEBHOOK = aws_kms_ciphertext.environment_vars_notifications["slack_judgment_webhook"].ciphertext_blob
+      SLACK_STANDARD_WEBHOOK = aws_kms_ciphertext.environment_vars_notifications["slack_standard_webhook"].ciphertext_blob
       SLACK_TDR_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_tdr_webhook"].ciphertext_blob
       SLACK_EXPORT_WEBHOOK   = aws_kms_ciphertext.environment_vars_notifications["slack_export_webhook"].ciphertext_blob
       TO_EMAIL               = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
@@ -35,6 +36,7 @@ resource "aws_kms_ciphertext" "environment_vars_notifications" {
   for_each = local.count_notifications == 0 ? {} : {
     slack_tdr_webhook           = data.aws_ssm_parameter.slack_webhook[0].value,
     slack_judgment_webhook      = data.aws_ssm_parameter.slack_judgment_webhook[0].value,
+    slack_standard_webhook      = data.aws_ssm_parameter.slack_standard_webhook[0].value,
     slack_notifications_webhook = data.aws_ssm_parameter.slack_notifications_webhook[0].value,
     slack_export_webhook        = data.aws_ssm_parameter.slack_export_webhook[0].value,
     to_email                    = "tdr-secops@nationalarchives.gov.uk",
@@ -60,6 +62,11 @@ data "aws_ssm_parameter" "slack_webhook" {
 data "aws_ssm_parameter" "slack_judgment_webhook" {
   count = local.count_notifications
   name  = "/${local.environment}/slack/judgment/webhook"
+}
+
+data "aws_ssm_parameter" "slack_standard_webhook" {
+  count = local.count_notifications
+  name  = "/${local.environment}/slack/standard/webhook"
 }
 
 data "aws_ssm_parameter" "slack_notifications_webhook" {
