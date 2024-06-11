@@ -377,3 +377,14 @@ variable "cloudwatch_log_retention_in_days" {
   description = "Number of days to retain logs. '0' equals indefinite retention"
   default     = 30
 }
+
+variable "notifications_vpc_config" {
+  type = object({
+    subnet_ids         = list(string)
+    security_group_ids = list(string)
+  })
+  default = {
+    subnet_ids         = [],
+    security_group_ids = []
+  }
+}
