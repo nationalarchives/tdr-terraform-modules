@@ -29,7 +29,7 @@ resource "aws_iam_policy" "s3_access_policy" {
   count       = local.region == var.primary_region ? 1 : 0
   name        = "${upper(var.project)}Config${title(local.environment)}"
   description = "Allows access to AWS Config S3 bucket"
-  policy      = templatefile("./tdr-terraform-modules/config/templates/s3_access_policy.json.tpl", {bucket_name = var.bucket_id})
+  policy      = templatefile("./tdr-terraform-modules/config/templates/s3_access_policy.json.tpl", { bucket_name = var.bucket_id })
 }
 
 resource "aws_iam_role_policy_attachment" "s3_policy_attach" {
