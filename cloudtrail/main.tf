@@ -1,19 +1,11 @@
-data "template_file" "cloudtrail_assume_role_policy" {
-  template = file("./tdr-terraform-modules/cloudtrail/templates/assume_role_policy.json.tpl")
-}
-
 resource "aws_iam_role" "cloudtrail_role" {
   name               = "${upper(var.project)}CloudTrail${title(local.environment)}"
-  assume_role_policy = data.template_file.cloudtrail_assume_role_policy.rendered
-}
-
-data "template_file" "cloudwatch_policy" {
-  template = file("./tdr-terraform-modules/cloudtrail/templates/cloudwatch_logs_policy.json.tpl")
+  assume_role_policy = templatefile("./tdr-terraform-modules/cloudtrail/templates/assume_role_policy.json.tpl", {})
 }
 
 resource "aws_iam_policy" "cloudwatch_policy" {
   name   = "${upper(var.project)}Cloudwatch${title(local.environment)}"
-  policy = data.template_file.cloudwatch_policy.rendered
+  policy = templatefile("./tdr-terraform-modules/cloudtrail/templates/cloudwatch_logs_policy.json.tpl", {})
 }
 
 resource "aws_iam_role_policy_attachment" "cloudtrail_policy_attach" {
