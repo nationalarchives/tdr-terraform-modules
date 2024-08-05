@@ -55,8 +55,8 @@ resource "aws_kms_ciphertext" "environment_vars_notifications" {
     to_email                                  = "tdr-secops@nationalarchives.gov.uk",
     da_event_bus                              = var.da_event_bus_arn
     transfer_complete_template_id             = data.aws_ssm_parameter.gov_uk_transfer_complete_template_id[0].value
-    metadata_review_requested_tb_template_id  = data.aws_ssm_parameter.gov_uk_metadata_review_tb_template_id[0].value
-    metadata_review_requested_dta_template_id = data.aws_ssm_parameter.gov_uk_metadata_review_dta_template_id[0].value
+    metadata_review_requested_tb_template_id  = data.aws_ssm_parameter.gov_uk_metadata_review_requested_tb_template_id[0].value
+    metadata_review_requested_dta_template_id = data.aws_ssm_parameter.gov_uk_metadata_review_requested_dta_template_id[0].value
     metadata_review_rejected_template_id      = data.aws_ssm_parameter.gov_uk_metadata_review_rejected_template_id[0].value
     metadata_review_approved_template_id      = data.aws_ssm_parameter.gov_uk_metadata_review_approved_template_id[0].value
     gov_uk_notify_api_key                     = data.aws_ssm_parameter.gov_uk_notify_api_key[0].value
@@ -105,14 +105,14 @@ data "aws_ssm_parameter" "gov_uk_transfer_complete_template_id" {
   name  = "/${local.environment}/gov_uk_notify/transfer_complete_template_id"
 }
 
-data "aws_ssm_parameter" "gov_uk_metadata_review_tb_template_id" {
+data "aws_ssm_parameter" "gov_uk_metadata_review_requested_tb_template_id" {
   count = local.count_notifications
-  name  = "/${local.environment}/gov_uk_notify/metadata_review_tb_template_id"
+  name  = "/${local.environment}/gov_uk_notify/metadata_review_requested_tb_template_id"
 }
 
-data "aws_ssm_parameter" "gov_uk_metadata_review_dta_template_id" {
+data "aws_ssm_parameter" "gov_uk_metadata_review_requested_dta_template_id" {
   count = local.count_notifications
-  name  = "/${local.environment}/gov_uk_notify/metadata_review_dta_template_id"
+  name  = "/${local.environment}/gov_uk_notify/metadata_review_requested_dta_template_id"
 }
 
 data "aws_ssm_parameter" "gov_uk_metadata_review_rejected_template_id" {
