@@ -25,6 +25,7 @@
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/${environment}/keycloak/rotate_secrets_client/secret",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/${environment}/keycloak/rotate_secrets_client/secret",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/${environment}/keycloak/user_admin_client/secret",
+        "arn:aws:ssm:eu-west-2:${account_id}:parameter/${environment}/keycloak/user_read_client/secret",
         "${kms_arn}"
       ]
     },
