@@ -27,7 +27,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
       GOV_UK_NOTIFY_API_KEY     = aws_kms_ciphertext.environment_vars_notifications["gov_uk_notify_api_key"].ciphertext_blob
       SEND_GOV_UK_NOTIFICATIONS = aws_kms_ciphertext.environment_vars_notifications["send_gov_uk_notifications"].ciphertext_blob
       TDR_INBOX_EMAIL           = aws_kms_ciphertext.environment_vars_notifications["tdr_inbox_email"].ciphertext_blob
-      ENVIRONMENT               = aws_kms_ciphertext.environment_vars_notifications["environment"].ciphertext_blob
+      ENVIRONMENT               = local.environment
     }
   }
 
@@ -53,7 +53,6 @@ resource "aws_kms_ciphertext" "environment_vars_notifications" {
     gov_uk_notify_api_key       = data.aws_ssm_parameter.gov_uk_notify_api_key[0].value
     send_gov_uk_notifications   = local.environment == "prod"
     tdr_inbox_email             = local.environment == "prod" ? "tdr@nationalarchives.gov.uk" : "tdrtest@nationalarchives.gov.uk"
-    environment                 = local.environment
   }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
   # created by the terraform environments project as they won't exist when we first run the backend project.
