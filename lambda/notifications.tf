@@ -92,26 +92,6 @@ data "aws_ssm_parameter" "slack_export_webhook" {
   name  = "/${local.environment}/slack/export/webhook"
 }
 
-data "aws_ssm_parameter" "gov_uk_transfer_complete_template_id" {
-  count = local.count_notifications
-  name  = "/${local.environment}/gov_uk_notify/transfer_complete_template_id"
-}
-
-data "aws_ssm_parameter" "gov_uk_metadata_review_requested_tb_template_id" {
-  count = local.count_notifications
-  name  = "/${local.environment}/gov_uk_notify/metadata_review_requested_tb_template_id"
-}
-
-data "aws_ssm_parameter" "gov_uk_metadata_review_requested_dta_template_id" {
-  count = local.count_notifications
-  name  = "/${local.environment}/gov_uk_notify/metadata_review_requested_dta_template_id"
-}
-
-data "aws_ssm_parameter" "gov_uk_metadata_review_rejected_template_id" {
-  count = local.count_notifications
-  name  = "/${local.environment}/gov_uk_notify/metadata_review_rejected_template_id"
-}
-
 data "aws_ssm_parameter" "gov_uk_metadata_review_approved_template_id" {
   count = local.count_notifications
   name  = "/${local.environment}/gov_uk_notify/metadata_review_approved_template_id"
