@@ -91,11 +91,6 @@ data "aws_ssm_parameter" "slack_export_webhook" {
   name  = "/${local.environment}/slack/export/webhook"
 }
 
-data "aws_ssm_parameter" "gov_uk_metadata_review_approved_template_id" {
-  count = local.count_notifications
-  name  = "/${local.environment}/gov_uk_notify/metadata_review_approved_template_id"
-}
-
 data "aws_ssm_parameter" "gov_uk_notify_api_key" {
   count = local.count_notifications
   name  = "/${local.environment}/keycloak/govuk_notify/api_key"
