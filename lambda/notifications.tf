@@ -2,7 +2,6 @@ locals {
   //management account does not need the notifications digital archiving event bus aws resources
   da_event_bus_count                 = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
   kms_export_bucket_encryption_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
-  
 }
 
 resource "aws_lambda_function" "notifications_lambda_function" {
