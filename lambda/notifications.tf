@@ -2,6 +2,7 @@ locals {
   //management account does not need the notifications digital archiving event bus aws resources
   da_event_bus_count                 = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
   kms_export_bucket_encryption_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
+  
 }
 
 resource "aws_lambda_function" "notifications_lambda_function" {
@@ -89,11 +90,6 @@ data "aws_ssm_parameter" "slack_notifications_webhook" {
 data "aws_ssm_parameter" "slack_export_webhook" {
   count = local.count_notifications
   name  = "/${local.environment}/slack/export/webhook"
-}
-
-data "aws_ssm_parameter" "gov_uk_metadata_review_approved_template_id" {
-  count = local.count_notifications
-  name  = "/${local.environment}/gov_uk_notify/metadata_review_approved_template_id"
 }
 
 data "aws_ssm_parameter" "gov_uk_notify_api_key" {
