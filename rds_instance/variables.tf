@@ -39,6 +39,6 @@ variable "apply_immediately" {
 }
 
 variable "manage_master_credentials_with_secrets_manager" {
-  default = false
+  default     = false
   description = "Whether master database credentials should be managed using the RDS Secrets Manager integration"
 }
