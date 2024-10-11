@@ -37,3 +37,8 @@ variable "apply_immediately" {
   default     = false
   description = "Apply modifications immediately or wait for next maintenance window"
 }
+
+variable "manage_master_credentials_with_secrets_manager" {
+  default = false
+  description = "Whether master database credentials should be managed using the RDS Secrets Manager integration"
+}
