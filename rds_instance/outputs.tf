@@ -13,3 +13,7 @@ output "database_url" {
 output "resource_id" {
   value = aws_db_instance.db_instance.resource_id
 }
+
+output "database_master_user_secret_arn" {
+  value = var.manage_master_credentials_with_secrets_manager ? aws_db_instance.db_instance.master_user_secret[0].secret_arn : null
+}
