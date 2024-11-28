@@ -48,11 +48,12 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
       "HEAD",
       "GET"
     ]
-    target_origin_id         = var.sse_kms_enabled ? local.s3_origin_id_oac : local.s3_origin_id_oai
-    viewer_protocol_policy   = "https-only"
-    cache_policy_id          = data.aws_cloudfront_cache_policy.caching_disabled.id
-    origin_request_policy_id = aws_cloudfront_origin_request_policy.request_policy.id
-    trusted_key_groups       = [aws_cloudfront_key_group.cookie_signing_key_group.id]
+    target_origin_id           = var.sse_kms_enabled ? local.s3_origin_id_oac : local.s3_origin_id_oai
+    viewer_protocol_policy     = "https-only"
+    cache_policy_id            = data.aws_cloudfront_cache_policy.caching_disabled.id
+    origin_request_policy_id   = aws_cloudfront_origin_request_policy.request_policy.id
+    trusted_key_groups         = [aws_cloudfront_key_group.cookie_signing_key_group.id]
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.default_response_headers_policy.id
   }
 
   origin {
@@ -147,4 +148,15 @@ resource "aws_cloudfront_key_group" "cookie_signing_key_group" {
   comment = "Key group for the signed cookie key"
   items   = [aws_cloudfront_public_key.cookie_signing_key.id]
   name    = "tdr-signed-cookie-group-${var.environment}"
+}
+
+resource "aws_cloudfront_response_headers_policy" "default_response_headers_policy" {
+  name = "tdr-default-response-headers-${var.environment}"
+  security_headers_config {
+    strict_transport_security {
+      access_control_max_age_sec = "31536000"
+      include_subdomains         = true
+      override                   = false
+    }
+  }
 }
