@@ -89,8 +89,9 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     cache_policy_id          = aws_cloudfront_cache_policy.cache_policy.id
     origin_request_policy_id = aws_cloudfront_origin_request_policy.sign_cookies_api_policy.id
 
-    compress               = true
-    viewer_protocol_policy = "redirect-to-https"
+    compress                   = true
+    viewer_protocol_policy     = "redirect-to-https"
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.default_response_headers_policy.id
   }
   restrictions {
     geo_restriction {
