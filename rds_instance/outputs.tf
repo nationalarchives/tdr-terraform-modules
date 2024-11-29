@@ -15,5 +15,5 @@ output "resource_id" {
 }
 
 output "database_master_user_secret_arn" {
-  value = var.manage_master_credentials_with_secrets_manager ? aws_db_instance.db_instance.master_user_secret[0].secret_arn : null
+  value = var.manage_master_credentials_with_secrets_manager ? join("", aws_db_instance.db_instance.master_user_secret.*.secret_arn) : null
 }
