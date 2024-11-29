@@ -91,5 +91,5 @@ resource "aws_security_group_rule" "create_db_user_db_rule" {
   security_group_id        = aws_security_group.create_db_users_lambda[count.index].id
   to_port                  = 5432
   type                     = "egress"
-  source_security_group_id = var.api_database_security_group
+  source_security_group_id = var.database_security_group
 }

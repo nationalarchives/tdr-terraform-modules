@@ -18,14 +18,6 @@ output "create_users_lambda_security_group_id" {
   value = aws_security_group.create_db_users_lambda.*.id
 }
 
-output "create_keycloak_user_lambda_security_group" {
-  value = aws_security_group.create_keycloak_db_user_lambda.*.id
-}
-
-output "create_keycloak_user_lambda_security_group_new" {
-  value = aws_security_group.create_keycloak_db_user_lambda_new.*.id
-}
-
 output "create_keycloak_users_api_lambda_arn" {
   value = local.create_keycloak_user_api_arn
 }

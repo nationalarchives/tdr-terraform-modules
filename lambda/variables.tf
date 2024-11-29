@@ -256,10 +256,6 @@ variable "kms_key_arn" {
   description = "The KMS arn to encrypt environment variables. Not all lambdas need this so it has a default"
 }
 
-variable "lambda_create_keycloak_db_users" {
-  default = false
-}
-
 variable "keycloak_password" {
   default = ""
 }
@@ -273,7 +269,7 @@ variable "keycloak_database_security_group" {
   default = ""
 }
 
-variable "api_database_security_group" {
+variable "database_security_group" {
   default = ""
 }
 
@@ -290,10 +286,6 @@ variable "database_name" {
 variable "reserved_concurrency" {
   description = "The total number of concurrent lambdas which can run at one time. Defaults to -1 which is unlimited up to the account limit"
   default     = -1
-}
-
-variable "lambda_create_keycloak_db_users_new" {
-  default = false
 }
 
 variable "lambda_create_keycloak_user_api" {
