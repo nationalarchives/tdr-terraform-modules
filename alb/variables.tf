@@ -84,3 +84,8 @@ variable "host" {
   default     = ""
   description = "The host to allow requests from if using own_host_header_only"
 }
+
+variable "health_check_port" {
+  description = "Port to use for health check if different from target port"
+  default     = null
+}
