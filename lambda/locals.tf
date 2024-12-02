@@ -16,8 +16,6 @@ locals {
   count_reporting                           = var.apply_resource == true && var.lambda_reporting == true ? 1 : 0
   count_efs                                 = var.apply_resource == true && var.use_efs ? 1 : 0
   count_create_db_users                     = var.apply_resource == true && var.lambda_create_db_users ? 1 : 0
-  count_create_keycloak_db_user             = var.apply_resource == true && var.lambda_create_keycloak_db_users ? 1 : 0
-  count_create_keycloak_db_user_new         = var.apply_resource == true && var.lambda_create_keycloak_db_users_new ? 1 : 0
   count_export_api_authoriser               = var.apply_resource == true && var.lambda_export_authoriser == true ? 1 : 0
   count_service_unavailable                 = var.apply_resource == true && var.lambda_service_unavailable == true ? 1 : 0
   count_create_keycloak_users_api           = var.apply_resource == true && var.lambda_create_keycloak_user_api == true ? 1 : 0
