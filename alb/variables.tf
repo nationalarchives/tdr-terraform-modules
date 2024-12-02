@@ -87,5 +87,5 @@ variable "host" {
 
 variable "health_check_port" {
   description = "Port to use for health check if different from target port"
-  default = ""
+  default     = ""
 }
