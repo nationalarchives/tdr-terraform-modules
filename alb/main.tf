@@ -42,7 +42,7 @@ resource "aws_alb_target_group" "alb_module" {
   vpc_id      = var.vpc_id
 
   health_check {
-    port                = var.health_check_port != "" ? var.health_check_port : null
+    port                = var.health_check_port
     healthy_threshold   = "3"
     interval            = "30"
     protocol            = "HTTP"
