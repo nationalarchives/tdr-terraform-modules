@@ -30,7 +30,6 @@ resource "aws_ssm_parameter" "ssm_parameter" {
   value       = each.value.value
   description = each.value.description
   tier        = each.value.tier
-  overwrite   = true
   tags        = var.common_tags
 }
 
@@ -41,7 +40,6 @@ resource "aws_ssm_parameter" "ssm_parameter_ignore_value" {
   value       = each.value.value
   description = each.value.description
   tier        = each.value.tier
-  overwrite   = true
   tags        = var.common_tags
   lifecycle {
     ignore_changes = [value]
