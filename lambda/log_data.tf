@@ -59,10 +59,6 @@ resource "aws_lambda_function" "log_data_lambda" {
       TARGET_S3_BUCKET = aws_kms_ciphertext.environment_vars_log_data["target_s3_bucket"].ciphertext_blob
     }
   }
-
-  lifecycle {
-    ignore_changes = [last_modified]
-  }
 }
 
 resource "aws_kms_ciphertext" "environment_vars_log_data" {
