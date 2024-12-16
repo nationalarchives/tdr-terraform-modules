@@ -9,12 +9,12 @@
       "Principal": {
         "AWS": "${grant.id}"
       },
-      "Action": ${jsonencode(grant.permissions)},
+      "Action": ${grant.permissions},
       "Resource": [
         "arn:aws:s3:::${bucket_name}",
         "arn:aws:s3:::${bucket_name}/*"
        ]
-      },
+      }%{ if for.index != canonical_user_grants.length - 1 ~},%{ endif }
   %{ endfor ~}
 {
       "Sid": "AllowSSLRequestsOnly",

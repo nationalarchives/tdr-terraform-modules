@@ -79,12 +79,6 @@ resource "aws_s3_bucket" "bucket" {
     )
   )
 }
-resource "aws_s3_bucket_acl" "bucket_acl" {
-  count = var.apply_resource == true && length(var.canonical_user_grants) == 0 ? 1 : 0
-
-  bucket = aws_s3_bucket.bucket[0].id
-  acl    = var.acl
-}
 
 resource "aws_s3_bucket_versioning" "bucket_versioning" {
   count = var.apply_resource == true && length(var.canonical_user_grants) == 0 ? 1 : 0
