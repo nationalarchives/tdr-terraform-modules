@@ -380,3 +380,7 @@ variable "notifications_vpc_config" {
     security_group_ids = []
   }
 }
+
+variable "db_master_user_secret_arn" {
+  default = null
+}

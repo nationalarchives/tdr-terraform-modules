@@ -57,6 +57,7 @@ resource "aws_ssm_parameter" "database_username" {
 }
 
 resource "aws_ssm_parameter" "database_password" {
+  count = var.manage_master_credentials_with_secrets_manager ? 0 : 1
   name  = "/${var.environment}/${var.database_name}/instance/password"
   type  = "SecureString"
   value = aws_db_instance.db_instance.password
