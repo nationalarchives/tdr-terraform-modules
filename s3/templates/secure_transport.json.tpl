@@ -16,7 +16,7 @@
       ]
     },
   %{ endfor ~}
-{
+   {
       "Sid": "AllowSSLRequestsOnly",
       "Action": "s3:*",
       "Effect": "Deny",
@@ -30,6 +30,6 @@
         }
       },
       "Principal": "*"
-    }
+   }
   ]
 }
