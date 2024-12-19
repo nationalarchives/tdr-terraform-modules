@@ -13,8 +13,8 @@
       "Resource": [
         "arn:aws:s3:::${bucket_name}",
         "arn:aws:s3:::${bucket_name}/*"
-       ]
-      },
+      ]
+    },
   %{ endfor ~}
 {
       "Sid": "AllowSSLRequestsOnly",
