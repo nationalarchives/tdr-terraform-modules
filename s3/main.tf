@@ -131,29 +131,6 @@ resource "aws_s3_bucket_cors_configuration" "bucket_cors" {
     max_age_seconds = 3000
   }
 }
-# resource "aws_s3_bucket_policy" "bucket_canonical_grants" {
-#   count  = var.apply_resource == true && length(var.canonical_user_grants) > 0 ? 1 : 0
-#   bucket = aws_s3_bucket.bucket[0].id
-#
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       for grant in var.canonical_user_grants : {
-#         Sid       = "GrantPermissions-${grant.id}"
-#         Effect    = "Allow"
-#         Principal = {
-#           AWS = grant.id
-#         }
-#         Action   = grant.permissions
-#         Resource = [
-#           "arn:aws:s3:::${aws_s3_bucket.bucket[0].id}",
-#           "arn:aws:s3:::${aws_s3_bucket.bucket[0].id}/*"
-#         ]
-#       }
-#     ]
-#   })
-# }
-
 
 resource "aws_s3_bucket_policy" "bucket" {
   count  = var.apply_resource == true ? 1 : 0
@@ -165,7 +142,7 @@ resource "aws_s3_bucket_policy" "bucket" {
       external_account_1    = data.aws_ssm_parameter.intg_account_number.*.value[0],
       external_account_2    = data.aws_ssm_parameter.staging_account_number.*.value[0],
       external_account_3    = data.aws_ssm_parameter.prod_account_number.*.value[0]
-      canonical_user_grants = var.canonical_user_grants
+      canonical_user_grants = jsonencode(var.canonical_user_grants)
     }) : templatefile("./tdr-terraform-modules/s3/templates/${var.bucket_policy}.json.tpl",
     {
       bucket_name                  = aws_s3_bucket.bucket.*.id[0],
@@ -178,9 +155,6 @@ resource "aws_s3_bucket_policy" "bucket" {
       canonical_user_grants        = jsonencode(var.canonical_user_grants)
   })
   depends_on = [aws_s3_bucket_public_access_block.bucket]
-}
-output "canonical_user_grants_debug" {
-  value = var.canonical_user_grants
 }
 
 resource "aws_s3_bucket_public_access_block" "bucket" {
