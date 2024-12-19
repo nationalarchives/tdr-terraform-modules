@@ -1,7 +1,7 @@
 {
   "Version": "2012-10-17",
   "Statement": [
-    %{ for grant in canonical_user_grants ~}
+    %{ for grant in jsondecode(canonical_user_grants) ~}
     {
       "Sid": "GrantPermissions-${grant.id}",
       "Effect": "Allow",

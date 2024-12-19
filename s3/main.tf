@@ -53,7 +53,7 @@ resource "aws_s3_bucket_public_access_block" "log_bucket" {
 resource "aws_s3_bucket_policy" "log_bucket" {
   count      = var.access_logs == true && var.apply_resource == true ? 1 : 0
   bucket     = aws_s3_bucket.log_bucket.*.id[0]
-  policy     = templatefile("./tdr-terraform-modules/s3/templates/secure_transport.json.tpl", { bucket_name = aws_s3_bucket.log_bucket.*.id[0], canonical_user_grants = var.canonical_user_grants })
+  policy     = templatefile("./tdr-terraform-modules/s3/templates/secure_transport.json.tpl", { bucket_name = aws_s3_bucket.log_bucket.*.id[0], canonical_user_grants = jsonencode(var.canonical_user_grants) })
   depends_on = [aws_s3_bucket_public_access_block.log_bucket]
 }
 
@@ -175,7 +175,7 @@ resource "aws_s3_bucket_policy" "bucket" {
       environment                  = local.environment, title_environment = title(local.environment),
       read_access_roles            = var.read_access_role_arns,
       cloudfront_distribution_arns = jsonencode(var.cloudfront_distribution_arns)
-      canonical_user_grants        = var.canonical_user_grants
+      canonical_user_grants        = jsonencode(var.canonical_user_grants)
   })
   depends_on = [aws_s3_bucket_public_access_block.bucket]
 }
