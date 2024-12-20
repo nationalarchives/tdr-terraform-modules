@@ -7,9 +7,18 @@
       "Sid": "GrantPermissions-${grant.id}",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "${grant.id}"
+        "CanonicalUser": "${grant.id}"
       },
-      "Action": ${jsonencode(grant.permissions)},
+        "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket",
+        "s3:GetBucketLocation",
+        "s3:GetBucketAcl",
+        "s3:PutBucketAcl",
+        "s3:DeleteBucket"
+    ],
       "Resource": [
         "arn:aws:s3:::${bucket_name}",
         "arn:aws:s3:::${bucket_name}/*"

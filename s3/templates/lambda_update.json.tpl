@@ -2,20 +2,6 @@
   "Version": "2012-10-17",
   "Id": "secure-transport-tdr-backend-code-mgmt",
   "Statement": [
-    %{ for grant in jsondecode(canonical_user_grants) ~}
-    {
-      "Sid": "GrantPermissions-${grant.id}",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "${grant.id}"
-      },
-      "Action": ${jsonencode(grant.permissions)},
-      "Resource": [
-        "arn:aws:s3:::${bucket_name}",
-        "arn:aws:s3:::${bucket_name}/*"
-      ]
-    },
-    %{ endfor ~}
     {
       "Sid": "AllowSSLRequestsOnly",
       "Effect": "Deny",

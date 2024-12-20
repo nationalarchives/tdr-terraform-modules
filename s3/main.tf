@@ -51,13 +51,13 @@ resource "aws_s3_bucket_public_access_block" "log_bucket" {
 }
 
 resource "aws_s3_bucket_policy" "log_bucket" {
-  count      = var.access_logs == true && var.apply_resource == true ? 1 : 0
-  bucket     = aws_s3_bucket.log_bucket.*.id[0]
-  policy     = templatefile("./tdr-terraform-modules/s3/templates/secure_transport.json.tpl",
+  count  = var.access_logs == true && var.apply_resource == true ? 1 : 0
+  bucket = aws_s3_bucket.log_bucket.*.id[0]
+  policy = templatefile("./tdr-terraform-modules/s3/templates/secure_transport.json.tpl",
     {
-      bucket_name = aws_s3_bucket.log_bucket.*.id[0],
+      bucket_name           = aws_s3_bucket.log_bucket.*.id[0],
       canonical_user_grants = jsonencode(var.canonical_user_grants)
-    })
+  })
   depends_on = [aws_s3_bucket_public_access_block.log_bucket]
 }
 
@@ -71,7 +71,9 @@ resource "aws_s3_bucket_notification" "log_bucket_notification" {
   }
   depends_on = [aws_s3_bucket_policy.log_bucket]
 }
-
+# This module is to be deprecated and caused many terraform warnings.
+# Attributes have been removed and added as resources.
+# The grants are now passed as a variable to the bucket policy template.
 resource "aws_s3_bucket" "bucket" {
   count         = var.apply_resource == true ? 1 : 0
   bucket        = local.bucket_name
