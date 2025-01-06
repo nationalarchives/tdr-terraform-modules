@@ -10,11 +10,7 @@
         "CanonicalUser": "${grant.id}"
       },
         "Action": [
-        "s3:DeleteBucket",
-        "s3:DeleteObject",
         "s3:GetBucketAcl",
-        "s3:GetBucketLocation",
-        "s3:GetObject",
         "s3:ListBucket",
         "s3:PutBucketAcl",
         "s3:PutObject"
