@@ -71,9 +71,7 @@ resource "aws_s3_bucket_notification" "log_bucket_notification" {
   }
   depends_on = [aws_s3_bucket_policy.log_bucket]
 }
-# This module is to be deprecated and caused many terraform warnings.
-# Attributes have been removed and added as resources.
-# The grants are now passed as a variable to the bucket policy template.
+# This module is to be deprecated
 resource "aws_s3_bucket" "bucket" {
   count         = var.apply_resource == true ? 1 : 0
   bucket        = local.bucket_name
@@ -92,7 +90,7 @@ resource "aws_s3_bucket_versioning" "bucket_versioning" {
   bucket = aws_s3_bucket.bucket[0].id
 
   versioning_configuration {
-    status = "Enabled" # Use "Suspended" to disable versioning
+    status = "Enabled"
   }
 }
 

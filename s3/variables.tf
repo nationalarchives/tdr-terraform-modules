@@ -24,7 +24,7 @@ variable "acl" {
   default = "private"
 }
 # If this is set, the id will be used to set bucket policies for the user equivalent to 'FULL_CONTROL'.Permissions value ignored
-# Only specified for the log bucket and used in the se
+# Only specified for the log bucket and used in the secure_transport.json.tpl
 variable "canonical_user_grants" {
   description = "A list of canonical user IDs and their permissions. If this is set, you cannot use a canned ACL"
   type        = list(object({ id = string, permissions = list(string) }))
