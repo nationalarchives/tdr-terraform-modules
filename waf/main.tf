@@ -6,6 +6,15 @@ resource "aws_wafv2_ip_set" "trusted" {
   scope              = "REGIONAL"
 }
 
+resource "aws_wafv2_ip_set" "blocked_ips" {
+  name               = "${var.project}-${var.function}-${var.environment}-blockedIps"
+  scope              = "REGIONAL"
+  ip_address_version = "IPV4"
+  addresses          = length(var.blocked_ips) > 0 ? split(",", var.blocked_ips) : []
+  description        = "IP set for blocking malicious IPs"
+}
+
+
 resource "aws_wafv2_rule_group" "rule_group" {
   capacity = 12
   name     = "waf-rule-group"
@@ -68,6 +77,25 @@ resource "aws_wafv2_rule_group" "rule_group" {
       sampled_requests_enabled   = false
     }
   }
+
+  rule {
+    name     = "BlockIPsRule"
+    priority = 10
+    action {
+      block {}
+    }
+    statement {
+      ip_set_reference_statement {
+        arn = aws_wafv2_ip_set.blocked_ips.arn
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "BlockIPsRule"
+      sampled_requests_enabled   = true
+    }
+  }
+
   visibility_config {
     cloudwatch_metrics_enabled = false
     metric_name                = "geo-match-metric"
