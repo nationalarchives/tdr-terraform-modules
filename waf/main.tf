@@ -77,10 +77,21 @@ resource "aws_wafv2_rule_group" "rule_group" {
       sampled_requests_enabled   = false
     }
   }
+  visibility_config {
+    cloudwatch_metrics_enabled = false
+    metric_name                = "geo-match-metric"
+    sampled_requests_enabled   = false
+  }
+}
+
+resource "aws_wafv2_rule_group" "block_ips_rule_group" {
+  capacity = 1
+  name     = "block-ips-rule-group"
+  scope    = "REGIONAL"
 
   rule {
     name     = "BlockIPsRule"
-    priority = 40
+    priority = 10
     action {
       block {}
     }
@@ -98,7 +109,7 @@ resource "aws_wafv2_rule_group" "rule_group" {
 
   visibility_config {
     cloudwatch_metrics_enabled = false
-    metric_name                = "geo-match-metric"
+    metric_name                = "block-ips-rule-group"
     sampled_requests_enabled   = false
   }
 }
@@ -150,6 +161,24 @@ resource "aws_wafv2_web_acl" "acl" {
     visibility_config {
       cloudwatch_metrics_enabled = false
       metric_name                = "acl-rule-metric"
+      sampled_requests_enabled   = false
+    }
+  }
+
+  rule {
+    name     = "acl-rule-blocked_ips"
+    priority = 2
+    override_action {
+      none {}
+    }
+    statement {
+      rule_group_reference_statement {
+        arn = aws_wafv2_rule_group.block_ips_rule_group.arn
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "acl-rule-metric-blocked-ips"
       sampled_requests_enabled   = false
     }
   }
