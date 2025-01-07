@@ -80,7 +80,7 @@ resource "aws_wafv2_rule_group" "rule_group" {
 
   rule {
     name     = "BlockIPsRule"
-    priority = 10
+    priority = 40
     action {
       block {}
     }
