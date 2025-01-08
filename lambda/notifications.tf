@@ -22,7 +22,7 @@ resource "aws_lambda_function" "notifications_lambda_function" {
       SLACK_STANDARD_WEBHOOK    = aws_kms_ciphertext.environment_vars_notifications["slack_standard_webhook"].ciphertext_blob
       SLACK_TDR_WEBHOOK         = aws_kms_ciphertext.environment_vars_notifications["slack_tdr_webhook"].ciphertext_blob
       SLACK_EXPORT_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_export_webhook"].ciphertext_blob
-      SLACK_BAU_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_bau_webhook"].ciphertext_blob
+      SLACK_BAU_WEBHOOK         = aws_kms_ciphertext.environment_vars_notifications["slack_bau_webhook"].ciphertext_blob
       TO_EMAIL                  = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
       DA_EVENT_BUS              = aws_kms_ciphertext.environment_vars_notifications["da_event_bus"].ciphertext_blob
       GOV_UK_NOTIFY_API_KEY     = aws_kms_ciphertext.environment_vars_notifications["gov_uk_notify_api_key"].ciphertext_blob
