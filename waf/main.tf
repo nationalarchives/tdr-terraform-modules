@@ -7,6 +7,7 @@ resource "aws_wafv2_ip_set" "trusted" {
 }
 
 resource "aws_wafv2_ip_set" "blocked_ips" {
+  count              = var.blocked_ips == "" ? 0 : 1
   name               = "${var.project}-${var.function}-${var.environment}-blockedIps"
   scope              = "REGIONAL"
   ip_address_version = "IPV4"
@@ -85,6 +86,7 @@ resource "aws_wafv2_rule_group" "rule_group" {
 }
 
 resource "aws_wafv2_rule_group" "block_ips_rule_group" {
+  count              = var.blocked_ips == "" ? 0 : 1
   capacity = 1
   name     = "block-ips-rule-group"
   scope    = "REGIONAL"
@@ -97,7 +99,7 @@ resource "aws_wafv2_rule_group" "block_ips_rule_group" {
     }
     statement {
       ip_set_reference_statement {
-        arn = aws_wafv2_ip_set.blocked_ips.arn
+        arn = aws_wafv2_ip_set.blocked_ips[0].arn
       }
     }
     visibility_config {
@@ -121,7 +123,6 @@ resource "aws_wafv2_web_acl" "acl" {
     block {}
   }
   rule {
-
     name     = "rate-based-rule"
     priority = 0
     action {
@@ -161,24 +162,6 @@ resource "aws_wafv2_web_acl" "acl" {
     visibility_config {
       cloudwatch_metrics_enabled = false
       metric_name                = "acl-rule-metric"
-      sampled_requests_enabled   = false
-    }
-  }
-
-  rule {
-    name     = "acl-rule-blocked_ips"
-    priority = 2
-    override_action {
-      none {}
-    }
-    statement {
-      rule_group_reference_statement {
-        arn = aws_wafv2_rule_group.block_ips_rule_group.arn
-      }
-    }
-    visibility_config {
-      cloudwatch_metrics_enabled = false
-      metric_name                = "acl-rule-metric-blocked-ips"
       sampled_requests_enabled   = false
     }
   }
