@@ -86,7 +86,7 @@ resource "aws_wafv2_rule_group" "rule_group" {
 }
 
 resource "aws_wafv2_rule_group" "block_ips_rule_group" {
-  count              = var.blocked_ips == "" ? 0 : 1
+  count    = var.blocked_ips == "" ? 0 : 1
   capacity = 1
   name     = "block-ips-rule-group"
   scope    = "REGIONAL"
@@ -162,6 +162,25 @@ resource "aws_wafv2_web_acl" "acl" {
     visibility_config {
       cloudwatch_metrics_enabled = false
       metric_name                = "acl-rule-metric"
+      sampled_requests_enabled   = false
+    }
+  }
+
+  rule {
+    count    = var.blocked_ips == "" ? 0 : 1
+    name     = "block-ips-rule-group"
+    priority = 2
+    override_action {
+      none {}
+    }
+    statement {
+      rule_group_reference_statement {
+        arn = aws_wafv2_rule_group.block_ips_rule_group[0].arn
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "block-ips-rule-group"
       sampled_requests_enabled   = false
     }
   }
