@@ -10,14 +10,24 @@
       ],
       "Resource": [
         "arn:aws:states:${aws_region}:${account}:stateMachine:TDRConsignmentExport${titleEnvironment}"
-      ]
+      ],
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceAccount": "${account_id}"
+        }
+      }
     },
     {
       "Effect": "Allow",
       "Action": [
         "elasticfilesystem:ClientWrite"
       ],
-      "Resource": "*"
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceAccount": "${account_id}"
+        }
+      }
     },
     {
       "Effect": "Allow",
@@ -28,7 +38,12 @@
       "Resource": [
         "arn:aws:s3:::tdr-upload-files-${environment}/*",
         "arn:aws:s3:::tdr-upload-files-${environment}"
-      ]
+      ],
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceAccount": "${account_id}"
+        }
+      }
     },
     {
       "Sid": "KMSs3ExportBucketPermission",
@@ -37,6 +52,11 @@
         "kms:GenerateDataKey"
       ],
       "Effect": "Allow",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceAccount": "${account_id}"
+        }
+      },
       "Resource": ${kms_bucket_key_arns}
     },
     {
@@ -49,7 +69,12 @@
         "arn:aws:s3:::tdr-consignment-export-${environment}",
         "arn:aws:s3:::tdr-consignment-export-judgment-${environment}/*",
         "arn:aws:s3:::tdr-consignment-export-judgment-${environment}"
-      ]
+      ],
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceAccount": "${account_id}"
+        }
+      }
     }
   ]
 }
