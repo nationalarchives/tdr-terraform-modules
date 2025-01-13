@@ -140,3 +140,8 @@ variable "cloudfront_distribution_arns" {
   description = "ARNs of Cloudfront distributions interacting with the bucket"
   default     = []
 }
+
+variable "aws_logs_delivery_account_id" {
+  description = "AWS log delivery account ID"
+  default     = ""
+}

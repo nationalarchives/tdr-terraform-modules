@@ -55,8 +55,9 @@ resource "aws_s3_bucket_policy" "log_bucket" {
   bucket = aws_s3_bucket.log_bucket.*.id[0]
   policy = templatefile("./tdr-terraform-modules/s3/templates/secure_transport.json.tpl",
     {
-      bucket_name           = aws_s3_bucket.log_bucket.*.id[0],
-      canonical_user_grants = jsonencode(var.canonical_user_grants)
+      bucket_name                  = aws_s3_bucket.log_bucket.*.id[0],
+      account_id                   = data.aws_caller_identity.current.account_id,
+      aws_logs_delivery_account_id = var.aws_logs_delivery_account_id
   })
   depends_on = [aws_s3_bucket_public_access_block.log_bucket]
 }
