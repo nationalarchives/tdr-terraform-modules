@@ -4,3 +4,6 @@ locals {
   cloudtrail_name   = "${var.project}-${var.function}-${local.environment}"
   cloudtrail_prefix = "${var.project}-${local.environment}"
 }
+
+
+data "aws_caller_identity" "current" {}
