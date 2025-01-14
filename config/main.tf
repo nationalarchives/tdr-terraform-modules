@@ -22,7 +22,7 @@ resource "aws_sns_topic" "config_topic" {
 resource "aws_iam_role" "config_role" {
   count              = local.region == var.primary_region ? 1 : 0
   name               = "${upper(var.project)}Config${title(local.environment)}"
-  assume_role_policy = templatefile("./tdr-terraform-modules/config/templates/config_assume_role_policy.json.tpl", {})
+  assume_role_policy = templatefile("./tdr-terraform-modules/config/templates/config_assume_role_policy.json.tpl", { account_id = data.aws_caller_identity.current.account_id })
 }
 
 resource "aws_iam_policy" "s3_access_policy" {

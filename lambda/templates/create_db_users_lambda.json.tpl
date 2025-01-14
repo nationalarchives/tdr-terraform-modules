@@ -10,7 +10,12 @@
       "Resource": [
         "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-${lambda_name}-${environment}",
         "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-${lambda_name}-${environment}:log-stream:*"
-      ]
+      ],
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceAccount": "${account_id}"
+        }
+      }
     },
     {
       "Effect": "Allow",
@@ -19,7 +24,12 @@
         "ec2:DeleteNetworkInterface",
         "ec2:DescribeNetworkInterfaces"
       ],
-      "Resource": "*"
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceAccount": "${account_id}"
+        }
+      }
     },
     {
       "Sid": "DecryptEnvVar",
@@ -27,7 +37,12 @@
       "Action": [
         "kms:Decrypt"
       ],
-      "Resource": "${kms_arn}"
+      "Resource": "${kms_arn}",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceAccount": "${account_id}"
+        }
+      }
     }
   ]
 }
