@@ -3,26 +3,6 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "GrantPermissions-${grant.id}",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": [
-           "arn:aws:iam::${account_id}:root",
-           "arn:aws:iam::${aws_logs_delivery_account_id}:root"
-        ]
-      },
-        "Action": [
-        "s3:GetBucketAcl",
-        "s3:ListBucket",
-        "s3:PutBucketAcl",
-        "s3:PutObject"
-    ],
-      "Resource": [
-        "arn:aws:s3:::${bucket_name}",
-        "arn:aws:s3:::${bucket_name}/*"
-      ]
-    },
-    {
       "Sid": "AllowSSLRequestsOnly",
       "Action": "s3:*",
       "Effect": "Deny",
@@ -36,6 +16,6 @@
         }
       },
       "Principal": "*"
-   }
+    }
   ]
 }
