@@ -41,13 +41,13 @@ resource "aws_iam_policy" "export_status_update_lambda_policy" {
     environment    = local.environment, kms_arn = var.kms_key_arn,
     parameter_name = var.backend_checks_client_secret_path
   })
-  name = "${upper(var.project)}ExportStatusUpdateLambdaPolicy${title(local.environment)}"
+  name = "${upper(var.project)}ExportStatusUpdateOldLambdaPolicy${title(local.environment)}"
 }
 
 resource "aws_iam_role" "export_status_update_lambda_iam_role" {
   count              = local.count_export_status_update
   assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", {})
-  name               = "${upper(var.project)}ExportStatusUpdateLambdaRole${title(local.environment)}"
+  name               = "${upper(var.project)}ExportStatusUpdateOldLambdaRole${title(local.environment)}"
 }
 
 resource "aws_iam_role_policy_attachment" "export_status_update_lambda_role_policy" {
@@ -58,7 +58,7 @@ resource "aws_iam_role_policy_attachment" "export_status_update_lambda_role_poli
 
 resource "aws_security_group" "lambda_export_status_update_security_group" {
   count       = local.count_export_status_update
-  name        = "${var.project}-lambda-export_status_update"
+  name        = "${var.project}-lambda-export_status_update_old"
   description = "Export Status Update Lambda Security Group"
   vpc_id      = var.vpc_id
 
