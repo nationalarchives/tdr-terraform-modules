@@ -49,14 +49,17 @@ resource "aws_s3_bucket_public_access_block" "log_bucket" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
-
+# The account_id and aws_logs_delivery_account_id are used to create the bucket policy
+# that matched the previous canonical user grants. The only time the canonical user grants
+# were used both the account and aws log delivery account canonical user ids were used.
 resource "aws_s3_bucket_policy" "log_bucket" {
   count  = var.access_logs == true && var.apply_resource == true ? 1 : 0
   bucket = aws_s3_bucket.log_bucket.*.id[0]
   policy = templatefile("./tdr-terraform-modules/s3/templates/secure_transport.json.tpl",
     {
-      bucket_name           = aws_s3_bucket.log_bucket.*.id[0],
-      canonical_user_grants = jsonencode(var.canonical_user_grants)
+      bucket_name                  = aws_s3_bucket.log_bucket.*.id[0],
+      account_id                   = data.aws_caller_identity.current.account_id,
+      aws_logs_delivery_account_id = var.aws_logs_delivery_account_id
   })
   depends_on = [aws_s3_bucket_public_access_block.log_bucket]
 }
@@ -85,7 +88,7 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 resource "aws_s3_bucket_versioning" "bucket_versioning" {
-  count = var.apply_resource == true && length(var.canonical_user_grants) == 0 ? 1 : 0
+  count = var.apply_resource == true && length(var.aws_logs_delivery_account_id) == 0 ? 1 : 0
 
   bucket = aws_s3_bucket.bucket[0].id
 
@@ -141,22 +144,21 @@ resource "aws_s3_bucket_policy" "bucket" {
   bucket = aws_s3_bucket.bucket.*.id[0]
   policy = local.environment == "mgmt" && contains(["log-data", "lambda_update"], var.bucket_policy) ? templatefile("./tdr-terraform-modules/s3/templates/${var.bucket_policy}.json.tpl",
     {
-      bucket_name           = aws_s3_bucket.bucket.*.id[0],
-      account_id            = data.aws_caller_identity.current.account_id,
-      external_account_1    = data.aws_ssm_parameter.intg_account_number.*.value[0],
-      external_account_2    = data.aws_ssm_parameter.staging_account_number.*.value[0],
-      external_account_3    = data.aws_ssm_parameter.prod_account_number.*.value[0]
-      canonical_user_grants = jsonencode(var.canonical_user_grants)
+      bucket_name        = aws_s3_bucket.bucket.*.id[0],
+      account_id         = data.aws_caller_identity.current.account_id,
+      external_account_1 = data.aws_ssm_parameter.intg_account_number.*.value[0],
+      external_account_2 = data.aws_ssm_parameter.staging_account_number.*.value[0],
+      external_account_3 = data.aws_ssm_parameter.prod_account_number.*.value[0]
     }) : templatefile("./tdr-terraform-modules/s3/templates/${var.bucket_policy}.json.tpl",
     {
       bucket_name                  = aws_s3_bucket.bucket.*.id[0],
       aws_elb_account              = data.aws_ssm_parameter.aws_elb_account_number.value,
       cloudfront_oai               = var.cloudfront_oai,
       account_id                   = data.aws_caller_identity.current.account_id,
+      aws_logs_delivery_account_id = var.aws_logs_delivery_account_id,
       environment                  = local.environment, title_environment = title(local.environment),
       read_access_roles            = var.read_access_role_arns,
       cloudfront_distribution_arns = jsonencode(var.cloudfront_distribution_arns)
-      canonical_user_grants        = jsonencode(var.canonical_user_grants)
   })
   depends_on = [aws_s3_bucket_public_access_block.bucket]
 }
