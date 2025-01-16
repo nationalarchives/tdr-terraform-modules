@@ -11,6 +11,6 @@ output "blocked_ip_set_arn" {
 }
 
 output "blocked_rule_group_arn" {
-  value = aws_wafv2_rule_group.block_ips_rule_group[0].arn
+  value = length(aws_wafv2_rule_group.block_ips_rule_group) > 0 ? aws_wafv2_rule_group.block_ips_rule_group[0].arn : ""
 }
 
