@@ -5,7 +5,7 @@ resource "aws_iam_role" "cloudtrail_role" {
 
 resource "aws_iam_policy" "cloudwatch_policy" {
   name   = "${upper(var.project)}Cloudwatch${title(local.environment)}"
-  policy = templatefile("./tdr-terraform-modules/cloudtrail/templates/cloudwatch_logs_policy.json.tpl", { account_id = data.aws_caller_identity.current.account_id })
+  policy = templatefile("./tdr-terraform-modules/cloudtrail/templates/cloudwatch_logs_policy.json.tpl", {})
 }
 
 resource "aws_iam_role_policy_attachment" "cloudtrail_policy_attach" {
