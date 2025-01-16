@@ -29,12 +29,7 @@
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/${environment}/keycloak/user_read_client/secret",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/${environment}/keycloak/transfer_service_client/secret",
         "${kms_arn}"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      ]
     },
     {
       "Effect": "Allow",
@@ -43,12 +38,7 @@
         "ec2:DeleteNetworkInterface",
         "ec2:DescribeNetworkInterfaces"
       ],
-      "Resource": "*",
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      "Resource": "*"
     }
   ]
 }

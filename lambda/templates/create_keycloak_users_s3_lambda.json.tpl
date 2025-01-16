@@ -10,12 +10,7 @@
       "Resource": [
         "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/${function_name}",
         "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/${function_name}:*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      ]
     },
     {
       "Effect": "Allow",
@@ -26,12 +21,7 @@
       "Resource" : [
         "arn:aws:s3:::tdr-create-bulk-keycloak-users-${environment}",
         "arn:aws:s3:::tdr-create-bulk-keycloak-users-${environment}/*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      ]
     },
     {
       "Effect": "Allow",
@@ -41,12 +31,7 @@
         "ec2:DeleteNetworkInterface",
         "elasticfilesystem:ClientWrite"
       ],
-      "Resource": "*",
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      "Resource": "*"
     },
     {
       "Sid": "DecryptEnvVar",
@@ -55,24 +40,14 @@
         "kms:Decrypt",
         "kms:GenerateDataKey"
       ],
-      "Resource": "${kms_arn}",
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      "Resource": "${kms_arn}"
     },
     {
       "Effect": "Allow",
       "Action": [
         "ssm:GetParameter"
       ],
-      "Resource": "arn:aws:ssm:eu-west-2:${account_id}:parameter${parameter_name}",
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      "Resource": "arn:aws:ssm:eu-west-2:${account_id}:parameter${parameter_name}"
     }
   ]
 }
