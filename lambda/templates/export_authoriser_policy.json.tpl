@@ -10,12 +10,7 @@
       "Resource": [
         "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-export-api-authoriser-${environment}",
         "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-export-api-authoriser-${environment}:log-stream:*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      ]
     },
     {
       "Sid": "DecryptEnvVar",
@@ -23,12 +18,7 @@
       "Action": [
         "kms:Decrypt"
       ],
-      "Resource": "${kms_arn}",
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      "Resource": "${kms_arn}"
     },
     {
       "Effect": "Allow",
@@ -37,12 +27,7 @@
         "ec2:DescribeNetworkInterfaces",
         "ec2:DeleteNetworkInterface"
       ],
-      "Resource": "*",
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      "Resource": "*"
     }
   ]
 }
