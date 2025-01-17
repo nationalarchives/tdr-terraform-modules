@@ -39,6 +39,19 @@
         "ec2:DescribeNetworkInterfaces"
       ],
       "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "events:DescribeConnection",
+        "events:UpdateConnection"
+      ],
+      "Resource": "${api_connection_arn}",
+      "Condition": {
+        "StringEquals": {
+          "aws:SourceAccount": "${account_id}"
+        }
+      }
     }
   ]
 }
