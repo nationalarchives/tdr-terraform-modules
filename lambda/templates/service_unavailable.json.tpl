@@ -10,12 +10,7 @@
       "Resource": [
         "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-service-unavailable-${environment}",
         "arn:aws:logs:eu-west-2:${account_id}:log-group:/aws/lambda/tdr-service-unavailable-${environment}:log-stream:*"
-      ],
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      ]
     },
     {
       "Effect": "Allow",
@@ -24,12 +19,7 @@
         "ec2:DescribeNetworkInterfaces",
         "ec2:DeleteNetworkInterface"
       ],
-      "Resource": "*",
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      "Resource": "*"
     }
   ]
 }

@@ -7,22 +7,12 @@
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
-      "Resource": "*",
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      "Resource": "*"
     },
     {
       "Effect": "Allow",
       "Action": "cloudwatch:PutMetricData",
-      "Resource": "*",
-      "Condition": {
-        "StringEquals": {
-          "AWS:SourceAccount": "${account_id}"
-        }
-      }
+      "Resource": "*"
     }
   ]
 }
