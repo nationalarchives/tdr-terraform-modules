@@ -380,3 +380,8 @@ variable "notifications_vpc_config" {
     security_group_ids = []
   }
 }
+
+variable "api_connection_arn" {
+  description = "Arn of the EventBridge connection for the Consignment Api"
+  default     = ""
+}
