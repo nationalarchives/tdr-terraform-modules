@@ -85,46 +85,37 @@ resource "aws_wafv2_rule_group" "rule_group" {
   }
 }
 
-resource "aws_wafv2_rule_group" "block_ips_rule_group" {
-  count    = var.blocked_ips == "" ? 0 : 1
-  capacity = 1
-  name     = "block-ips-rule-group"
-  scope    = "REGIONAL"
-
-  rule {
-    name     = "BlockIPsRule"
-    priority = 10
-    action {
-      block {}
-    }
-    statement {
-      ip_set_reference_statement {
-        arn = aws_wafv2_ip_set.blocked_ips[0].arn
-      }
-    }
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "BlockIPsRule"
-      sampled_requests_enabled   = true
-    }
-  }
-
-  visibility_config {
-    cloudwatch_metrics_enabled = false
-    metric_name                = "block-ips-rule-group"
-    sampled_requests_enabled   = false
-  }
-}
-
 resource "aws_wafv2_web_acl" "acl" {
   name  = "${var.project}-${var.function}-${var.environment}-restricted-uri"
   scope = "REGIONAL"
   default_action {
     block {}
   }
+
+  dynamic "rule" {
+    for_each = var.blocked_ips == "" ? [] : [1]
+    content {
+      name     = "BlockIPsRule"
+      priority = 0
+      action {
+        block {}
+      }
+      statement {
+        ip_set_reference_statement {
+          arn = aws_wafv2_ip_set.blocked_ips[0].arn
+        }
+      }
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = "BlockIPsRule"
+        sampled_requests_enabled   = true
+      }
+    }
+  }
+
   rule {
     name     = "rate-based-rule"
-    priority = 0
+    priority = 1
     action {
       block {}
     }
@@ -150,7 +141,7 @@ resource "aws_wafv2_web_acl" "acl" {
   }
   rule {
     name     = "acl-rule"
-    priority = 1
+    priority = 2
     override_action {
       none {}
     }
@@ -166,28 +157,7 @@ resource "aws_wafv2_web_acl" "acl" {
     }
   }
 
-  dynamic "rule" {
-    for_each = var.blocked_ips == "" ? [] : [1]
-    content {
-      name     = "block-ips-rule-group"
-      priority = 2
-      override_action {
-        none {}
-      }
-      statement {
-        rule_group_reference_statement {
-          arn = aws_wafv2_rule_group.block_ips_rule_group[0].arn
-        }
-      }
-      visibility_config {
-        cloudwatch_metrics_enabled = false
-        metric_name                = "block-ips-rule-group"
-        sampled_requests_enabled   = false
-      }
-    }
-  }
-
-  dynamic "rule" {
+   dynamic "rule" {
     for_each = toset(var.aws_managed_rules)
     content {
       name     = rule.value.name
