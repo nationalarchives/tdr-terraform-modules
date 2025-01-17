@@ -7,5 +7,5 @@ output "rule_group_arn" {
 }
 
 output "blocked_ip_set_arn" {
-  value = var.blocked_ips == "" ? "" : aws_wafv2_ip_set.blocked_ips[0].arn
+  value = var.blocked_ips == "" ? "" : aws_wafv2_ip_set.blocked_ips.arn
 }

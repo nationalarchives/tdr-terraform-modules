@@ -7,7 +7,6 @@ resource "aws_wafv2_ip_set" "trusted" {
 }
 
 resource "aws_wafv2_ip_set" "blocked_ips" {
-  count              = var.blocked_ips == "" ? 0 : 1
   name               = "${var.project}-${var.function}-${var.environment}-blockedIps"
   scope              = "REGIONAL"
   ip_address_version = "IPV4"
@@ -102,7 +101,7 @@ resource "aws_wafv2_web_acl" "acl" {
       }
       statement {
         ip_set_reference_statement {
-          arn = aws_wafv2_ip_set.blocked_ips[0].arn
+          arn = aws_wafv2_ip_set.blocked_ips.arn
         }
       }
       visibility_config {
@@ -157,7 +156,7 @@ resource "aws_wafv2_web_acl" "acl" {
     }
   }
 
-   dynamic "rule" {
+  dynamic "rule" {
     for_each = toset(var.aws_managed_rules)
     content {
       name     = rule.value.name
