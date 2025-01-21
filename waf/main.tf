@@ -6,6 +6,15 @@ resource "aws_wafv2_ip_set" "trusted" {
   scope              = "REGIONAL"
 }
 
+resource "aws_wafv2_ip_set" "blocked_ips" {
+  name               = "${var.project}-${var.function}-${var.environment}-blockedIps"
+  scope              = "REGIONAL"
+  ip_address_version = "IPV4"
+  addresses          = length(var.blocked_ips) > 0 ? split(",", var.blocked_ips) : []
+  description        = "IP set for blocking malicious IPs"
+}
+
+
 resource "aws_wafv2_rule_group" "rule_group" {
   capacity = 12
   name     = "waf-rule-group"
@@ -81,10 +90,31 @@ resource "aws_wafv2_web_acl" "acl" {
   default_action {
     block {}
   }
-  rule {
 
+  dynamic "rule" {
+    for_each = var.blocked_ips == "" ? [] : [1]
+    content {
+      name     = "BlockIPsRule"
+      priority = 0
+      action {
+        block {}
+      }
+      statement {
+        ip_set_reference_statement {
+          arn = aws_wafv2_ip_set.blocked_ips.arn
+        }
+      }
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = "BlockIPsRule"
+        sampled_requests_enabled   = true
+      }
+    }
+  }
+
+  rule {
     name     = "rate-based-rule"
-    priority = 0
+    priority = 1
     action {
       block {}
     }
@@ -110,7 +140,7 @@ resource "aws_wafv2_web_acl" "acl" {
   }
   rule {
     name     = "acl-rule"
-    priority = 1
+    priority = 2
     override_action {
       none {}
     }
