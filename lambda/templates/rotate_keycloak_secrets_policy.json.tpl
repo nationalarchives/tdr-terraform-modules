@@ -46,12 +46,7 @@
         "events:DescribeConnection",
         "events:UpdateConnection"
       ],
-      "Resource": "${api_connection_arn}",
-      "Condition": {
-        "StringEquals": {
-          "aws:SourceAccount": "${account_id}"
-        }
-      }
+      "Resource": "arn:aws:events:eu-west-2:${account_id}:connection/${api_connection_name}"
     }
   ]
 }
