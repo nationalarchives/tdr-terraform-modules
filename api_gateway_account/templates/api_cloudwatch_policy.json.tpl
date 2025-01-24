@@ -12,7 +12,12 @@
         "logs:GetLogEvents",
         "logs:PutLogEvents"
       ],
-      "Resource": "*"
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceAccount": "${account_id}"
+        }
+      }
     }
   ]
 }
