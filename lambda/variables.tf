@@ -381,7 +381,7 @@ variable "notifications_vpc_config" {
   }
 }
 
-variable "api_connection_arn" {
+variable "api_connection_name" {
   description = "Arn of the EventBridge connection for the Consignment Api"
   default     = ""
 }
