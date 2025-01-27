@@ -11,11 +11,12 @@ resource "aws_lambda_function" "rotate_keycloak_secrets_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      AUTH_URL                        = var.auth_url
-      AUTH_SECRET_PATH                = var.rotate_secrets_client_path
-      ENVIRONMENT                     = local.environment
-      SNS_TOPIC                       = var.notifications_topic
-      CONSIGNMENT_API_CONNECTION_NAME = var.api_connection_name
+      AUTH_URL                             = var.auth_url
+      AUTH_SECRET_PATH                     = var.rotate_secrets_client_path
+      ENVIRONMENT                          = local.environment
+      SNS_TOPIC                            = var.notifications_topic
+      CONSIGNMENT_API_CONNECTION_NAME      = var.api_connection_name
+      CONSIGNMENT_API_CONNECTION_AUTH_TYPE = var.api_connection_auth_type
     }
   }
 
@@ -39,10 +40,11 @@ resource "aws_cloudwatch_log_group" "rotate_keycloak_secrets_lambda_log_group" {
 resource "aws_iam_policy" "rotate_keycloak_secrets_lambda_policy" {
   count = local.count_rotate_keycloak_secrets
   policy = templatefile("${path.module}/templates/rotate_keycloak_secrets_policy.json.tpl", {
-    account_id          = data.aws_caller_identity.current.account_id,
-    environment         = local.environment,
-    kms_arn             = var.kms_key_arn
-    api_connection_name = var.api_connection_name
+    account_id                = data.aws_caller_identity.current.account_id,
+    environment               = local.environment,
+    kms_arn                   = var.kms_key_arn
+    api_connection_name       = var.api_connection_name
+    api_connection_secret_arn = var.api_connection_secret_arn
   })
   name = "${upper(var.project)}RotateKeycloakSecretsLambdaPolicy${title(local.environment)}"
 }
