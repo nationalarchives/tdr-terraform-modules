@@ -28,6 +28,7 @@
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/${environment}/keycloak/user_admin_client/secret",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/${environment}/keycloak/user_read_client/secret",
         "arn:aws:ssm:eu-west-2:${account_id}:parameter/${environment}/keycloak/transfer_service_client/secret",
+        "arn:aws:ssm:eu-west-2:${account_id}:parameter/${environment}/keycloak/draft_metadata_client/secret",
         "${kms_arn}"
       ]
     },
