@@ -39,10 +39,11 @@ resource "aws_cloudwatch_log_group" "rotate_keycloak_secrets_lambda_log_group" {
 resource "aws_iam_policy" "rotate_keycloak_secrets_lambda_policy" {
   count = local.count_rotate_keycloak_secrets
   policy = templatefile("${path.module}/templates/rotate_keycloak_secrets_policy.json.tpl", {
-    account_id          = data.aws_caller_identity.current.account_id,
-    environment         = local.environment,
-    kms_arn             = var.kms_key_arn
-    api_connection_name = var.api_connection_name
+    account_id                = data.aws_caller_identity.current.account_id,
+    environment               = local.environment,
+    kms_arn                   = var.kms_key_arn
+    api_connection_name       = var.api_connection_name
+    api_connection_secret_arn = var.api_connection_secret_arn
   })
   name = "${upper(var.project)}RotateKeycloakSecretsLambdaPolicy${title(local.environment)}"
 }
