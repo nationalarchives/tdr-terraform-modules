@@ -11,11 +11,12 @@ resource "aws_lambda_function" "rotate_keycloak_secrets_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      AUTH_URL                        = var.auth_url
-      AUTH_SECRET_PATH                = var.rotate_secrets_client_path
-      ENVIRONMENT                     = local.environment
-      SNS_TOPIC                       = var.notifications_topic
-      CONSIGNMENT_API_CONNECTION_NAME = var.api_connection_name
+      AUTH_URL                             = var.auth_url
+      AUTH_SECRET_PATH                     = var.rotate_secrets_client_path
+      ENVIRONMENT                          = local.environment
+      SNS_TOPIC                            = var.notifications_topic
+      CONSIGNMENT_API_CONNECTION_NAME      = var.api_connection_name
+      CONSIGNMENT_API_CONNECTION_AUTH_TYPE = var.api_connection_auth_type
     }
   }
 

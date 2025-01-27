@@ -53,7 +53,7 @@
         "secretsmanager:*"
       ],
       "Effect": "Allow",
-      "Resource": "{api_connection_secret_arn}"
+      "Resource": "${api_connection_secret_arn}"
     }
   ]
 }
