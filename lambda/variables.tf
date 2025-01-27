@@ -381,7 +381,18 @@ variable "notifications_vpc_config" {
   }
 }
 
+variable "api_connection_auth_type" {
+  description = "Authorisation type for the EventBridge connection for the Consignment Api"
+  default     = ""
+}
+
+
 variable "api_connection_name" {
   description = "Name of the EventBridge connection for the Consignment Api"
+  default     = ""
+}
+
+variable "api_connection_secret_arn" {
+  description = "Arn of the Secrets Manager secret for the Event Bridge connection for the Consignment Api"
   default     = ""
 }
