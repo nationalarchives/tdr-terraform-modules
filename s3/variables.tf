@@ -145,3 +145,9 @@ variable "aws_logs_delivery_account_id" {
   description = "AWS log delivery account ID"
   default     = ""
 }
+
+variable "lifecycle_rules" {
+  description = "List of maps describing configuration of object lifecycle management for bucket"
+  type        = any
+  default     = []
+}
