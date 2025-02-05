@@ -106,21 +106,22 @@ resource "aws_s3_bucket_logging" "bucket_logging" {
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "bucket_lifecycle" {
-  count = var.apply_resource == true && var.abort_incomplete_uploads == true ? 1 : 0
+  count = var.apply_resource == true && (length(var.lifecycle_rules) > 0 || var.abort_incomplete_uploads == true) ? 1 : 0
 
   bucket = aws_s3_bucket.bucket[0].id
 
-  rule {
-    id     = "abort-incomplete-uploads"
-    status = "Enabled"
-
-    abort_incomplete_multipart_upload {
-      days_after_initiation = 7
-    }
-
-    expiration {
-      days                         = 0
-      expired_object_delete_marker = false
+  dynamic "rule" {
+    for_each = var.abort_incomplete_uploads == true ? ["this"] : []
+    content {
+      id     = "abort-incomplete-uploads"
+      status = "Enabled"
+      abort_incomplete_multipart_upload {
+        days_after_initiation = 7
+      }
+      expiration {
+        days                         = 0
+        expired_object_delete_marker = false
+      }
     }
   }
 
