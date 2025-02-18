@@ -151,3 +151,13 @@ variable "lifecycle_rules" {
   type        = any
   default     = []
 }
+
+variable "s3_bucket_additional_tags" {
+  description = "Set of tags to be applied to the S3 bucket only"
+  default     = null
+}
+
+variable "s3_logs_bucket_additional_tags" {
+  description = "Set of tags to be applied to the S3 logs bucket only"
+  default     = null
+}
