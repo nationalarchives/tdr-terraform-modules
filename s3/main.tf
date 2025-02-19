@@ -4,7 +4,7 @@ resource "aws_s3_bucket" "log_bucket" {
   force_destroy = var.force_destroy
 
   tags = merge(
-    var.common_tags,
+    local.s3_log_bucket_tags,
     tomap(
       { "Name" = "${local.bucket_name}-logs" }
     )
@@ -80,7 +80,7 @@ resource "aws_s3_bucket" "bucket" {
   bucket        = local.bucket_name
   force_destroy = var.force_destroy
   tags = merge(
-    var.common_tags,
+    local.s3_bucket_tags,
     tomap(
       { "Name" = local.bucket_name }
     )
