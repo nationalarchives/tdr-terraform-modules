@@ -42,3 +42,8 @@ variable "manage_master_credentials_with_secrets_manager" {
   default     = false
   description = "Whether master database credentials should be managed using the RDS Secrets Manager integration"
 }
+
+variable "aws_backup_tag" {
+  description = "Tag to indicate resource should be backed up"
+  default     = null
+}
