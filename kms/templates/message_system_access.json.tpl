@@ -70,6 +70,20 @@
         "kms:GenerateDataKey"
       ],
       "Resource": "*"
+    },
+    {
+      "Sid": "AllowCopyToCentralBackupAccount",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::${aws_backup_account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup"
+      },
+      "Action": [
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey",
+        "kms:Decrypt",
+        "kms:CreateGrant"
+      ],
+      "Resource": "*"
     }
   ]
 }
