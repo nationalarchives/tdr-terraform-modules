@@ -70,6 +70,20 @@
         "kms:GenerateDataKey"
       ],
       "Resource": "*"
+    },
+    {
+      "Sid": "AllowCopyToCentralBackupAccount",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${aws_backup_role}"
+      },
+      "Action": [
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey",
+        "kms:Decrypt",
+        "kms:CreateGrant"
+      ],
+      "Resource": "*"
     }
   ]
 }

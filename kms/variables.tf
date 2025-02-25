@@ -23,3 +23,7 @@ variable "policy_variables" {
   default = {}
   type    = map(string)
 }
+
+variable "aws_backup_role_arn" {
+  description = "AWS service role for the central backup"
+}

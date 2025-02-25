@@ -3,8 +3,9 @@ resource "aws_kms_key" "encryption" {
   enable_key_rotation = true
 
   policy = templatefile("${path.module}/templates/${var.key_policy}.json.tpl", merge(var.policy_variables, {
-    account_id  = data.aws_caller_identity.current.account_id,
-    environment = var.environment
+    account_id      = data.aws_caller_identity.current.account_id,
+    aws_backup_role = var.aws_backup_role_arn
+    environment     = var.environment
   }))
   tags = merge(
     var.common_tags,

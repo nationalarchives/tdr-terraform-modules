@@ -38,7 +38,7 @@ resource "aws_db_instance" "db_instance" {
   multi_az                              = var.multi_az
   availability_zone                     = var.multi_az == true ? null : var.availability_zone
   auto_minor_version_upgrade            = true
-  tags                                  = var.common_tags
+  tags                                  = merge(var.common_tags, var.aws_backup_tag)
   iam_database_authentication_enabled   = true
   performance_insights_enabled          = true
   performance_insights_retention_period = 7
