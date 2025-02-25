@@ -24,6 +24,6 @@ variable "policy_variables" {
   type    = map(string)
 }
 
-variable "aws_backup_account_id" {
-  description = "AWS account id for the central backup"
+variable "aws_backup_role_arn" {
+  description = "AWS service role for the central backup"
 }

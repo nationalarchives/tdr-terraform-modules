@@ -75,7 +75,7 @@
       "Sid": "AllowCopyToCentralBackupAccount",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::${aws_backup_account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup"
+        "AWS": "${aws_backup_role}"
       },
       "Action": [
         "kms:GenerateDataKey*",
