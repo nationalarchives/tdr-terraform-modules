@@ -18,21 +18,6 @@
       "Principal": "*"
     },
     {
-      "Sid": "AllowReadAccess",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": ${jsonencode(read_access_roles)}
-      },
-      "Action": [
-        "s3:GetObject",
-        "s3:ListBucket"
-      ],
-      "Resource": [
-        "arn:aws:s3:::${bucket_name}",
-        "arn:aws:s3:::${bucket_name}/*"
-      ]
-    },
-    {
       "Sid": "AllowAWSBackupRoleAccess",
       "Effect": "Allow",
       "Principal": {
