@@ -33,10 +33,10 @@
       ]
     },
     {
-      "Sid": "AllowAWSBackupRoleAccess",
+      "Sid": "AllowSourceAWSBackupRoleAccess",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::${account_id}:role/org-deploy-backup-role"
+        "AWS": "arn:aws:iam::${account_id}:role/org-backup-role"
       },
       "Action": [
         "s3:GetObject",
