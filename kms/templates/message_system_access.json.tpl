@@ -72,10 +72,29 @@
       "Resource": "*"
     },
     {
+      "Sid": "AllowSourceBackupRoleAccess",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${aws_backup_local_role}"
+      },
+      "Action": [
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey",
+        "kms:Decrypt",
+        "kms:CreateGrant"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:SourceAccount": "${account_id}"
+        }
+      }
+    },
+    {
       "Sid": "AllowCopyToCentralBackupAccount",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "${aws_backup_role}"
+        "AWS": "${aws_backup_service_role}"
       },
       "Action": [
         "kms:GenerateDataKey*",
