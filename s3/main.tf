@@ -202,8 +202,7 @@ resource "aws_s3_bucket_policy" "bucket" {
       environment                  = local.environment, title_environment = title(local.environment),
       read_access_roles            = var.read_access_role_arns,
       cloudfront_distribution_arns = jsonencode(var.cloudfront_distribution_arns)
-      aws_backup_local_role        = var.aws_backup_local_role_arn,
-
+      aws_backup_local_role        = var.aws_backup_local_role_arn
   })
   depends_on = [aws_s3_bucket_public_access_block.bucket]
 }
