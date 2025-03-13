@@ -24,7 +24,12 @@ variable "policy_variables" {
   type    = map(string)
 }
 
-variable "aws_backup_role_arn" {
+variable "aws_backup_service_role_arn" {
   description = "AWS service role for the central backup"
+  default     = null
+}
+
+variable "aws_backup_local_role_arn" {
+  description = "Local account role for the central backup"
   default     = null
 }
