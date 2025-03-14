@@ -164,5 +164,5 @@ variable "s3_logs_bucket_additional_tags" {
 
 variable "aws_backup_local_role_arn" {
   description = "Local account role for the central backup"
-  default     = null
+  default     = ""
 }
