@@ -2,6 +2,43 @@
   "Version": "2012-10-17",
   "Id": "key-default-1",
   "Statement": [
+  %{ if aws_backup_service_role != "" }
+    {
+      "Sid": "AllowCopyToCentralBackupAccount",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${aws_backup_service_role}"
+    },
+    "Action": [
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+      "kms:Decrypt",
+      "kms:CreateGrant"
+    ],
+    "Resource": "*"
+    },
+  %{ endif }
+  %{ if aws_backup_local_role != "" }
+    {
+      "Sid": "AllowSourceBackupRoleAccess",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${aws_backup_local_role}"
+    },
+    "Action": [
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+      "kms:Decrypt",
+      "kms:CreateGrant"
+    ],
+    "Resource": "*",
+    "Condition": {
+        "StringEquals": {
+          "aws:SourceAccount": "${account_id}"
+        }
+      }
+    },
+  %{ endif }
     {
       "Sid": "Enable IAM User Permissions",
       "Effect": "Allow",

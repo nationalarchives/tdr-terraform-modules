@@ -26,10 +26,10 @@ variable "policy_variables" {
 
 variable "aws_backup_service_role_arn" {
   description = "AWS service role for the central backup"
-  default     = null
+  default     = ""
 }
 
 variable "aws_backup_local_role_arn" {
   description = "Local account role for the central backup"
-  default     = null
+  default     = ""
 }
