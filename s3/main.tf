@@ -60,6 +60,7 @@ resource "aws_s3_bucket_policy" "log_bucket" {
       bucket_name                  = aws_s3_bucket.log_bucket.*.id[0],
       account_id                   = data.aws_caller_identity.current.account_id,
       aws_logs_delivery_account_id = var.aws_logs_delivery_account_id
+      aws_backup_local_role        = var.aws_backup_local_role_arn
   })
   depends_on = [aws_s3_bucket_public_access_block.log_bucket]
 }
@@ -202,6 +203,7 @@ resource "aws_s3_bucket_policy" "bucket" {
       environment                  = local.environment, title_environment = title(local.environment),
       read_access_roles            = var.read_access_role_arns,
       cloudfront_distribution_arns = jsonencode(var.cloudfront_distribution_arns)
+      aws_backup_local_role        = var.aws_backup_local_role_arn
   })
   depends_on = [aws_s3_bucket_public_access_block.bucket]
 }
