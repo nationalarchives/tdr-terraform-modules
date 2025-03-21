@@ -2,6 +2,7 @@ resource "aws_alb" "alb_module" {
   name            = "${var.project}-${var.function}-${var.environment}"
   subnets         = var.public_subnets
   security_groups = [var.alb_security_group_id]
+  idle_timeout    = var.idle_timeout
 
   access_logs {
     bucket  = var.alb_log_bucket

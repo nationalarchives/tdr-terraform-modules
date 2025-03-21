@@ -89,3 +89,8 @@ variable "health_check_port" {
   description = "Port to use for health check if different from target port"
   default     = null
 }
+
+variable "idle_timeout" {
+  description = "The amount of time a client or target connection can be idle before the load balancer closes it"
+  default     = 60
+}
