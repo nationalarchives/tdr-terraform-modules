@@ -12,8 +12,8 @@ resource "aws_lambda_function" "create_db_users_lambda_function" {
   environment {
     variables = {
       DB_SECRETS_ARN = aws_kms_ciphertext.environment_vars_create_db_users["db_secrets_arn"].ciphertext_blob
-      DB_URL            = aws_kms_ciphertext.environment_vars_create_db_users["db_url"].ciphertext_blob
-      DATABASE_NAME     = aws_kms_ciphertext.environment_vars_create_db_users["database_name"].ciphertext_blob
+      DB_URL         = aws_kms_ciphertext.environment_vars_create_db_users["db_url"].ciphertext_blob
+      DATABASE_NAME  = aws_kms_ciphertext.environment_vars_create_db_users["database_name"].ciphertext_blob
     }
   }
 
@@ -28,7 +28,7 @@ resource "aws_lambda_function" "create_db_users_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_create_db_users" {
-  for_each  = local.count_create_db_users == 0 ? {} : { db_secrets_arn = var.db_secrets_arn, db_url = "jdbc:postgresql://${var.db_url}:5432/${var.database_name ==  "keycloak" ? var.database_name : "consignmentapi" }", database_name = var.database_name }
+  for_each  = local.count_create_db_users == 0 ? {} : { db_secrets_arn = var.db_secrets_arn, db_url = "jdbc:postgresql://${var.db_url}:5432/${var.database_name == "keycloak" ? var.database_name : "consignmentapi"}", database_name = var.database_name }
   key_id    = var.kms_key_arn
   plaintext = each.value
   context   = { "LambdaFunctionName" = local.create_db_users_function_name }

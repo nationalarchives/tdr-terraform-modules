@@ -1,5 +1,5 @@
 variable "instance_class" {
-  default = "db.t3.micro"
+  default = "db.t3.medium"
 }
 
 variable "database_name" {}
