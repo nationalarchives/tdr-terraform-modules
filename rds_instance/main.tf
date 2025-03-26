@@ -5,11 +5,6 @@ resource "random_string" "identifier_string" {
   upper   = false
 }
 
-resource "random_password" "password" {
-  length  = 60
-  special = false
-}
-
 resource "aws_db_subnet_group" "user_subnet_group" {
   name       = "${var.database_name}-instance-main-${var.environment}"
   subnet_ids = var.private_subnets
@@ -32,7 +27,6 @@ resource "aws_db_instance" "db_instance" {
   engine                                = "postgres"
   engine_version                        = var.database_version
   username                              = var.admin_username
-  password                              = var.manage_master_credentials_with_secrets_manager ? null : random_password.password.result
   vpc_security_group_ids                = var.security_group_ids
   db_subnet_group_name                  = aws_db_subnet_group.user_subnet_group.name
   multi_az                              = var.multi_az
@@ -47,7 +41,7 @@ resource "aws_db_instance" "db_instance" {
   backup_retention_period               = var.backup_retention_period
   ca_cert_identifier                    = var.ca_cert_identifier
   apply_immediately                     = var.apply_immediately
-  manage_master_user_password           = var.manage_master_credentials_with_secrets_manager ? var.manage_master_credentials_with_secrets_manager : null
+  manage_master_user_password           = true
 }
 
 resource "aws_ssm_parameter" "database_username" {

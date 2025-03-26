@@ -28,6 +28,14 @@
         "kms:Decrypt"
       ],
       "Resource": "${kms_arn}"
-    }
+    },
+     {
+       "Sid": "GetSecretValue",
+       "Effect": "Allow",
+       "Action": [
+         "secretsmanager:GetSecretValue"
+       ],
+       "Resource": "arn:aws:secretsmanager:eu-west-2:${account_id}:secret:rds*"
+     }
   ]
 }
