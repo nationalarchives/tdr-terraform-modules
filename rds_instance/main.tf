@@ -50,12 +50,6 @@ resource "aws_ssm_parameter" "database_username" {
   value = aws_db_instance.db_instance.username
 }
 
-resource "aws_ssm_parameter" "database_password" {
-  name  = "/${var.environment}/${var.database_name}/instance/password"
-  type  = "SecureString"
-  value = aws_db_instance.db_instance.password
-}
-
 resource "aws_ssm_parameter" "database_url" {
   name  = "/${var.environment}/${var.database_name}/instance/url"
   type  = "SecureString"
