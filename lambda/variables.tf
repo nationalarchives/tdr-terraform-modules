@@ -245,6 +245,10 @@ variable "db_url" {
   default = ""
 }
 
+variable "db_secrets_arn" {
+  default = ""
+}
+
 variable "muted_scan_alerts" {
   description = "Parameter for the notification lambda listing which ECR scan alerts should be muted"
   type        = list(string)
