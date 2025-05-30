@@ -26,3 +26,26 @@ data "aws_ssm_parameter" "cloudfront_private_key_pem" {
 }
 
 data "aws_availability_zones" "available" {}
+
+data "aws_organizations_organization" "current" {}
+
+// This replaces the templates/lambda_assume_role.json.tpl which did not have a trust condition
+// See TDRD-845
+data "aws_iam_policy_document" "lambda_assume_role" {
+  statement {
+
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceOrgID"
+      values   = ["${data.aws_organizations_organization.current.id}"]
+    }
+  }
+}
