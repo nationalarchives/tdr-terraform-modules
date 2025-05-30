@@ -39,7 +39,7 @@ resource "aws_iam_policy" "ecr_scan_lambda_policy" {
 
 resource "aws_iam_role" "ecr_scan_lambda_iam_role" {
   count              = local.count_ecr_scan
-  assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", {})
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
   name               = "${upper(var.project)}EcrScanLambdaRole${title(local.environment)}"
 }
 
