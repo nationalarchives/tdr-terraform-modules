@@ -58,7 +58,7 @@ resource "aws_iam_policy" "signed_cookies_lambda_policy" {
 
 resource "aws_iam_role" "signed_cookies_lambda_iam_role" {
   count              = local.count_signed_cookies
-  assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", {})
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
   name               = "${upper(var.project)}SignedCookiesLambdaRole"
 }
 

@@ -46,7 +46,7 @@ resource "aws_iam_policy" "export_status_update_lambda_policy" {
 
 resource "aws_iam_role" "export_status_update_lambda_iam_role" {
   count              = local.count_export_status_update
-  assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", {})
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
   name               = "${upper(var.project)}ExportStatusUpdateLambdaRole${title(local.environment)}"
 }
 

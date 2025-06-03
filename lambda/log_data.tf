@@ -7,7 +7,7 @@ resource "aws_iam_policy" "log_data_lambda_base_policy" {
 resource "aws_iam_role" "log_data_assume_role" {
   count              = local.count_log_data
   name               = "${upper(var.project)}LogDataAssumeRole${title(local.environment)}"
-  assume_role_policy = templatefile("./tdr-terraform-modules/lambda/templates/lambda_assume_role.json.tpl", {})
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
 }
 
 resource "aws_iam_role_policy_attachment" "log_data_base_policy_attach" {
