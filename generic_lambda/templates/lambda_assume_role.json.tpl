@@ -6,6 +6,11 @@
       "Principal": {
         "Service": "lambda.amazonaws.com"
       },
+      "Condition": {
+        "StringEquals": {
+          "aws:SourceAccount": "${account_id}"
+        }
+      },
       "Effect": "Allow",
       "Sid": ""
     }
