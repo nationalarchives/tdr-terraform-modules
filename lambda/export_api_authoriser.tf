@@ -41,7 +41,7 @@ resource "aws_cloudwatch_log_group" "export_api_authoriser_lambda_log_group" {
 
 resource "aws_iam_role" "export_api_authoriser_lambda_iam_role" {
   count              = local.count_export_api_authoriser
-  assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", {})
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
   name               = "${upper(var.project)}ExportApiAuthoriserLambdaRole${title(local.environment)}"
 }
 

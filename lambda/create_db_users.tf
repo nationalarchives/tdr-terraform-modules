@@ -49,7 +49,7 @@ resource "aws_iam_policy" "create_db_users_lambda_policy" {
 
 resource "aws_iam_role" "create_db_users_lambda_iam_role" {
   count              = local.count_create_db_users
-  assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", {})
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
   name               = "${upper(var.project)}CreateDbUsers${title(var.database_name)}Role${title(local.environment)}"
 }
 

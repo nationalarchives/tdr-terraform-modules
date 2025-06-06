@@ -51,7 +51,7 @@ resource "aws_iam_policy" "rotate_keycloak_secrets_lambda_policy" {
 
 resource "aws_iam_role" "rotate_keycloak_secrets_lambda_iam_role" {
   count              = local.count_rotate_keycloak_secrets
-  assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", {})
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
   name               = "${upper(var.project)}RotateKeycloakSecretsLambdaRole${title(local.environment)}"
 }
 

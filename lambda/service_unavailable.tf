@@ -35,7 +35,7 @@ resource "aws_iam_policy" "lambda_service_unavailable_policy" {
 
 resource "aws_iam_role" "lambda_service_unavailable_iam_role" {
   count              = local.count_service_unavailable
-  assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", {})
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
   name               = "${upper(var.project)}ServiceUnavailableRole${title(local.environment)}"
 }
 
