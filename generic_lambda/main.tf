@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_lambda_function" "lambda_function" {
   function_name = var.function_name
   handler       = var.handler
@@ -71,7 +73,7 @@ resource "aws_lambda_permission" "lambda_permissions" {
 }
 
 resource "aws_iam_role" "lambda_iam_role" {
-  assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", {})
+  assume_role_policy = templatefile("${path.module}/templates/lambda_assume_role.json.tpl", { account_id = data.aws_caller_identity.current.id })
   name               = var.role_name
 }
 
