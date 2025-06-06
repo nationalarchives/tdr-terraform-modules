@@ -35,7 +35,7 @@ resource "aws_iam_instance_profile" "instance_profile" {
 resource "aws_iam_role" "ec2_role" {
   count              = local.role_count
   name               = "${title(var.name)}EC2Role${title(var.environment)}"
-  assume_role_policy = templatefile("${path.module}/templates/ec2_assume_role.json.tpl", {})
+  assume_role_policy = templatefile("${path.module}/templates/ec2_assume_role.json.tpl", { account_id = data.aws_caller_identity.current.id })
   tags = merge(
     var.common_tags,
     tomap(
