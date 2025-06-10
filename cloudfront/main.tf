@@ -152,12 +152,23 @@ resource "aws_cloudfront_key_group" "cookie_signing_key_group" {
 }
 
 resource "aws_cloudfront_response_headers_policy" "default_response_headers_policy" {
-  name = "tdr-default-response-headers-${var.environment}"
+    name = "tdr-default-response-headers-${var.environment}"
   security_headers_config {
     strict_transport_security {
       access_control_max_age_sec = "31536000"
       include_subdomains         = true
       override                   = false
+    }
+    content_security_policy {
+      content_security_policy = "default-src 'self'"
+      override                = false
+    }
+  }
+  custom_headers_config {
+    items {
+      header   = "X-Permitted-Cross-Domain-Policies"
+      override = false
+      value    = "none"
     }
   }
 }
