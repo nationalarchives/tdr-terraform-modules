@@ -159,5 +159,16 @@ resource "aws_cloudfront_response_headers_policy" "default_response_headers_poli
       include_subdomains         = true
       override                   = false
     }
+    content_security_policy {
+      content_security_policy = "default-src 'self'"
+      override                = false
+    }
+  }
+  custom_headers_config {
+    items {
+      header   = "X-Permitted-Cross-Domain-Policies"
+      override = false
+      value    = "none"
+    }
   }
 }
