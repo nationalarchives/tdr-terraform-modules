@@ -1,6 +1,11 @@
 resource "aws_iam_role" "cloudtrail_role" {
-  name               = "${upper(var.project)}CloudTrail${title(local.environment)}"
-  assume_role_policy = templatefile("./tdr-terraform-modules/cloudtrail/templates/assume_role_policy.json.tpl", {})
+  name = "${upper(var.project)}CloudTrail${title(local.environment)}"
+  assume_role_policy = templatefile("./tdr-terraform-modules/cloudtrail/templates/assume_role_policy.json.tpl", {
+    trail_name    = local.cloudtrail_name
+    account_id    = data.aws_caller_identity.current.id
+    aws_partition = data.aws_partition.current.id
+    aws_region    = data.aws_region.current.name
+  })
 }
 
 resource "aws_iam_policy" "cloudwatch_policy" {
