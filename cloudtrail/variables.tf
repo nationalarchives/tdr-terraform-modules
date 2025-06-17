@@ -36,5 +36,5 @@ variable "log_stream_wildcard" {
 
 variable "cloudwatch_rentention_period" {
   description = "Rentention period for the cloudwatch log group where flow logs are kept"
-  default     = 30
+  default     = 90
 }
