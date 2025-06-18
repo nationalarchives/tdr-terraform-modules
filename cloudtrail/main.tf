@@ -19,8 +19,9 @@ resource "aws_iam_role_policy_attachment" "cloudtrail_policy_attach" {
 }
 
 resource "aws_cloudwatch_log_group" "cloudtrail" {
-  name = "/cloudtrail/${local.cloudtrail_prefix}"
-  tags = var.common_tags
+  name              = "/cloudtrail/${local.cloudtrail_prefix}"
+  retention_in_days = var.cloudwatch_rentention_period
+  tags              = var.common_tags
 }
 
 resource "aws_cloudtrail" "cloudtrail" {

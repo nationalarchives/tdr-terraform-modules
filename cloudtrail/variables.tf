@@ -33,3 +33,8 @@ variable "log_stream_wildcard" {
   description = "Later versions of Terraform require the log stream wildcard to be explicitly stated"
   default     = ""
 }
+
+variable "cloudwatch_rentention_period" {
+  description = "Rentention period for the cloudwatch log group where flow logs are kept"
+  default     = 90
+}
