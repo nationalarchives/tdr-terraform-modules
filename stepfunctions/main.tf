@@ -4,6 +4,7 @@ locals {
 
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
+data "aws_partition" "current" {}
 
 resource "aws_sfn_state_machine" "state_machine" {
   definition = var.definition
@@ -55,7 +56,7 @@ data "aws_iam_policy_document" "step_function_iam_trust_policy" {
     condition {
       test     = "ArnLike"
       variable = "aws:SourceArn"
-      values   = ["arn:aws:states:${data.aws_region.current.name}:${data.aws_caller_identity.current.id}:${upper(var.project)}${var.step_function_name}${title(var.environment)}:*"]
+      values   = ["arn:${data.aws_partition.current.id}:states:${data.aws_region.current.name}:${data.aws_caller_identity.current.id}:stateMachine:${upper(var.project)}${var.step_function_name}${title(var.environment)}"]
     }
 
     condition {
