@@ -53,11 +53,14 @@ data "aws_iam_policy_document" "step_function_iam_trust_policy" {
       identifiers = ["states.amazonaws.com"]
     }
 
-    condition {
-      test     = "ArnLike"
-      variable = "aws:SourceArn"
-      values   = ["arn:${data.aws_partition.current.id}:states:${data.aws_region.current.name}:${data.aws_caller_identity.current.id}:stateMachine:${upper(var.project)}${var.step_function_name}${title(var.environment)}"]
-    }
+    # TODO
+    # This breaks the step function when a map run is used
+    # Needs investigting.  Have tried usind the mapRun arn but to no avail
+    # condition {
+    #   test     = "ArnLike"
+    #   variable = "aws:SourceArn"
+    #   values   = ["arn:${data.aws_partition.current.id}:states:${data.aws_region.current.name}:${data.aws_caller_identity.current.id}:stateMachine:${upper(var.project)}${var.step_function_name}${title(var.environment)}"]
+    # }
 
     condition {
       test     = "StringEquals"
