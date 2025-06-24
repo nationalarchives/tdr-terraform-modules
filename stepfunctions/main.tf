@@ -41,7 +41,7 @@ resource "aws_iam_role_policy_attachment" "state_machine_attachment" {
 
 // See TDRD-845
 // See https://docs.aws.amazon.com/step-functions/latest/dg/procedure-create-iam-role.html
-// Note using aws_sfn_state_machine.state_machine.arn creates a cyclic dependancy so cannot be used
+// Note using aws_sfn_state_machine.state_machine.arn creates a cyclic dependency so cannot be used
 data "aws_iam_policy_document" "step_function_iam_trust_policy" {
   statement {
 
@@ -55,7 +55,7 @@ data "aws_iam_policy_document" "step_function_iam_trust_policy" {
 
     # TODO
     # This breaks the step function when a map run is used
-    # Needs investigting.  Have tried usind the mapRun arn but to no avail
+    # Needs investigating.  Have tried using the mapRun arn but to no avail
     # condition {
     #   test     = "ArnLike"
     #   variable = "aws:SourceArn"
