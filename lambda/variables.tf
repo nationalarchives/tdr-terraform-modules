@@ -217,6 +217,10 @@ variable "user_admin_client_secret" {
   default = ""
 }
 
+variable "reporting_client_secret" {
+  default = ""
+}
+
 variable "mount_target_zero" {
   default = ""
 }
@@ -296,6 +300,10 @@ variable "lambda_create_keycloak_user_api" {
   default = false
 }
 
+variable "lambda_disable_keycloak_user_api" {
+  default = false
+}
+
 variable "lambda_create_keycloak_user_s3" {
   default = false
 }
@@ -306,6 +314,10 @@ variable "s3_bucket_arn" {
 }
 
 variable "keycloak_user_management_api_arn" {
+  default = ""
+}
+
+variable "scheduled_disable_judgment_arn" {
   default = ""
 }
 
