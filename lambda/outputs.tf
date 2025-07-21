@@ -22,10 +22,6 @@ output "create_keycloak_users_api_lambda_arn" {
   value = local.create_keycloak_user_api_arn
 }
 
-output "disable_keycloak_users_api_lambda_arn" {
-  value = local.disable_keycloak_user_api_arn
-}
-
 output "create_keycloak_users_s3_lambda_arn" {
   value = local.create_keycloak_user_s3_arn
 }
