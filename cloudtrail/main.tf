@@ -4,7 +4,7 @@ resource "aws_iam_role" "cloudtrail_role" {
     trail_name    = local.cloudtrail_name
     account_id    = data.aws_caller_identity.current.id
     aws_partition = data.aws_partition.current.id
-    aws_region    = data.aws_region.current.name
+    aws_region    = data.aws_region.current.region
   })
 }
 
