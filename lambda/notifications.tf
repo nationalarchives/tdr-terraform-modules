@@ -23,6 +23,8 @@ resource "aws_lambda_function" "notifications_lambda_function" {
       SLACK_TDR_WEBHOOK         = aws_kms_ciphertext.environment_vars_notifications["slack_tdr_webhook"].ciphertext_blob
       SLACK_EXPORT_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_export_webhook"].ciphertext_blob
       SLACK_BAU_WEBHOOK         = aws_kms_ciphertext.environment_vars_notifications["slack_bau_webhook"].ciphertext_blob
+      SLACK_TRANSFERS_WEBHOOK   = aws_kms_ciphertext.environment_vars_notifications["slack_transfers_webhook"].ciphertext_blob
+      SLACK_RELEASES_WEBHOOK    = aws_kms_ciphertext.environment_vars_notifications["slack_releases_webhook"].ciphertext_blob
       TO_EMAIL                  = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
       DA_EVENT_BUS              = aws_kms_ciphertext.environment_vars_notifications["da_event_bus"].ciphertext_blob
       GOV_UK_NOTIFY_API_KEY     = aws_kms_ciphertext.environment_vars_notifications["gov_uk_notify_api_key"].ciphertext_blob
@@ -50,6 +52,8 @@ resource "aws_kms_ciphertext" "environment_vars_notifications" {
     slack_notifications_webhook = data.aws_ssm_parameter.slack_notifications_webhook[0].value,
     slack_export_webhook        = data.aws_ssm_parameter.slack_export_webhook[0].value,
     slack_bau_webhook           = data.aws_ssm_parameter.slack_bau_webhook[0].value,
+    slack_transfers_webhook     = data.aws_ssm_parameter.slack_transfers_webhook[0].value,
+    slack_releases_webhook      = data.aws_ssm_parameter.slack_releases_webhook[0].value,
     to_email                    = "tdr-secops@nationalarchives.gov.uk",
     da_event_bus                = var.da_event_bus_arn
     gov_uk_notify_api_key       = data.aws_ssm_parameter.gov_uk_notify_api_key[0].value
@@ -96,6 +100,14 @@ data "aws_ssm_parameter" "slack_export_webhook" {
 data "aws_ssm_parameter" "slack_bau_webhook" {
   count = local.count_notifications
   name  = "/${local.environment}/slack/bau/webhook"
+}
+data "aws_ssm_parameter" "slack_transfers_webhook" {
+  count = local.count_notifications
+  name  = "/${local.environment}/slack/transfers/webhook"
+}
+data "aws_ssm_parameter" "slack_releases_webhook" {
+  count = local.count_notifications
+  name  = "/${local.environment}/release/slack/webhook"
 }
 
 data "aws_ssm_parameter" "gov_uk_notify_api_key" {
