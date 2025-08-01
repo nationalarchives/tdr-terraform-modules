@@ -3,7 +3,7 @@ resource "aws_lambda_function" "lambda_service_unavailable_function" {
   function_name                  = local.service_unavailable_function_name
   handler                        = "app.lambda_handler"
   role                           = aws_iam_role.lambda_service_unavailable_iam_role.*.arn[0]
-  runtime                        = "python3.9"
+  runtime                        = "python3.13"
   filename                       = "${path.module}/functions/service-unavailable.zip"
   timeout                        = 3
   memory_size                    = 128
