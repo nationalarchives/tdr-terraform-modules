@@ -3,7 +3,7 @@ resource "aws_lambda_function" "reporting_lambda_function" {
   function_name                  = local.reporting_function_name
   handler                        = "app.report.handler"
   role                           = aws_iam_role.reporting_lambda_iam_role.*.arn[0]
-  runtime                        = "python3.9"
+  runtime                        = "python3.13"
   filename                       = "${path.module}/functions/reporting.zip"
   timeout                        = var.timeout_seconds
   memory_size                    = 1024
