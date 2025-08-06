@@ -50,6 +50,13 @@
         "arn:aws:s3:::tdr-consignment-export-judgment-${environment}",
         "arn:aws:s3:::tdr-consignment-export-judgment-${environment}/*"
       ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssm:GetParameter"
+      ],
+      "Resource": ${parameter_names}
     }
   ]
 }

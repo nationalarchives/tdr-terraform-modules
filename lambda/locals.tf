@@ -57,4 +57,12 @@ locals {
   create_keycloak_user_s3_arn               = var.apply_resource == true && var.lambda_create_keycloak_user_s3 == true && length(aws_lambda_function.create_keycloak_users_s3_lambda_function) > 0 ? aws_lambda_function.create_keycloak_users_s3_lambda_function.*.arn[0] : ""
   rotate_keycloak_secrets_arn               = var.apply_resource == true && var.lambda_rotate_keycloak_secrets == true && length(aws_lambda_function.rotate_keycloak_secrets_lambda_function) > 0 ? aws_lambda_function.rotate_keycloak_secrets_lambda_function.*.arn[0] : ""
   principal_arns                            = setunion(var.sns_topic_arns, var.sqs_queue_arns)
+  slack_tdr_webhook                         = "/${local.environment}/slack/notification/webhook"
+  slack_judgment_webhook                    = "/${local.environment}/slack/judgment/webhook"
+  slack_standard_webhook                    = "/${local.environment}/slack/standard/webhook"
+  slack_notifications_webhook               = "/${local.environment}/slack/notifications/webhook"
+  slack_export_webhook                      = "/${local.environment}/slack/export/webhook"
+  slack_bau_webhook                         = "/${local.environment}/slack/bau/webhook"
+  slack_transfers_webhook                   = "/${local.environment}/slack/transfers/webhook"
+  slack_releases_webhook                    = "/${local.environment}/release/slack/webhook"
 }

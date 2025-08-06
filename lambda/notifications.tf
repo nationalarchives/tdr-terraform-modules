@@ -17,14 +17,14 @@ resource "aws_lambda_function" "notifications_lambda_function" {
   tags                           = var.common_tags
   environment {
     variables = {
-      SLACK_WEBHOOK             = aws_kms_ciphertext.environment_vars_notifications["slack_notifications_webhook"].ciphertext_blob
-      SLACK_JUDGMENT_WEBHOOK    = aws_kms_ciphertext.environment_vars_notifications["slack_judgment_webhook"].ciphertext_blob
-      SLACK_STANDARD_WEBHOOK    = aws_kms_ciphertext.environment_vars_notifications["slack_standard_webhook"].ciphertext_blob
-      SLACK_TDR_WEBHOOK         = aws_kms_ciphertext.environment_vars_notifications["slack_tdr_webhook"].ciphertext_blob
-      SLACK_EXPORT_WEBHOOK      = aws_kms_ciphertext.environment_vars_notifications["slack_export_webhook"].ciphertext_blob
-      SLACK_BAU_WEBHOOK         = aws_kms_ciphertext.environment_vars_notifications["slack_bau_webhook"].ciphertext_blob
-      SLACK_TRANSFERS_WEBHOOK   = aws_kms_ciphertext.environment_vars_notifications["slack_transfers_webhook"].ciphertext_blob
-      SLACK_RELEASES_WEBHOOK    = aws_kms_ciphertext.environment_vars_notifications["slack_releases_webhook"].ciphertext_blob
+      SLACK_WEBHOOK             = local.slack_notifications_webhook
+      SLACK_JUDGMENT_WEBHOOK    = local.slack_judgment_webhook
+      SLACK_STANDARD_WEBHOOK    = local.slack_standard_webhook
+      SLACK_TDR_WEBHOOK         = local.slack_tdr_webhook
+      SLACK_EXPORT_WEBHOOK      = local.slack_export_webhook
+      SLACK_BAU_WEBHOOK         = local.slack_bau_webhook
+      SLACK_TRANSFERS_WEBHOOK   = local.slack_transfers_webhook
+      SLACK_RELEASES_WEBHOOK    = local.slack_releases_webhook
       TO_EMAIL                  = aws_kms_ciphertext.environment_vars_notifications["to_email"].ciphertext_blob
       DA_EVENT_BUS              = aws_kms_ciphertext.environment_vars_notifications["da_event_bus"].ciphertext_blob
       GOV_UK_NOTIFY_API_KEY     = aws_kms_ciphertext.environment_vars_notifications["gov_uk_notify_api_key"].ciphertext_blob
@@ -46,19 +46,11 @@ resource "aws_lambda_function" "notifications_lambda_function" {
 
 resource "aws_kms_ciphertext" "environment_vars_notifications" {
   for_each = local.count_notifications == 0 ? {} : {
-    slack_tdr_webhook           = data.aws_ssm_parameter.slack_webhook[0].value,
-    slack_judgment_webhook      = data.aws_ssm_parameter.slack_judgment_webhook[0].value,
-    slack_standard_webhook      = data.aws_ssm_parameter.slack_standard_webhook[0].value,
-    slack_notifications_webhook = data.aws_ssm_parameter.slack_notifications_webhook[0].value,
-    slack_export_webhook        = data.aws_ssm_parameter.slack_export_webhook[0].value,
-    slack_bau_webhook           = data.aws_ssm_parameter.slack_bau_webhook[0].value,
-    slack_transfers_webhook     = data.aws_ssm_parameter.slack_transfers_webhook[0].value,
-    slack_releases_webhook      = data.aws_ssm_parameter.slack_releases_webhook[0].value,
-    to_email                    = "tdr-secops@nationalarchives.gov.uk",
-    da_event_bus                = var.da_event_bus_arn
-    gov_uk_notify_api_key       = data.aws_ssm_parameter.gov_uk_notify_api_key[0].value
-    send_gov_uk_notifications   = local.environment == "prod"
-    tdr_inbox_email             = local.environment == "prod" ? "tdr@nationalarchives.gov.uk" : "tdrtest@nationalarchives.gov.uk"
+    to_email                  = "tdr-secops@nationalarchives.gov.uk",
+    da_event_bus              = var.da_event_bus_arn
+    gov_uk_notify_api_key     = data.aws_ssm_parameter.gov_uk_notify_api_key[0].value
+    send_gov_uk_notifications = local.environment == "prod"
+    tdr_inbox_email           = local.environment == "prod" ? "tdr@nationalarchives.gov.uk" : "tdrtest@nationalarchives.gov.uk"
   }
   # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
   # created by the terraform environments project as they won't exist when we first run the backend project.
@@ -70,44 +62,6 @@ resource "aws_kms_ciphertext" "environment_vars_notifications" {
 
 data "aws_kms_key" "encryption_key_account" {
   key_id = "alias/tdr-account-${local.environment}"
-}
-
-data "aws_ssm_parameter" "slack_webhook" {
-  count = local.count_notifications
-  name  = "/${local.environment}/slack/notification/webhook"
-}
-
-data "aws_ssm_parameter" "slack_judgment_webhook" {
-  count = local.count_notifications
-  name  = "/${local.environment}/slack/judgment/webhook"
-}
-
-data "aws_ssm_parameter" "slack_standard_webhook" {
-  count = local.count_notifications
-  name  = "/${local.environment}/slack/standard/webhook"
-}
-
-data "aws_ssm_parameter" "slack_notifications_webhook" {
-  count = local.count_notifications
-  name  = "/${local.environment}/slack/notifications/webhook"
-}
-
-data "aws_ssm_parameter" "slack_export_webhook" {
-  count = local.count_notifications
-  name  = "/${local.environment}/slack/export/webhook"
-}
-
-data "aws_ssm_parameter" "slack_bau_webhook" {
-  count = local.count_notifications
-  name  = "/${local.environment}/slack/bau/webhook"
-}
-data "aws_ssm_parameter" "slack_transfers_webhook" {
-  count = local.count_notifications
-  name  = "/${local.environment}/slack/transfers/webhook"
-}
-data "aws_ssm_parameter" "slack_releases_webhook" {
-  count = local.count_notifications
-  name  = "/${local.environment}/release/slack/webhook"
 }
 
 data "aws_ssm_parameter" "gov_uk_notify_api_key" {
@@ -125,18 +79,31 @@ resource "aws_cloudwatch_log_group" "notifications_lambda_log_group" {
 resource "aws_iam_policy" "notifications_lambda_policy" {
   count = local.count_notifications
   policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", {
-    account_id  = data.aws_caller_identity.current.account_id,
-    environment = local.environment,
-    email       = "tdr-secops@nationalarchives.gov.uk",
-    kms_arn     = var.kms_key_arn,
-  kms_account_arn = data.aws_kms_key.encryption_key_account.arn })
+    account_id      = data.aws_caller_identity.current.account_id,
+    environment     = local.environment,
+    email           = "tdr-secops@nationalarchives.gov.uk",
+    kms_arn         = var.kms_key_arn,
+    kms_account_arn = data.aws_kms_key.encryption_key_account.arn
+    parameter_names = jsonencode([
+      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter${local.slack_notifications_webhook}",
+      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter${local.slack_judgment_webhook}",
+      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter${local.slack_standard_webhook}",
+      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter${local.slack_tdr_webhook}",
+      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter${local.slack_export_webhook}",
+      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter${local.slack_bau_webhook}",
+      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter${local.slack_transfers_webhook}",
+      "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter${local.slack_releases_webhook}"
+    ])
+  })
   name = "${upper(var.project)}NotificationsLambdaPolicy${title(local.environment)}"
 }
 
 resource "aws_iam_policy" "notifications_kms_bucket_key_policy" {
-  count  = local.kms_export_bucket_encryption_count
-  policy = templatefile("${path.module}/templates/notifications_lambda_kms_bucket_key_policy.json.tpl", { kms_export_bucket_key_arn = var.kms_export_bucket_key_arn })
-  name   = "${upper(var.project)}NotificationsLambdaKMSBucketKeyPolicy${title(local.environment)}"
+  count = local.kms_export_bucket_encryption_count
+  policy = templatefile("${path.module}/templates/notifications_lambda_kms_bucket_key_policy.json.tpl", {
+    kms_export_bucket_key_arn = var.kms_export_bucket_key_arn
+  })
+  name = "${upper(var.project)}NotificationsLambdaKMSBucketKeyPolicy${title(local.environment)}"
 }
 
 resource "aws_iam_policy" "da_event_bus_notifications_lambda_policy" {
