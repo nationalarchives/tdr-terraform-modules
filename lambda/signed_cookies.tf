@@ -3,7 +3,7 @@ resource "aws_lambda_function" "signed_cookies_lambda_function" {
   function_name                  = local.signed_cookies_function_name
   handler                        = "signed_cookies.handler"
   role                           = aws_iam_role.signed_cookies_lambda_iam_role.*.arn[0]
-  runtime                        = "python3.13"
+  runtime                        = "python3.9"
   filename                       = "${path.module}/functions/signed-cookies.zip"
   timeout                        = var.timeout_seconds
   memory_size                    = 1024
