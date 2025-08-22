@@ -213,10 +213,6 @@ variable "draft_metadata_api_arn" {
   default = ""
 }
 
-variable "user_admin_client_secret" {
-  default = ""
-}
-
 variable "mount_target_zero" {
   default = ""
 }
