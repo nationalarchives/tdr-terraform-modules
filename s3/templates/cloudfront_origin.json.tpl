@@ -36,7 +36,8 @@
       "Effect": "Allow",
       "Principal": {
         "AWS": [
-          "arn:aws:iam::${account_id}:role/TDRYaraAVV2LambdaRole${title_environment}"
+          "arn:aws:iam::${account_id}:role/TDRYaraAVV2LambdaRole${title_environment}",
+          "arn:aws:iam::${account_id}:role/tdr-aggregate-processing-${title_environment}-role"
         ]
       },
       "Action": "s3:GetObject",
