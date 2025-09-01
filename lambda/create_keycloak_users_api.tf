@@ -13,6 +13,7 @@ resource "aws_lambda_function" "create_keycloak_users_api_lambda_function" {
     variables = {
       AUTH_URL                      = aws_kms_ciphertext.environment_vars_create_keycloak_users_api["auth_url"].ciphertext_blob
       USER_ADMIN_CLIENT_SECRET_PATH = var.user_admin_client_secret_path
+      DISABLE_USERS_DRY_RUN         = var.disable_users_dry_run
     }
   }
   vpc_config {
