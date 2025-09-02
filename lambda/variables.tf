@@ -399,5 +399,5 @@ variable "api_connection_secret_arn" {
 
 variable "disable_users_dry_run" {
   description = "Disable users dry run mode - if true, users will be listed but not disabled"
-  default = true
+  default     = true
 }
