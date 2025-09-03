@@ -396,3 +396,8 @@ variable "api_connection_secret_arn" {
   description = "Arn of the Secrets Manager secret for the Event Bridge connection for the Consignment Api"
   default     = ""
 }
+
+variable "disable_users_dry_run" {
+  description = "Disable users dry run mode - if true, users will be listed but not disabled"
+  default     = true
+}
