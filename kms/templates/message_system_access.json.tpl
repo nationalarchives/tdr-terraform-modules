@@ -70,6 +70,24 @@
     {
       "Effect": "Allow",
       "Principal": {
+        "Service": "sqs.amazonaws.com"
+      },
+      "Action": [
+        "kms:GenerateDataKey",
+        "kms:Decrypt"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringLike": {
+          "kms:EncryptionContext:aws:sqs:arn": [
+            "arn:aws:sqs:eu-west-2:${account_id}:tdr-aggregate-processing-${environment}"
+          ]
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
         "Service": "s3.amazonaws.com"
       },
       "Action": [
