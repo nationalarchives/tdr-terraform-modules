@@ -33,3 +33,8 @@ variable "aws_backup_local_role_arn" {
   description = "Local account role for the central backup"
   default     = ""
 }
+
+variable "transfer_service_ecs_task_role_arn" {
+  description = "Transfer Service ECS task role arn"
+  default     = ""
+}
