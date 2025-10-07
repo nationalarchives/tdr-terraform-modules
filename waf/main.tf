@@ -14,11 +14,20 @@ resource "aws_wafv2_ip_set" "blocked_ips" {
   description        = "IP set for blocking malicious IPs"
 }
 
+resource "aws_wafv2_ip_set" "region_allowed" {
+  count              = var.region_allowed_ips == "" ? 0 : 1
+  name               = "${var.project}-${var.function}-${var.environment}-region-allow"
+  scope              = "REGIONAL"
+  ip_address_version = "IPV4"
+  addresses          = length(var.region_allowed_ips) > 0 ? split(",", var.region_allowed_ips) : []
+  description        = "IP set for region-specific allow rule"
+}
 
 resource "aws_wafv2_rule_group" "rule_group" {
   capacity = 12
   name     = "waf-rule-group"
   scope    = "REGIONAL"
+
   rule {
     name     = "waf-rule-restricted-uri"
     priority = 20
@@ -112,9 +121,39 @@ resource "aws_wafv2_web_acl" "acl" {
     }
   }
 
+  dynamic "rule" {
+    for_each = (var.region_allowed_ips != "" && length(var.region_allowed_country_codes) > 0) ? [1] : []
+    content {
+      name     = "region-allowed-ips"
+      priority = 50
+      action {
+        allow {}
+      }
+      statement {
+        and_statement {
+          statement {
+            ip_set_reference_statement {
+              arn = aws_wafv2_ip_set.region_allowed[0].arn
+            }
+          }
+          statement {
+            geo_match_statement {
+              country_codes = var.region_allowed_country_codes
+            }
+          }
+        }
+      }
+      visibility_config {
+        cloudwatch_metrics_enabled = false
+        metric_name                = "region-allowed-ips"
+        sampled_requests_enabled   = false
+      }
+    }
+  }
+
   rule {
     name     = "rate-based-rule"
-    priority = 1
+    priority = 2
     action {
       block {}
     }
@@ -140,7 +179,7 @@ resource "aws_wafv2_web_acl" "acl" {
   }
   rule {
     name     = "acl-rule"
-    priority = 2
+    priority = 3
     override_action {
       none {}
     }

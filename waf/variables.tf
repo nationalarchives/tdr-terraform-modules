@@ -54,11 +54,22 @@ variable "aws_managed_rules" {
     metric_name                              = string
   }))
   default = [
-    { name = "AWS-AWSManagedRulesAmazonIpReputationList", priority = 3, managed_rule_group_statement_name = "AWSManagedRulesAmazonIpReputationList", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesAmazonIpReputationList" },
-    { name = "AWS-AWSManagedRulesCommonRuleSet", priority = 4, managed_rule_group_statement_name = "AWSManagedRulesCommonRuleSet", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesCommonRuleSet" },
-    { name = "AWS-AWSManagedRulesKnownBadInputsRuleSet", priority = 5, managed_rule_group_statement_name = "AWSManagedRulesKnownBadInputsRuleSet", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesKnownBadInputsRuleSet" },
-    { name = "AWS-AWSManagedRulesLinuxRuleSet", priority = 6, managed_rule_group_statement_name = "AWSManagedRulesLinuxRuleSet", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesLinuxRuleSet" },
-    { name = "AWS-AWSManagedRulesUnixRuleSet", priority = 7, managed_rule_group_statement_name = "AWSManagedRulesUnixRuleSet", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesUnixRuleSet" },
-    { name = "AWS-AWSManagedRulesSQLiRuleSet", priority = 8, managed_rule_group_statement_name = "AWSManagedRulesSQLiRuleSet", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesSQLiRuleSet" }
+    { name = "AWS-AWSManagedRulesAmazonIpReputationList", priority = 60, managed_rule_group_statement_name = "AWSManagedRulesAmazonIpReputationList", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesAmazonIpReputationList" },
+    { name = "AWS-AWSManagedRulesCommonRuleSet", priority = 61, managed_rule_group_statement_name = "AWSManagedRulesCommonRuleSet", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesCommonRuleSet" },
+    { name = "AWS-AWSManagedRulesKnownBadInputsRuleSet", priority = 62, managed_rule_group_statement_name = "AWSManagedRulesKnownBadInputsRuleSet", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesKnownBadInputsRuleSet" },
+    { name = "AWS-AWSManagedRulesLinuxRuleSet", priority = 63, managed_rule_group_statement_name = "AWSManagedRulesLinuxRuleSet", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesLinuxRuleSet" },
+    { name = "AWS-AWSManagedRulesUnixRuleSet", priority = 64, managed_rule_group_statement_name = "AWSManagedRulesUnixRuleSet", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesUnixRuleSet" },
+    { name = "AWS-AWSManagedRulesSQLiRuleSet", priority = 65, managed_rule_group_statement_name = "AWSManagedRulesSQLiRuleSet", managed_rule_group_statement_vendor_name = "AWS", metric_name = "AWS-AWSManagedRulesSQLiRuleSet" }
   ]
+}
+
+variable "region_allowed_ips" {
+  description = "Comma separated list of IPs that are allowed when originating from region_allowed_country_code"
+  default     = ""
+}
+
+variable "region_allowed_country_codes" {
+  description = "ISO two-letter country code(s) (e.g. GB, IE) for the region-specific allow rule"
+  type        = list(string)
+  default     = []
 }
