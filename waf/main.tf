@@ -18,8 +18,7 @@ resource "aws_wafv2_ip_set" "region_allowed" {
   name               = "${var.project}-${var.function}-${var.environment}-region-allow"
   scope              = "REGIONAL"
   ip_address_version = "IPV4"
-  # Always create. If no IPs supplied, use a non-routable placeholder so the set is valid but matches nothing.
-  addresses = length(var.region_allowed_ips) > 0 ? var.region_allowed_ips : []
+  addresses          = length(var.region_allowed_ips) > 0 ? var.region_allowed_ips : []
 }
 
 resource "aws_wafv2_rule_group" "rule_group" {
