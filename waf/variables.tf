@@ -64,7 +64,7 @@ variable "aws_managed_rules" {
 }
 
 variable "region_allowed_ips" {
-  description = "List of IPs (with CIDR) that are allowed when originating from region_allowed_country_codes"
+  description = "List of IPs (CIDR notation) that are allowed when originating from specified region country codes"
   type        = list(string)
   default     = []
 }

@@ -15,12 +15,11 @@ resource "aws_wafv2_ip_set" "blocked_ips" {
 }
 
 resource "aws_wafv2_ip_set" "region_allowed" {
-  count              = length(var.region_allowed_ips) == 0 ? 0 : 1
   name               = "${var.project}-${var.function}-${var.environment}-region-allow"
   scope              = "REGIONAL"
   ip_address_version = "IPV4"
-  addresses          = var.region_allowed_ips
-  description        = "IP set for region-specific allow rule"
+  # Always create. If no IPs supplied, use a non-routable placeholder so the set is valid but matches nothing.
+  addresses = length(var.region_allowed_ips) > 0 ? var.region_allowed_ips : []
 }
 
 resource "aws_wafv2_rule_group" "rule_group" {
@@ -132,7 +131,7 @@ resource "aws_wafv2_web_acl" "acl" {
         and_statement {
           statement {
             ip_set_reference_statement {
-              arn = aws_wafv2_ip_set.region_allowed[0].arn
+              arn = aws_wafv2_ip_set.region_allowed.arn
             }
           }
           statement {
