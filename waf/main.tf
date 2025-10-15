@@ -14,6 +14,12 @@ resource "aws_wafv2_ip_set" "blocked_ips" {
   description        = "IP set for blocking malicious IPs"
 }
 
+resource "aws_wafv2_ip_set" "region_allowed" {
+  name               = "${var.project}-${var.function}-${var.environment}-region-allow"
+  scope              = "REGIONAL"
+  ip_address_version = "IPV4"
+  addresses          = length(var.region_allowed_ips) > 0 ? var.region_allowed_ips : []
+}
 
 resource "aws_wafv2_rule_group" "rule_group" {
   capacity = 12
@@ -108,6 +114,36 @@ resource "aws_wafv2_web_acl" "acl" {
         cloudwatch_metrics_enabled = true
         metric_name                = "BlockIPsRule"
         sampled_requests_enabled   = true
+      }
+    }
+  }
+
+  dynamic "rule" {
+    for_each = (length(var.region_allowed_ips) > 0 && length(var.region_allowed_country_codes) > 0) ? [1] : []
+    content {
+      name     = "region-allowed-ips"
+      priority = 50
+      action {
+        allow {}
+      }
+      statement {
+        and_statement {
+          statement {
+            ip_set_reference_statement {
+              arn = aws_wafv2_ip_set.region_allowed.arn
+            }
+          }
+          statement {
+            geo_match_statement {
+              country_codes = var.region_allowed_country_codes
+            }
+          }
+        }
+      }
+      visibility_config {
+        cloudwatch_metrics_enabled = false
+        metric_name                = "region-allowed-ips"
+        sampled_requests_enabled   = false
       }
     }
   }
