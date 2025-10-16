@@ -94,3 +94,8 @@ variable "idle_timeout" {
   description = "The amount of time a client or target connection can be idle before the load balancer closes it"
   default     = 60
 }
+
+variable "allow_aws_elb_healthcheck_from_cidrs" {
+  description = "A list of CIDRS that will be forwarded to the target group if the User-Agent header is 'ELB-HealthChecker/2.0'"
+  default     = []
+}
