@@ -23,6 +23,12 @@ variable "trusted_ips" {
   default     = ""
 }
 
+variable "trusted_local_cidrs" {
+  description = "Trusted CIDR ranges, initially used for traffic revieved from a NLB target group"
+  type        = list(string)
+  default     = []
+}
+
 variable "blocked_ips" {
   description = "blocked IP addresses"
   default     = ""
