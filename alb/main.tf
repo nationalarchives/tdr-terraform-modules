@@ -121,8 +121,9 @@ resource "aws_lb_listener_rule" "allow_healthcheck_from_cidrs" {
   }
 
   condition {
-    host_header {
-      values = ["ELB-HealthChecker/2.0"]
+    http_header {
+      http_header_name = "User-Agent"
+      values           = ["ELB-HealthChecker/2.0"]
     }
   }
 
