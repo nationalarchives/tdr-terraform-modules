@@ -28,7 +28,7 @@
         "Service": "logdelivery.elasticloadbalancing.amazonaws.com"
       },
       "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::tdr-alb-logs-intg/*"
+      "Resource": "arn:aws:s3:::${bucket_name}/*"
     },
     {
       "Sid": "AWSELBLogDeliveryAclCheck",
