@@ -22,27 +22,13 @@
     },
   %{ endif }
     {
+      "Sid": "AWSALBLogDeliveryWrite",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::${aws_elb_account}:root"
+        "Service": "logdelivery.elasticloadbalancing.amazonaws.com"
       },
       "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::${bucket_name}/*"
-    },
-    {
-      "Sid": "AllowSSLRequestsOnly",
-      "Action": "s3:*",
-      "Effect": "Deny",
-      "Resource": [
-        "arn:aws:s3:::${bucket_name}",
-        "arn:aws:s3:::${bucket_name}/*"
-      ],
-      "Condition": {
-        "Bool": {
-          "aws:SecureTransport": "false"
-        }
-      },
-      "Principal": "*"
-    }
+      "Resource": "arn:aws:s3:::tdr-alb-logs-intg/*"
+    } 
   ]
 }
