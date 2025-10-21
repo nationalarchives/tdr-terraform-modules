@@ -21,6 +21,14 @@ resource "aws_wafv2_ip_set" "region_allowed" {
   addresses          = length(var.region_allowed_ips) > 0 ? var.region_allowed_ips : []
 }
 
+resource "aws_wafv2_ip_set" "trusted_local_cidrs" {
+  name               = "${var.project}-${var.function}-${var.environment}-local-whitelist"
+  scope              = "REGIONAL"
+  ip_address_version = "IPV4"
+  addresses          = var.trusted_local_cidrs
+  description        = "IP set for allow local subnets"
+}
+
 resource "aws_wafv2_rule_group" "rule_group" {
   capacity = 12
   name     = "waf-rule-group"
@@ -189,6 +197,28 @@ resource "aws_wafv2_web_acl" "acl" {
       cloudwatch_metrics_enabled = false
       metric_name                = "acl-rule-metric"
       sampled_requests_enabled   = false
+    }
+  }
+  # TDRD-1066 whitelist the subnets containing the NLBs used for private link to KeyCloak ALB 
+  dynamic "rule" {
+    for_each = (length(var.trusted_local_cidrs)) > 0 ? [1] : []
+
+    content {
+      name     = "allow-local-subnets"
+      priority = 0
+      action {
+        allow {}
+      }
+      statement {
+        ip_set_reference_statement {
+          arn = aws_wafv2_ip_set.trusted_local_cidrs.arn
+        }
+      }
+      visibility_config {
+        cloudwatch_metrics_enabled = false
+        metric_name                = "allow-local-subnets"
+        sampled_requests_enabled   = false
+      }
     }
   }
 
