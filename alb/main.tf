@@ -110,6 +110,30 @@ resource "aws_lb_listener_rule" "own_host_header_only" {
   }
 }
 
+resource "aws_lb_listener_rule" "allow_healthcheck_from_cidrs" {
+  count        = length(var.allow_aws_elb_healthcheck_from_cidrs) > 0 && var.own_host_header_only == true ? 1 : 0
+  listener_arn = aws_alb_listener.fixed_response_forbidden[count.index].arn
+  priority     = 2
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.alb_module.arn
+  }
+
+  condition {
+    http_header {
+      http_header_name = "User-Agent"
+      values           = ["ELB-HealthChecker/2.0"]
+    }
+  }
+
+  condition {
+    source_ip {
+      values = var.allow_aws_elb_healthcheck_from_cidrs
+    }
+  }
+}
+
 resource "aws_alb_listener" "http" {
   count             = var.http_listener == true ? 1 : 0
   load_balancer_arn = aws_alb.alb_module.id
