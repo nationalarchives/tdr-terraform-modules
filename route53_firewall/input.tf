@@ -3,7 +3,7 @@ variable "environment_name" {
   type        = string
 }
 
-variable "common_tags" {
+variable "tags" {
   description = "Tags to set"
   type        = map(any)
   default     = {}

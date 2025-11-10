@@ -2,18 +2,18 @@
 resource "aws_route53_resolver_firewall_domain_list" "whitelist" {
   name    = format("whitelist-%s", var.environment_name)
   domains = var.whitelist_domains
-  tags    = var.common_tags
+  tags    = var.tags
 }
 
 resource "aws_route53_resolver_firewall_domain_list" "all_domains" {
   name    = format("all_domains-%s", var.environment_name)
   domains = ["*."]
-  tags    = var.common_tags
+  tags    = var.tags
 }
 
 resource "aws_route53_resolver_firewall_rule_group" "walled_garden" {
-  name = "whitelist"
-  tags = var.common_tags
+  name = "walled_garden"
+  tags = var.tags
 }
 
 resource "aws_route53_resolver_firewall_rule" "whitelist" {
