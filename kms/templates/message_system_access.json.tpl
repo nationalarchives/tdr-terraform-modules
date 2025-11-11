@@ -39,6 +39,20 @@
       }
     },
   %{ endif }
+  %{ if transfer_service_ecs_task_role != "" }
+    {
+      "Sid": "AllowTransferServiceEcsTaskRole",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${transfer_service_ecs_task_role}"
+      },
+      "Action": [
+        "kms:GenerateDataKey",
+        "kms:Decrypt"
+      ],
+      "Resource": "*"
+    },
+  %{ endif }
     {
       "Sid": "Enable IAM User Permissions",
       "Effect": "Allow",

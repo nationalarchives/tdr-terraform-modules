@@ -12,7 +12,6 @@ resource "aws_lambda_function" "create_keycloak_users_api_lambda_function" {
   environment {
     variables = {
       AUTH_URL                      = aws_kms_ciphertext.environment_vars_create_keycloak_users_api["auth_url"].ciphertext_blob
-      USER_ADMIN_CLIENT_SECRET      = aws_kms_ciphertext.environment_vars_create_keycloak_users_api["user_admin_client_secret"].ciphertext_blob
       USER_ADMIN_CLIENT_SECRET_PATH = var.user_admin_client_secret_path
     }
   }
@@ -27,7 +26,7 @@ resource "aws_lambda_function" "create_keycloak_users_api_lambda_function" {
 }
 
 resource "aws_kms_ciphertext" "environment_vars_create_keycloak_users_api" {
-  for_each  = local.count_create_keycloak_users_api == 0 ? {} : { user_admin_client_secret = var.user_admin_client_secret, auth_url = var.auth_url }
+  for_each  = local.count_create_keycloak_users_api == 0 ? {} : { auth_url = var.auth_url }
   key_id    = var.kms_key_arn
   plaintext = each.value
   context   = { "LambdaFunctionName" = local.create_keycloak_user_api_function_name }
