@@ -17,11 +17,12 @@ resource "aws_route53_resolver_firewall_rule_group" "walled_garden" {
 }
 
 resource "aws_route53_resolver_firewall_rule" "whitelist" {
-  name                    = "whitelist-allow"
-  action                  = "ALLOW"
-  firewall_domain_list_id = aws_route53_resolver_firewall_domain_list.whitelist.id
-  firewall_rule_group_id  = aws_route53_resolver_firewall_rule_group.walled_garden.id
-  priority                = 100
+  name                               = "whitelist-allow"
+  action                             = "ALLOW"
+  firewall_domain_list_id            = aws_route53_resolver_firewall_domain_list.whitelist.id
+  firewall_rule_group_id             = aws_route53_resolver_firewall_rule_group.walled_garden.id
+  firewall_domain_redirection_action = "TRUST_REDIRECTION_DOMAIN"
+  priority                           = 100
 }
 
 # NB: Block response can't be set if action is not BLOCK
