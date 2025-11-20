@@ -166,3 +166,8 @@ variable "aws_backup_local_role_arn" {
   description = "Local account role for the central backup"
   default     = ""
 }
+
+variable "bucket_owner_enforced" {
+  description = "Toggle to enforce bucket owner control on bucket. Should be 'true' but toggling to ensure no breaking changes"
+  default     = false
+}

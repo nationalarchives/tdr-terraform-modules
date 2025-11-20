@@ -236,3 +236,12 @@ resource "aws_s3_bucket_notification" "bucket_lambda_invocation" {
     lambda_function_arn = var.lambda_arn
   }
 }
+
+resource "aws_s3_bucket_ownership_controls" "bucket_owner_enforced" {
+  count  = var.bucket_owner_enforced == true ? 1 : 0
+  bucket = aws_s3_bucket.bucket.*.id[0]
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
