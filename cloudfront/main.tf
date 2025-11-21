@@ -5,9 +5,6 @@ resource "aws_cloudfront_origin_access_control" "oac" {
   signing_protocol                  = "sigv4"
 }
 
-resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
-}
-
 resource "aws_cloudfront_origin_request_policy" "request_policy" {
   name = "s3-multipart-upload"
   headers_config {
@@ -48,20 +45,12 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
       "HEAD",
       "GET"
     ]
-    target_origin_id           = var.sse_kms_enabled ? local.s3_origin_id_oac : local.s3_origin_id_oai
+    target_origin_id           = local.s3_origin_id_oac
     viewer_protocol_policy     = "https-only"
     cache_policy_id            = data.aws_cloudfront_cache_policy.caching_disabled.id
     origin_request_policy_id   = aws_cloudfront_origin_request_policy.request_policy.id
     trusted_key_groups         = [aws_cloudfront_key_group.cookie_signing_key_group.id]
     response_headers_policy_id = aws_cloudfront_response_headers_policy.default_response_headers_policy.id
-  }
-
-  origin {
-    domain_name = var.s3_regional_domain_name
-    origin_id   = local.s3_origin_id_oai
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
-    }
   }
 
   origin {
