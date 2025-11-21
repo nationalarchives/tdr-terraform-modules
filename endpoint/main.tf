@@ -9,3 +9,9 @@ resource "aws_vpc_endpoint" "endpoint" {
     )
   )
 }
+
+resource "aws_vpc_endpoint_policy" "endpoint" {
+  count           = var.policy == null ? 0 : 1
+  vpc_endpoint_id = aws_vpc_endpoint.endpoint.id
+  policy          = var.policy
+}
