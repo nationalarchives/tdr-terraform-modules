@@ -56,10 +56,7 @@
       "Principal": {
         "AWS": "${cloudfront_oai}"
       },
-      "Action": [
-        "s3:PutObject",
-        "s3:PutObjectTagging"
-      ],
+      "Action": "s3:PutObjectTagging",
       "Resource": "arn:aws:s3:::${bucket_name}/*"
     },
     {
@@ -122,10 +119,7 @@
           "cloudfront.amazonaws.com"
         ]
       },
-      "Action": [
-        "s3:PutObject",
-        "s3:PutObjectTagging"
-      ],
+      "Action": "s3:PutObjectTagging",
       "Resource": [
         "arn:aws:s3:::${bucket_name}",
         "arn:aws:s3:::${bucket_name}/*"
