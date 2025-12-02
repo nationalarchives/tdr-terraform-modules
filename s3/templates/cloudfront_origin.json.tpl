@@ -22,14 +22,41 @@
     },
   %{ endif }
     {
+      "Sid": "OAIAllowConditionalPut",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${cloudfront_oai}"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::${bucket_name}/*",
+      "Condition": {
+        "Null": {
+          "s3:if-none-match": "false"
+        }
+      }
+    },
+    {
+      "Sid": "OAIAllowConditionalPutWithMPUs",
       "Effect": "Allow",
       "Principal": {
         "AWS": "${cloudfront_oai}"
       },
       "Action": [
-        "s3:PutObject",
-        "s3:PutObjectTagging"
+        "s3:PutObject"
       ],
+      "Resource": "arn:aws:s3:::${bucket_name}/*",
+      "Condition": {
+        "Bool": {
+          "s3:ObjectCreationOperation": "false"
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${cloudfront_oai}"
+      },
+      "Action": "s3:PutObjectTagging",
       "Resource": "arn:aws:s3:::${bucket_name}/*"
     },
     {
@@ -43,25 +70,65 @@
       "Resource": "arn:aws:s3:::tdr-upload-files-cloudfront-dirty-${environment}/*"
     },
     {
-        "Effect": "Allow",
-        "Principal": {
-            "Service": [
-                "cloudfront.amazonaws.com"
-            ]
+      "Sid": "AllowConditionalPut",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": [
+          "cloudfront.amazonaws.com"
+        ]
+      },
+      "Action": "s3:PutObject",
+      "Resource": [
+        "arn:aws:s3:::${bucket_name}",
+        "arn:aws:s3:::${bucket_name}/*"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceArn": ${cloudfront_distribution_arns}
         },
-        "Action": [
-            "s3:PutObject",
-            "s3:PutObjectTagging"
-        ],
-        "Resource": [
-            "arn:aws:s3:::${bucket_name}",
-            "arn:aws:s3:::${bucket_name}/*"
-        ],
-        "Condition": {
-            "StringEquals": {
-                "AWS:SourceArn": ${cloudfront_distribution_arns}
-            }
+        "Null": {
+          "s3:if-none-match": "false"
         }
+      }
+    },
+    {
+      "Sid": "AllowConditionalPutWithMPUs",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": [
+          "cloudfront.amazonaws.com"
+        ]
+      },
+      "Action": [
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${bucket_name}",
+        "arn:aws:s3:::${bucket_name}/*"
+      ],
+      "Condition": {
+        "Bool": {
+          "s3:ObjectCreationOperation": "false"
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": [
+          "cloudfront.amazonaws.com"
+        ]
+      },
+      "Action": "s3:PutObjectTagging",
+      "Resource": [
+        "arn:aws:s3:::${bucket_name}",
+        "arn:aws:s3:::${bucket_name}/*"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceArn": ${cloudfront_distribution_arns}
+        }
+      }
     },
     {
       "Sid": "AllowSSLRequestsOnly",
