@@ -198,7 +198,6 @@ resource "aws_s3_bucket_policy" "bucket" {
     {
       bucket_name                  = aws_s3_bucket.bucket.*.id[0],
       aws_elb_account              = data.aws_ssm_parameter.aws_elb_account_number.value,
-      cloudfront_oai               = var.cloudfront_oai,
       account_id                   = data.aws_caller_identity.current.account_id,
       aws_logs_delivery_account_id = var.aws_logs_delivery_account_id,
       environment                  = local.environment, title_environment = title(local.environment),
