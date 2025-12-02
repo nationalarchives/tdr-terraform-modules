@@ -22,44 +22,6 @@
     },
   %{ endif }
     {
-      "Sid": "OAIAllowConditionalPut",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "${cloudfront_oai}"
-      },
-      "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::${bucket_name}/*",
-      "Condition": {
-        "Null": {
-          "s3:if-none-match": "false"
-        }
-      }
-    },
-    {
-      "Sid": "OAIAllowConditionalPutWithMPUs",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "${cloudfront_oai}"
-      },
-      "Action": [
-        "s3:PutObject"
-      ],
-      "Resource": "arn:aws:s3:::${bucket_name}/*",
-      "Condition": {
-        "Bool": {
-          "s3:ObjectCreationOperation": "false"
-        }
-      }
-    },
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "${cloudfront_oai}"
-      },
-      "Action": "s3:PutObjectTagging",
-      "Resource": "arn:aws:s3:::${bucket_name}/*"
-    },
-    {
       "Effect": "Allow",
       "Principal": {
         "AWS": [
