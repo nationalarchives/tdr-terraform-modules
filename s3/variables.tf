@@ -126,11 +126,6 @@ variable "log_data_sns_topic_region" {
   default     = "eu-west-2"
 }
 
-variable "cloudfront_oai" {
-  description = "The origin access id from the cloudwatch distribution which is connecting to this bucket"
-  default     = ""
-}
-
 variable "lambda_arn" {
   description = "The lambda arn to send S3 event messages to"
   default     = ""
