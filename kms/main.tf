@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
 resource "aws_kms_key" "encryption" {
   description         = "KMS key for encryption within ${var.environment} environment"
   enable_key_rotation = true
