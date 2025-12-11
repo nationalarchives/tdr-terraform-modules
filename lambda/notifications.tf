@@ -53,16 +53,9 @@ resource "aws_kms_ciphertext" "environment_vars_notifications" {
     send_gov_uk_notifications = local.environment == "prod"
     tdr_inbox_email           = local.environment == "prod" ? "tdr@nationalarchives.gov.uk" : "tdrtest@nationalarchives.gov.uk"
   }
-  # This lambda is created by the tdr-terraform-backend project as it only exists in the management account so we can't use any KMS keys
-  # created by the terraform environments project as they won't exist when we first run the backend project.
-  # This KMS key is created by tdr-accounts which means it will exist when we run the terraform backend project for the first time
-  key_id    = "alias/tdr-account-${local.environment}"
+  key_id    = var.kms_key_arn
   plaintext = each.value
   context   = { "LambdaFunctionName" = local.notifications_function_name }
-}
-
-data "aws_kms_key" "encryption_key_account" {
-  key_id = "alias/tdr-account-${local.environment}"
 }
 
 data "aws_ssm_parameter" "gov_uk_notify_api_key" {
@@ -80,11 +73,10 @@ resource "aws_cloudwatch_log_group" "notifications_lambda_log_group" {
 resource "aws_iam_policy" "notifications_lambda_policy" {
   count = local.count_notifications
   policy = templatefile("${path.module}/templates/notifications_lambda.json.tpl", {
-    account_id      = data.aws_caller_identity.current.account_id,
-    environment     = local.environment,
-    email           = "tdr-secops@nationalarchives.gov.uk",
-    kms_arn         = var.kms_key_arn,
-    kms_account_arn = data.aws_kms_key.encryption_key_account.arn
+    account_id  = data.aws_caller_identity.current.account_id,
+    environment = local.environment,
+    email       = "tdr-secops@nationalarchives.gov.uk",
+    kms_arn     = var.kms_key_arn,
     parameter_names = jsonencode([
       "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter${local.slack_notifications_webhook}",
       "arn:aws:ssm:eu-west-2:${data.aws_caller_identity.current.account_id}:parameter${local.slack_judgment_webhook}",
