@@ -34,7 +34,6 @@
         "kms:Decrypt"
       ],
       "Resource": [
-        "${kms_account_arn}",
         "${kms_arn}"
       ]
     },
