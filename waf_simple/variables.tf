@@ -41,5 +41,3 @@ variable "rate_limit_evaluation_window" {
   type        = number
   default     = 300
 }
-
-
