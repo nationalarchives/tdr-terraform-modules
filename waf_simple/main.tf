@@ -1,4 +1,4 @@
-# Simple WAF only permists those on the whitelist
+# Simple WAF only permits those on the whitelist
 # Rate limits all traffic
 
 locals {
