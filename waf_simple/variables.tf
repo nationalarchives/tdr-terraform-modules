@@ -23,3 +23,9 @@ variable "associated_resources" {
   description = "list of resources arns to attached WAF to"
   type        = list(string)
 }
+
+variable "log_retention_period" {
+  description = "How long in days to keep logs in cloudwatch logs"
+  type        = number
+  default     = 30
+}

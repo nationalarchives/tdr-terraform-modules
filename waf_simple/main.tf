@@ -1,3 +1,21 @@
+# Simple WAF only permists those on the whitelist
+# Rate limits all traffic
+
+locals {
+  waf_name = format("%s-%s-%s-waf-simple", var.project, var.function, var.environment)
+}
+
+resource "aws_cloudwatch_log_group" "waf_log_group" {
+  name              = format("aws-waf-logs-%s", local.waf_name)
+  tags              = var.common_tags
+  retention_in_days = var.log_retention_period
+}
+
+resource "aws_wafv2_web_acl_logging_configuration" "simple_waf_logging" {
+  log_destination_configs = [aws_cloudwatch_log_group.waf_log_group.arn]
+  resource_arn            = aws_wafv2_web_acl.simple_waf.arn
+}
+
 resource "aws_wafv2_ip_set" "whitelist_ips" {
   name               = "${var.project}-${var.function}-${var.environment}-whitelist"
   addresses          = var.whitelist_ips
@@ -6,8 +24,8 @@ resource "aws_wafv2_ip_set" "whitelist_ips" {
   description        = "Allowed IPs"
 }
 
-resource "aws_wafv2_web_acl" "simple_acl" {
-  name  = "${var.project}-${var.function}-${var.environment}-simple"
+resource "aws_wafv2_web_acl" "simple_waf" {
+  name  = local.waf_name
   scope = "REGIONAL"
   default_action {
     allow {}
@@ -70,10 +88,5 @@ resource "aws_wafv2_web_acl" "simple_acl" {
 resource "aws_wafv2_web_acl_association" "association" {
   count        = length(var.associated_resources)
   resource_arn = var.associated_resources[count.index]
-  web_acl_arn  = aws_wafv2_web_acl.simple_acl.arn
+  web_acl_arn  = aws_wafv2_web_acl.simple_waf.arn
 }
-
-# resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
-#   log_destination_configs = var.log_destinations
-#   resource_arn            = aws_wafv2_web_acl.acl.arn
-# }
