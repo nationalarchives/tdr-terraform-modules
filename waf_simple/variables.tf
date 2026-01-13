@@ -20,7 +20,7 @@ variable "whitelist_ips" {
 }
 
 variable "associated_resources" {
-  description = "list of resources arns to attached WAF to"
+  description = "List of resource arns to attached WAF to"
   type        = list(string)
 }
 
@@ -31,13 +31,13 @@ variable "log_retention_period" {
 }
 
 variable "rate_limit" {
-  description = "The maximum number of requests to allow during the specified time window between 2,000,000,000"
+  description = "The maximum number of requests to allow during the specified time window between 10 - 2,000,000,000"
   type        = number
-  default     = 100
+  default     = 250
 }
 
 variable "rate_limit_evaluation_window" {
-  description = "The amount of time to use for request counts valid values are in seconds (60 120 300 600)"
+  description = "The amount of time to use for request counts - valid values are in seconds (60 120 300 600)"
   type        = number
-  default     = 300
+  default     = 600
 }
