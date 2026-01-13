@@ -1,5 +1,6 @@
 # Simple WAF only permits those on the whitelist
 # Rate limits all traffic
+# Apply AWSManagedRulesCommonRuleSet
 
 locals {
   waf_name = format("%s-%s-%s-waf-simple", var.project, var.function, var.environment)
@@ -83,6 +84,26 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     sampled_requests_enabled   = true
   }
 
+  rule {
+    name     = "AWS-AWSManagedRulesCommonRuleSet"
+    priority = 30
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesCommonRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "AWS-AWSManagedRulesCommonRuleSet"
+      sampled_requests_enabled   = true
+    }
+  }
   tags = var.common_tags
 }
 
