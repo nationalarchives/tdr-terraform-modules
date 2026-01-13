@@ -47,10 +47,11 @@ resource "aws_wafv2_web_acl" "simple_waf" {
         }
       }
     }
+
     visibility_config {
       cloudwatch_metrics_enabled = false
       metric_name                = "waf-simple-block-not-in-whitelist"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
@@ -64,22 +65,22 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     statement {
       rate_based_statement {
         aggregate_key_type    = "IP"
-        evaluation_window_sec = 60
-        limit                 = 10
+        evaluation_window_sec = var.rate_limit_evaluation_window
+        limit                 = var.rate_limit
       }
     }
 
     visibility_config {
       cloudwatch_metrics_enabled = false
       metric_name                = "waf-simple-rate-control"
-      sampled_requests_enabled   = false
+      sampled_requests_enabled   = true
     }
   }
 
   visibility_config {
     cloudwatch_metrics_enabled = false
     metric_name                = "waf-simple"
-    sampled_requests_enabled   = false
+    sampled_requests_enabled   = true
   }
 
   tags = var.common_tags

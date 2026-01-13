@@ -29,3 +29,17 @@ variable "log_retention_period" {
   type        = number
   default     = 30
 }
+
+variable "rate_limit" {
+  description = "The maximum number of requests to allow during the specified time window between 2,000,000,000"
+  type        = number
+  default     = 100
+}
+
+variable "rate_limit_evaluation_window" {
+  description = "The amount of time to use for request counts valid values are in seconds (60 120 300 600)"
+  type        = number
+  default     = 300
+}
+
+
