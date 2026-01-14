@@ -192,7 +192,8 @@ resource "aws_s3_bucket_policy" "bucket" {
       account_id            = data.aws_caller_identity.current.account_id,
       external_account_1    = data.aws_ssm_parameter.intg_account_number.*.value[0],
       external_account_2    = data.aws_ssm_parameter.staging_account_number.*.value[0],
-      external_account_3    = data.aws_ssm_parameter.prod_account_number.*.value[0]
+      external_account_3    = data.aws_ssm_parameter.prod_account_number.*.value[0],
+      external_account_4    = data.aws_ssm_parameter.dev_account_number.*.value[0],
       aws_backup_local_role = var.aws_backup_local_role_arn
     }) : templatefile("./tdr-terraform-modules/s3/templates/${var.bucket_policy}.json.tpl",
     {
