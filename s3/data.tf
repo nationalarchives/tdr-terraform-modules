@@ -15,6 +15,11 @@ data "aws_ssm_parameter" "prod_account_number" {
   name  = "/mgmt/prod_account"
 }
 
+data "aws_ssm_parameter" "dev_account_number" {
+  count = var.project == "tdr" && local.environment == "mgmt" ? 1 : 0
+  name  = "/mgmt/dev_account"
+}
+
 data "aws_ssm_parameter" "aws_elb_account_number" {
   name = "/mgmt/aws_elb_account"
 }
