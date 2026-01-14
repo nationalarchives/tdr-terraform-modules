@@ -42,8 +42,7 @@
         "AWS": [
           "arn:aws:iam::${external_account_1}:role/TDRGithubActionsDeployLambdaIntg",
           "arn:aws:iam::${external_account_2}:role/TDRGithubActionsDeployLambdaStaging",
-          "arn:aws:iam::${external_account_3}:role/TDRGithubActionsDeployLambdaProd",
-          "arn:aws:iam::${external_account_4}:role/TDRGithubActionsDeployLambdaTest"
+          "arn:aws:iam::${external_account_3}:role/TDRGithubActionsDeployLambdaProd"
         ]
       },
       "Action": ["s3:GetObject"],

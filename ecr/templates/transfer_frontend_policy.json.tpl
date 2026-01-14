@@ -8,8 +8,7 @@
         "AWS": [
           "arn:aws:iam::${intg_account}:role/frontend_ecs_execution_role_intg",
           "arn:aws:iam::${staging_account}:role/frontend_ecs_execution_role_staging",
-          "arn:aws:iam::${prod_account}:role/frontend_ecs_execution_role_prod",
-          "arn:aws:iam::${dev_account}:role/frontend_ecs_execution_role_dev"
+          "arn:aws:iam::${prod_account}:role/frontend_ecs_execution_role_prod"
         ]
       },
       "Action": [
