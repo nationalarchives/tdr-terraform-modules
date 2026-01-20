@@ -2,6 +2,11 @@
 # Rate limits all traffic
 # Apply AWSManagedRulesCommonRuleSet
 
+data "aws_ip_ranges" "aws_eu_west_2_api_gateway" {
+  regions  = ["eu-west-2"]
+  services = ["api_gateway"]
+}
+
 locals {
   waf_name = format("%s-%s-%s-waf-simple", var.project, var.function, var.environment)
 }
@@ -25,6 +30,15 @@ resource "aws_wafv2_ip_set" "whitelist_ips" {
   description        = "Allowed IPs"
 }
 
+resource "aws_wafv2_ip_set" "aws_api_gateway_ips" {
+  name               = "${var.project}-${var.function}-${var.environment}-aws-api-gateway"
+  addresses          = data.aws_ip_ranges.aws_eu_west_2_api_gateway.cidr_blocks
+  ip_address_version = "IPV4"
+  scope              = "REGIONAL"
+  description        = "AWS API Gateway CIDRs"
+}
+
+
 resource "aws_wafv2_web_acl" "simple_waf" {
   name  = local.waf_name
   scope = "REGIONAL"
@@ -33,8 +47,51 @@ resource "aws_wafv2_web_acl" "simple_waf" {
   }
 
   rule {
-    name     = "block_not_in_whitelist"
+    name     = "keycloak_allow_from_api_gateway"
     priority = 10
+
+    action {
+      allow {
+      }
+    }
+
+    statement {
+      and_statement {
+        statement {
+          regex_match_statement {
+            regex_string = "realms/tdr/(protocol/openid-connect/(certs|userinfo|token)|\\.well-known/openid-configuration)$"
+
+            field_to_match {
+              uri_path {}
+            }
+
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+        statement {
+          ip_set_reference_statement {
+            arn = "arn:aws:wafv2:eu-west-2:229554778675:regional/ipset/tdr-public-facing-intg-aws-api-gateway/cf52be6c-699d-444b-9b93-f5d021f0540c"
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "keycloak_allow_api_gatewat"
+      sampled_requests_enabled   = true
+    }
+  }
+
+
+
+
+  rule {
+    name     = "block_not_in_whitelist"
+    priority = 20
     action {
       block {}
     }
@@ -50,7 +107,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "waf-simple-block-not-in-whitelist"
       sampled_requests_enabled   = true
     }
@@ -58,7 +115,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
 
   rule {
     name     = "rate_control"
-    priority = 20
+    priority = 30
     action {
       block {}
     }
@@ -72,21 +129,21 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "waf-simple-rate-control"
       sampled_requests_enabled   = true
     }
   }
 
   visibility_config {
-    cloudwatch_metrics_enabled = false
+    cloudwatch_metrics_enabled = true
     metric_name                = "waf-simple"
     sampled_requests_enabled   = true
   }
 
   rule {
     name     = "AWS-AWSManagedRulesCommonRuleSet"
-    priority = 30
+    priority = 40
     override_action {
       none {}
     }
@@ -99,7 +156,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "AWS-AWSManagedRulesCommonRuleSet"
       sampled_requests_enabled   = true
     }
