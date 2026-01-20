@@ -1,9 +1,8 @@
 # Block blacklisted IPs
 # Block access to any admin url unless in whitelist
-# Block access to anyone not in the UK
-# Rate limits all traffic
-# Keycloak via Private link is not rate controlled (is controlled via their own WAF)
-# Apply AWS managed rules to 
+# Block access to anyone not in the UK unless in whitelist
+# Rate limits all traffic unless from private link / local subnet
+# Apply AWS managed rules 
 
 locals {
   waf_name = format("%s-%s-%s-waf", var.project, var.function, var.environment)
@@ -49,7 +48,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
   scope = "REGIONAL"
 
   visibility_config {
-    cloudwatch_metrics_enabled = false
+    cloudwatch_metrics_enabled = true
     metric_name                = "waf-simple"
     sampled_requests_enabled   = true
   }
@@ -72,7 +71,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "waf-simple-block-in-blacklist"
       sampled_requests_enabled   = true
     }
@@ -115,7 +114,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "waf-block-admin-urls-unless-in-whitelist"
       sampled_requests_enabled   = true
     }
@@ -152,7 +151,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "waf-block-not-in-GB"
       sampled_requests_enabled   = true
     }
@@ -184,15 +183,38 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "waf-rate-control"
       sampled_requests_enabled   = true
     }
   }
 
+
+  rule {
+    name     = "AWS-AWSManagedRulesAmazonIpReputationList"
+    priority = 50
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesAmazonIpReputationList"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWS-AWSManagedRulesAmazonIpReputationList"
+      sampled_requests_enabled   = true
+    }
+  }
+
+
   rule {
     name     = "AWS-AWSManagedRulesCommonRuleSet"
-    priority = 50
+    priority = 51
     override_action {
       none {}
     }
@@ -205,11 +227,79 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
 
     visibility_config {
-      cloudwatch_metrics_enabled = false
+      cloudwatch_metrics_enabled = true
       metric_name                = "AWS-AWSManagedRulesCommonRuleSet"
       sampled_requests_enabled   = true
     }
   }
+
+  rule {
+    name     = "AWS-AWSManagedRulesLinuxRuleSet"
+    priority = 52
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesLinuxRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWS-AWSManagedRulesLinuxRuleSet"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "AWS-AWSManagedRulesUnixRuleSet"
+    priority = 53
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesUnixRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWS-AWSManagedRulesUnixRuleSet"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "AWS-AWSManagedRulesSQLiRuleSet"
+    priority = 54
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesSQLiRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWS-AWSManagedRulesSQLiRuleSet"
+      sampled_requests_enabled   = true
+    }
+  }
+
+
   tags = var.common_tags
 }
 
