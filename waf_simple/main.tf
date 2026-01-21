@@ -83,7 +83,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
 
   rule {
     name     = "rate_control"
-    priority = 30
+    priority = 20
     action {
       block {}
     }
@@ -101,30 +101,30 @@ resource "aws_wafv2_web_acl" "simple_waf" {
       sampled_requests_enabled   = true
     }
   }
-  rule {
-    name     = "AWS-AWSManagedRulesCommonRuleSet"
-    priority = 40
-    override_action {
-      none {}
-    }
+  # rule {
+  #   name     = "AWS-AWSManagedRulesCommonRuleSet"
+  #   priority = 30
+  #   override_action {
+  #     none {}
+  #   }
 
-    statement {
-      managed_rule_group_statement {
-        name        = "AWSManagedRulesCommonRuleSet"
-        vendor_name = "AWS"
-      }
-    }
+  #   statement {
+  #     managed_rule_group_statement {
+  #       name        = "AWSManagedRulesCommonRuleSet"
+  #       vendor_name = "AWS"
+  #     }
+  #   }
 
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "AWS-AWSManagedRulesCommonRuleSet"
-      sampled_requests_enabled   = true
-    }
-  }
+  #   visibility_config {
+  #     cloudwatch_metrics_enabled = true
+  #     metric_name                = "AWS-AWSManagedRulesCommonRuleSet"
+  #     sampled_requests_enabled   = true
+  #   }
+  # }
 
   rule {
     name     = "allow_in_whitelist"
-    priority = 50
+    priority = 40
     action {
       allow {}
     }
@@ -145,7 +145,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
   # This allows keycloak token auth and /graphql if from GB
   rule {
     name     = "allow_public_urls"
-    priority = 10
+    priority = 50
 
     action {
       allow {
@@ -153,16 +153,26 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
 
     statement {
-      regex_match_statement {
-        regex_string = "realms/tdr/(protocol/openid-connect/(certs|userinfo|token)|\\.well-known/openid-configuration)$"
+      and_statement {
 
-        field_to_match {
-          uri_path {}
+        statement {
+          regex_match_statement {
+            regex_string = "^(/realms/tdr/protocol/openid-connect/(certs|userinfo|token)|/realms/tdr/.well-known/openid-configuration|/graphql)$"
+
+            field_to_match {
+              uri_path {}
+            }
+
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
         }
-
-        text_transformation {
-          priority = 0
-          type     = "NONE"
+        statement {
+          geo_match_statement {
+            country_codes = ["GB"]
+          }
         }
       }
     }
