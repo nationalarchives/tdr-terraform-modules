@@ -19,6 +19,11 @@ variable "whitelist_ips" {
   type        = list(string)
 }
 
+variable "blacklist_ips" {
+  description = "Blocked IPS"
+  type        = list(string)
+}
+
 variable "associated_resources" {
   description = "List of resource arns to attached WAF to"
   type        = list(string)

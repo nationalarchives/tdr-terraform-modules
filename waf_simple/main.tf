@@ -30,6 +30,14 @@ resource "aws_wafv2_ip_set" "whitelist_ips" {
   description        = "Allowed IPs"
 }
 
+resource "aws_wafv2_ip_set" "blacklist_ips" {
+  name               = "${var.project}-${var.function}-${var.environment}-blacklist"
+  addresses          = var.blacklist_ips
+  ip_address_version = "IPV4"
+  scope              = "REGIONAL"
+  description        = "Blocked IPs"
+}
+
 resource "aws_wafv2_ip_set" "aws_api_gateway_ips" {
   name               = "${var.project}-${var.function}-${var.environment}-aws-api-gateway"
   addresses          = data.aws_ip_ranges.aws_eu_west_2_api_gateway.cidr_blocks
@@ -43,72 +51,32 @@ resource "aws_wafv2_web_acl" "simple_waf" {
   name  = local.waf_name
   scope = "REGIONAL"
   default_action {
-    allow {}
+    block {}
   }
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "waf-simple"
+    sampled_requests_enabled   = true
+  }
+  tags = var.common_tags
 
   rule {
-    name     = "keycloak_allow_from_api_gateway"
+    name     = "block_in_blacklist"
     priority = 10
-
-    action {
-      allow {
-      }
-    }
-
-    statement {
-      and_statement {
-        statement {
-          regex_match_statement {
-            regex_string = "realms/tdr/(protocol/openid-connect/(certs|userinfo|token)|\\.well-known/openid-configuration)$"
-
-            field_to_match {
-              uri_path {}
-            }
-
-            text_transformation {
-              priority = 0
-              type     = "NONE"
-            }
-          }
-        }
-        statement {
-          ip_set_reference_statement {
-            arn = "arn:aws:wafv2:eu-west-2:229554778675:regional/ipset/tdr-public-facing-intg-aws-api-gateway/cf52be6c-699d-444b-9b93-f5d021f0540c"
-          }
-        }
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "keycloak_allow_api_gatewat"
-      sampled_requests_enabled   = true
-    }
-  }
-
-
-
-
-  rule {
-    name     = "block_not_in_whitelist"
-    priority = 20
     action {
       block {}
     }
 
     statement {
-      not_statement {
-        statement {
-          ip_set_reference_statement {
-            arn = aws_wafv2_ip_set.whitelist_ips.arn
-          }
-        }
+      ip_set_reference_statement {
+        arn = aws_wafv2_ip_set.blacklist_ips.arn
       }
     }
 
+
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "waf-simple-block-not-in-whitelist"
+      metric_name                = "waf-simple-block-in-blacklist"
       sampled_requests_enabled   = true
     }
   }
@@ -127,20 +95,12 @@ resource "aws_wafv2_web_acl" "simple_waf" {
         limit                 = var.rate_limit
       }
     }
-
     visibility_config {
-      cloudwatch_metrics_enabled = true
+      cloudwatch_metrics_enabled = false
       metric_name                = "waf-simple-rate-control"
       sampled_requests_enabled   = true
     }
   }
-
-  visibility_config {
-    cloudwatch_metrics_enabled = true
-    metric_name                = "waf-simple"
-    sampled_requests_enabled   = true
-  }
-
   rule {
     name     = "AWS-AWSManagedRulesCommonRuleSet"
     priority = 40
@@ -161,8 +121,59 @@ resource "aws_wafv2_web_acl" "simple_waf" {
       sampled_requests_enabled   = true
     }
   }
-  tags = var.common_tags
+
+  rule {
+    name     = "allow_in_whitelist"
+    priority = 50
+    action {
+      allow {}
+    }
+
+    statement {
+      ip_set_reference_statement {
+        arn = aws_wafv2_ip_set.whitelist_ips.arn
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = false
+      metric_name                = "waf-simple-allow-in-whitelist"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  # This allows keycloak token auth and /graphql if from GB
+  rule {
+    name     = "allow_public_urls"
+    priority = 10
+
+    action {
+      allow {
+      }
+    }
+
+    statement {
+      regex_match_statement {
+        regex_string = "realms/tdr/(protocol/openid-connect/(certs|userinfo|token)|\\.well-known/openid-configuration)$"
+
+        field_to_match {
+          uri_path {}
+        }
+
+        text_transformation {
+          priority = 0
+          type     = "NONE"
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-simple-allow-public"
+      sampled_requests_enabled   = true
+    }
+  }
 }
+
 
 resource "aws_wafv2_web_acl_association" "association" {
   count        = length(var.associated_resources)
