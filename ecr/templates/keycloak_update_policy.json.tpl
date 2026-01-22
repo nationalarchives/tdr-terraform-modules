@@ -8,7 +8,8 @@
         "AWS": [
           "arn:aws:iam::${intg_account}:role/TDRKeycloakUpdateECSExecutionRoleIntg",
           "arn:aws:iam::${staging_account}:role/TDRKeycloakUpdateECSExecutionRoleStaging",
-          "arn:aws:iam::${prod_account}:role/TDRKeycloakUpdateECSExecutionRoleProd"
+          "arn:aws:iam::${prod_account}:role/TDRKeycloakUpdateECSExecutionRoleProd",
+          "arn:aws:iam::${dev_account}:role/TDRKeycloakUpdateECSExecutionRoleDev"
         ]
       },
       "Action": [
