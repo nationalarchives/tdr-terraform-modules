@@ -226,6 +226,15 @@ resource "aws_wafv2_web_acl" "waf" {
       managed_rule_group_statement {
         name        = "AWSManagedRulesCommonRuleSet"
         vendor_name = "AWS"
+
+
+        rule_action_override {
+          name = "NoUserAgent_HEADER"
+          action_to_use {
+            count {
+            }
+          }
+        }
       }
     }
 
