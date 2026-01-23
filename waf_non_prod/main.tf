@@ -1,14 +1,5 @@
-# Simple WAF only permits those on the whitelist
-# Rate limits all traffic
-# Apply AWSManagedRulesCommonRuleSet
-
-data "aws_ip_ranges" "aws_eu_west_2_api_gateway" {
-  regions  = ["eu-west-2"]
-  services = ["api_gateway"]
-}
-
 locals {
-  waf_name = format("%s-%s-%s-waf-simple", var.project, var.function, var.environment)
+  waf_name = format("%s-%s-%s-waf", var.project, var.function, var.environment)
 }
 
 resource "aws_cloudwatch_log_group" "waf_log_group" {
@@ -17,9 +8,9 @@ resource "aws_cloudwatch_log_group" "waf_log_group" {
   retention_in_days = var.log_retention_period
 }
 
-resource "aws_wafv2_web_acl_logging_configuration" "simple_waf_logging" {
+resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
   log_destination_configs = [aws_cloudwatch_log_group.waf_log_group.arn]
-  resource_arn            = aws_wafv2_web_acl.simple_waf.arn
+  resource_arn            = aws_wafv2_web_acl.waf.arn
 }
 
 resource "aws_wafv2_ip_set" "whitelist_ips" {
@@ -38,16 +29,7 @@ resource "aws_wafv2_ip_set" "blacklist_ips" {
   description        = "Blocked IPs"
 }
 
-resource "aws_wafv2_ip_set" "aws_api_gateway_ips" {
-  name               = "${var.project}-${var.function}-${var.environment}-aws-api-gateway"
-  addresses          = data.aws_ip_ranges.aws_eu_west_2_api_gateway.cidr_blocks
-  ip_address_version = "IPV4"
-  scope              = "REGIONAL"
-  description        = "AWS API Gateway CIDRs"
-}
-
-
-resource "aws_wafv2_web_acl" "simple_waf" {
+resource "aws_wafv2_web_acl" "waf" {
   name  = local.waf_name
   scope = "REGIONAL"
   default_action {
@@ -55,7 +37,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
   }
   visibility_config {
     cloudwatch_metrics_enabled = true
-    metric_name                = "waf-simple"
+    metric_name                = "waf"
     sampled_requests_enabled   = true
   }
   tags = var.common_tags
@@ -73,10 +55,9 @@ resource "aws_wafv2_web_acl" "simple_waf" {
       }
     }
 
-
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "waf-simple-block-in-blacklist"
+      metric_name                = "waf-block-in-blacklist"
       sampled_requests_enabled   = true
     }
   }
@@ -97,7 +78,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
     visibility_config {
       cloudwatch_metrics_enabled = false
-      metric_name                = "waf-simple-rate-control"
+      metric_name                = "waf-rate-control"
       sampled_requests_enabled   = true
     }
   }
@@ -246,7 +227,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
 
     visibility_config {
       cloudwatch_metrics_enabled = false
-      metric_name                = "waf-simple-allow-in-whitelist"
+      metric_name                = "waf-allow-in-whitelist"
       sampled_requests_enabled   = true
     }
   }
@@ -287,7 +268,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "waf-simple-allow-public"
+      metric_name                = "waf-allow-public"
       sampled_requests_enabled   = true
     }
   }
@@ -297,5 +278,5 @@ resource "aws_wafv2_web_acl" "simple_waf" {
 resource "aws_wafv2_web_acl_association" "association" {
   count        = length(var.associated_resources)
   resource_arn = var.associated_resources[count.index]
-  web_acl_arn  = aws_wafv2_web_acl.simple_waf.arn
+  web_acl_arn  = aws_wafv2_web_acl.waf.arn
 }
