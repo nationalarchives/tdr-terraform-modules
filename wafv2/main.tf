@@ -14,9 +14,9 @@ resource "aws_cloudwatch_log_group" "waf_log_group" {
   retention_in_days = var.log_retention_period
 }
 
-resource "aws_wafv2_web_acl_logging_configuration" "simple_waf_logging" {
+resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
   log_destination_configs = [aws_cloudwatch_log_group.waf_log_group.arn]
-  resource_arn            = aws_wafv2_web_acl.simple_waf.arn
+  resource_arn            = aws_wafv2_web_acl.waf.arn
 }
 
 resource "aws_wafv2_ip_set" "whitelist_ips" {
@@ -43,19 +43,21 @@ resource "aws_wafv2_ip_set" "dont_rate_control_ips" {
   description        = "IPs that are not subject to rate controls"
 }
 
-resource "aws_wafv2_web_acl" "simple_waf" {
+resource "aws_wafv2_web_acl" "waf" {
   name  = local.waf_name
   scope = "REGIONAL"
-
-  visibility_config {
-    cloudwatch_metrics_enabled = true
-    metric_name                = "waf-simple"
-    sampled_requests_enabled   = true
-  }
 
   default_action {
     allow {}
   }
+
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "waf"
+    sampled_requests_enabled   = true
+  }
+
+  tags = var.common_tags
 
   rule {
     name     = "block_in_blacklist"
@@ -63,6 +65,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     action {
       block {}
     }
+
 
     statement {
       ip_set_reference_statement {
@@ -72,7 +75,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "waf-simple-block-in-blacklist"
+      metric_name                = "waf-block-in-blacklist"
       sampled_requests_enabled   = true
     }
   }
@@ -128,7 +131,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
     }
 
     statement {
-      or_statement {
+      and_statement {
         statement {
           not_statement {
             statement {
@@ -234,8 +237,30 @@ resource "aws_wafv2_web_acl" "simple_waf" {
   }
 
   rule {
-    name     = "AWS-AWSManagedRulesLinuxRuleSet"
+    name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
     priority = 52
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesKnownBadInputsRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+      sampled_requests_enabled   = true
+    }
+  }
+
+
+  rule {
+    name     = "AWS-AWSManagedRulesLinuxRuleSet"
+    priority = 53
 
     override_action {
       none {}
@@ -257,7 +282,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
 
   rule {
     name     = "AWS-AWSManagedRulesUnixRuleSet"
-    priority = 53
+    priority = 54
 
     override_action {
       none {}
@@ -279,7 +304,7 @@ resource "aws_wafv2_web_acl" "simple_waf" {
 
   rule {
     name     = "AWS-AWSManagedRulesSQLiRuleSet"
-    priority = 54
+    priority = 55
 
     override_action {
       none {}
@@ -298,13 +323,10 @@ resource "aws_wafv2_web_acl" "simple_waf" {
       sampled_requests_enabled   = true
     }
   }
-
-
-  tags = var.common_tags
 }
 
 resource "aws_wafv2_web_acl_association" "association" {
   count        = length(var.associated_resources)
   resource_arn = var.associated_resources[count.index]
-  web_acl_arn  = aws_wafv2_web_acl.simple_waf.arn
+  web_acl_arn  = aws_wafv2_web_acl.waf.arn
 }
