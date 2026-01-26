@@ -13,17 +13,17 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
   resource_arn            = aws_wafv2_web_acl.waf.arn
 }
 
-resource "aws_wafv2_ip_set" "whitelist_ips" {
-  name               = "${var.project}-${var.function}-${var.environment}-whitelist"
-  addresses          = var.whitelist_ips
+resource "aws_wafv2_ip_set" "allowlist_ips" {
+  name               = "${var.project}-${var.function}-${var.environment}-allowlist"
+  addresses          = var.allowlist_ips
   ip_address_version = "IPV4"
   scope              = "REGIONAL"
   description        = "Allowed IPs"
 }
 
-resource "aws_wafv2_ip_set" "blacklist_ips" {
-  name               = "${var.project}-${var.function}-${var.environment}-blacklist"
-  addresses          = var.blacklist_ips
+resource "aws_wafv2_ip_set" "blocklist_ips" {
+  name               = "${var.project}-${var.function}-${var.environment}-blocklist"
+  addresses          = var.blocklist_ips
   ip_address_version = "IPV4"
   scope              = "REGIONAL"
   description        = "Blocked IPs"
@@ -43,7 +43,7 @@ resource "aws_wafv2_web_acl" "waf" {
   tags = var.common_tags
 
   rule {
-    name     = "block_in_blacklist"
+    name     = "block_in_blocklist"
     priority = 10
     action {
       block {}
@@ -51,13 +51,13 @@ resource "aws_wafv2_web_acl" "waf" {
 
     statement {
       ip_set_reference_statement {
-        arn = aws_wafv2_ip_set.blacklist_ips.arn
+        arn = aws_wafv2_ip_set.blocklist_ips.arn
       }
     }
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "waf-block-in-blacklist"
+      metric_name                = "waf-block-in-blocklist"
       sampled_requests_enabled   = true
     }
   }
@@ -116,7 +116,6 @@ resource "aws_wafv2_web_acl" "waf" {
         name        = "AWSManagedRulesCommonRuleSet"
         vendor_name = "AWS"
 
-
         rule_action_override {
           name = "NoUserAgent_HEADER"
           action_to_use {
@@ -153,8 +152,6 @@ resource "aws_wafv2_web_acl" "waf" {
       sampled_requests_enabled   = true
     }
   }
-
-
 
   rule {
     name     = "AWS-AWSManagedRulesLinuxRuleSet"
@@ -223,7 +220,7 @@ resource "aws_wafv2_web_acl" "waf" {
   }
 
   rule {
-    name     = "allow_in_whitelist"
+    name     = "allow_in_allowlist"
     priority = 40
     action {
       allow {}
@@ -231,13 +228,13 @@ resource "aws_wafv2_web_acl" "waf" {
 
     statement {
       ip_set_reference_statement {
-        arn = aws_wafv2_ip_set.whitelist_ips.arn
+        arn = aws_wafv2_ip_set.allowlist_ips.arn
       }
     }
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "waf-allow-in-whitelist"
+      metric_name                = "waf-allow-in-allowlist"
       sampled_requests_enabled   = true
     }
   }
@@ -283,7 +280,6 @@ resource "aws_wafv2_web_acl" "waf" {
     }
   }
 }
-
 
 resource "aws_wafv2_web_acl_association" "association" {
   count        = length(var.associated_resources)
