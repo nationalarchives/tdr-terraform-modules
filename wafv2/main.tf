@@ -1,6 +1,6 @@
 # Block blacklisted IPs
-# Block access to any admin url unless in whitelist
-# Block access to anyone not in the UK unless in whitelist
+# Block access to any admin url unless in allowlist
+# Block access to anyone not in the UK unless in allowlist
 # Rate limits all traffic unless from private link / local subnet
 # Apply AWS managed rules 
 
@@ -19,17 +19,17 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
   resource_arn            = aws_wafv2_web_acl.waf.arn
 }
 
-resource "aws_wafv2_ip_set" "whitelist_ips" {
-  name               = "${var.project}-${var.function}-${var.environment}-whitelist"
-  addresses          = var.whitelist_ips
+resource "aws_wafv2_ip_set" "allowlist_ips" {
+  name               = "${var.project}-${var.function}-${var.environment}-allowlist"
+  addresses          = var.allowlist_ips
   ip_address_version = "IPV4"
   scope              = "REGIONAL"
   description        = "Access to all parts of the apps including admin"
 }
 
-resource "aws_wafv2_ip_set" "blacklist_ips" {
-  name               = "${var.project}-${var.function}-${var.environment}-blacklist"
-  addresses          = var.blacklist_ips
+resource "aws_wafv2_ip_set" "blocklist_ips" {
+  name               = "${var.project}-${var.function}-${var.environment}-blocklist"
+  addresses          = var.blocklist_ips
   ip_address_version = "IPV4"
   scope              = "REGIONAL"
   description        = "Block ips"
@@ -60,28 +60,27 @@ resource "aws_wafv2_web_acl" "waf" {
   tags = var.common_tags
 
   rule {
-    name     = "block_in_blacklist"
+    name     = "block_in_blocklist"
     priority = 10
     action {
       block {}
     }
 
-
     statement {
       ip_set_reference_statement {
-        arn = aws_wafv2_ip_set.blacklist_ips.arn
+        arn = aws_wafv2_ip_set.blocklist_ips.arn
       }
     }
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "waf-block-in-blacklist"
+      metric_name                = "waf-block-in-blocklist"
       sampled_requests_enabled   = true
     }
   }
 
   rule {
-    name     = "block_admin_urls_unless_in_whitelist"
+    name     = "block_admin_urls_unless_in_allowlist"
     priority = 20
     action {
       block {}
@@ -108,7 +107,7 @@ resource "aws_wafv2_web_acl" "waf" {
           not_statement {
             statement {
               ip_set_reference_statement {
-                arn = aws_wafv2_ip_set.whitelist_ips.arn
+                arn = aws_wafv2_ip_set.allowlist_ips.arn
               }
             }
           }
@@ -118,7 +117,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "waf-block-admin-urls-unless-in-whitelist"
+      metric_name                = "waf-block-admin-urls-unless-in-allowlist"
       sampled_requests_enabled   = true
     }
   }
@@ -145,7 +144,7 @@ resource "aws_wafv2_web_acl" "waf" {
           not_statement {
             statement {
               ip_set_reference_statement {
-                arn = aws_wafv2_ip_set.whitelist_ips.arn
+                arn = aws_wafv2_ip_set.allowlist_ips.arn
               }
             }
           }
@@ -192,7 +191,6 @@ resource "aws_wafv2_web_acl" "waf" {
     }
   }
 
-
   rule {
     name     = "AWS-AWSManagedRulesAmazonIpReputationList"
     priority = 50
@@ -214,10 +212,9 @@ resource "aws_wafv2_web_acl" "waf" {
     }
   }
 
-
   rule {
     name     = "AWS-AWSManagedRulesCommonRuleSet"
-    priority = 51
+    priority = 55
     override_action {
       none {}
     }
@@ -235,6 +232,13 @@ resource "aws_wafv2_web_acl" "waf" {
             }
           }
         }
+        rule_action_override {
+          name = "SizeRestrictions_BODY"
+          action_to_use {
+            count {
+            }
+          }
+        }
       }
     }
 
@@ -246,8 +250,52 @@ resource "aws_wafv2_web_acl" "waf" {
   }
 
   rule {
+    name     = "allow_GT8K_body_uploads"
+    priority = 56
+
+    action {
+      block {}
+    }
+
+    statement {
+      and_statement {
+        statement {
+          label_match_statement {
+            key   = "awswaf:managed:aws:core-rule-set:SizeRestrictions_Body"
+            scope = "LABEL"
+          }
+        }
+        statement {
+          not_statement {
+            statement {
+              byte_match_statement {
+                positional_constraint = "ENDS_WITH"
+                search_string         = "draft-metadata/upload"
+
+                field_to_match {
+                  uri_path {}
+                }
+
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-allow-GT8K-body-uploads"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
     name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
-    priority = 52
+    priority = 60
     override_action {
       none {}
     }
@@ -266,10 +314,9 @@ resource "aws_wafv2_web_acl" "waf" {
     }
   }
 
-
   rule {
     name     = "AWS-AWSManagedRulesLinuxRuleSet"
-    priority = 53
+    priority = 65
 
     override_action {
       none {}
@@ -291,7 +338,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
   rule {
     name     = "AWS-AWSManagedRulesUnixRuleSet"
-    priority = 54
+    priority = 70
 
     override_action {
       none {}
@@ -313,7 +360,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
   rule {
     name     = "AWS-AWSManagedRulesSQLiRuleSet"
-    priority = 55
+    priority = 75
 
     override_action {
       none {}
