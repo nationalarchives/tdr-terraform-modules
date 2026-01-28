@@ -268,9 +268,8 @@ resource "aws_wafv2_web_acl" "waf" {
         statement {
           not_statement {
             statement {
-              byte_match_statement {
-                positional_constraint = "ENDS_WITH"
-                search_string         = "draft-metadata/upload"
+              regex_match_statement {
+                regex_string = "(^\\/graphql$|^\\/save-metadata$|^\\/consignment\\/.+\\/draft-metadata\\/upload$)"
 
                 field_to_match {
                   uri_path {}
