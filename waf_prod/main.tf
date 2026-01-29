@@ -1,8 +1,4 @@
-# Block blacklisted IPs
-# Block access to any admin url unless in allowlist
-# Block access to anyone not in the UK unless in allowlist
-# Rate limits all traffic unless from private link / local subnet
-# Apply AWS managed rules 
+# see https://github.com/nationalarchives/tdr-dev-documentation-internal/blob/main/manual/waf.md
 
 locals {
   waf_name = format("%s-%s-%s-waf", var.project, var.function, var.environment)
@@ -285,6 +281,7 @@ resource "aws_wafv2_web_acl" "waf" {
         }
       }
     }
+
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "waf-allow-GT8K-body-uploads"
