@@ -106,7 +106,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
   rule {
     name     = "AWS-AWSManagedRulesCommonRuleSet"
-    priority = 31
+    priority = 35
     override_action {
       none {}
     }
@@ -123,6 +123,13 @@ resource "aws_wafv2_web_acl" "waf" {
             }
           }
         }
+        rule_action_override {
+          name = "SizeRestrictions_BODY"
+          action_to_use {
+            count {
+            }
+          }
+        }
       }
     }
 
@@ -134,8 +141,51 @@ resource "aws_wafv2_web_acl" "waf" {
   }
 
   rule {
+    name     = "allow_GT8K_body_uploads"
+    priority = 36
+
+    action {
+      block {}
+    }
+
+    statement {
+      and_statement {
+        statement {
+          label_match_statement {
+            key   = "awswaf:managed:aws:core-rule-set:SizeRestrictions_Body"
+            scope = "LABEL"
+          }
+        }
+        statement {
+          not_statement {
+            statement {
+              regex_match_statement {
+                regex_string = "(^\\/graphql$|^\\/save-metadata$|^\\/consignment\\/.+\\/draft-metadata\\/upload$)"
+
+                field_to_match {
+                  uri_path {}
+                }
+
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-allow-GT8K-body-uploads"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
     name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
-    priority = 32
+    priority = 40
     override_action {
       none {}
     }
@@ -155,7 +205,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
   rule {
     name     = "AWS-AWSManagedRulesLinuxRuleSet"
-    priority = 33
+    priority = 45
 
     override_action {
       none {}
@@ -177,7 +227,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
   rule {
     name     = "AWS-AWSManagedRulesUnixRuleSet"
-    priority = 34
+    priority = 50
 
     override_action {
       none {}
@@ -199,7 +249,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
   rule {
     name     = "AWS-AWSManagedRulesSQLiRuleSet"
-    priority = 35
+    priority = 55
 
     override_action {
       none {}
@@ -221,7 +271,7 @@ resource "aws_wafv2_web_acl" "waf" {
 
   rule {
     name     = "allow_in_allowlist"
-    priority = 40
+    priority = 60
     action {
       allow {}
     }
@@ -242,7 +292,7 @@ resource "aws_wafv2_web_acl" "waf" {
   # This allows keycloak token auth and /graphql if from GB
   rule {
     name     = "allow_public_urls"
-    priority = 50
+    priority = 70
 
     action {
       allow {
