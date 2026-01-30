@@ -34,7 +34,7 @@ variable "associated_resources" {
   type        = list(string)
 }
 
-variable "log_retention_period" {
+variable "log_retention_period_days" {
   description = "How long in days to keep logs in cloudwatch logs"
   type        = number
   default     = 180
@@ -46,7 +46,7 @@ variable "rate_limit" {
   default     = 250
 }
 
-variable "rate_limit_evaluation_window" {
+variable "rate_limit_evaluation_window_secs" {
   description = "The amount of time to use for request counts - valid values are in seconds (60 120 300 600)"
   type        = number
   default     = 600
