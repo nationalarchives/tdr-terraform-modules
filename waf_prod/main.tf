@@ -7,7 +7,7 @@ locals {
 resource "aws_cloudwatch_log_group" "waf_log_group" {
   name              = format("aws-waf-logs-%s", local.waf_name)
   tags              = var.common_tags
-  retention_in_days = var.log_retention_period
+  retention_in_days = var.log_retention_period_days
 }
 
 resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
@@ -165,7 +165,7 @@ resource "aws_wafv2_web_acl" "waf" {
     statement {
       rate_based_statement {
         aggregate_key_type    = "IP"
-        evaluation_window_sec = var.rate_limit_evaluation_window
+        evaluation_window_sec = var.rate_limit_evaluation_window_secs
         limit                 = var.rate_limit
 
         scope_down_statement {
