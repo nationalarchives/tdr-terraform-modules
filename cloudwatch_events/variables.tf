@@ -5,7 +5,7 @@ variable "event_pattern" {
 
 variable "event_target_arns" {
   description = "Name to arn map for the event target resources"
-  type = map(string)
+  type        = map(string)
 }
 
 variable "rule_name" {}
