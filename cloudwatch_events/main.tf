@@ -12,26 +12,8 @@ resource "aws_cloudwatch_event_rule" "event_rule_event_schedule" {
   schedule_expression = var.schedule
 }
 
-resource "aws_cloudwatch_event_target" "sqs_event_target" {
-  count = local.count_sqs_event_target
+resource "aws_cloudwatch_event_target" "event_target" {
+  for_each = var.event_target_arns
   rule  = local.event_rule_name
-  arn   = var.log_group_event_target_arn
-}
-
-resource "aws_cloudwatch_event_target" "ecs_event_target" {
-  count = local.count_ecs_event_target
-  rule  = local.event_rule_name
-  arn   = var.log_group_ecs_task_events_target_arn
-}
-
-resource "aws_cloudwatch_event_target" "lambda_event_target" {
-  for_each = var.lambda_event_target_arn
-  rule     = local.event_rule_name
-  arn      = each.value
-}
-
-resource "aws_cloudwatch_event_target" "sns_topic_event_target" {
-  for_each = var.sns_topic_event_target_arn
-  rule     = local.event_rule_name
-  arn      = each.value
+  arn   = each.value
 }
