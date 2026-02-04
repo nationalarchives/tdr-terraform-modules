@@ -8,7 +8,8 @@
         "AWS": [
           "arn:aws:iam::${intg_account}:role/TDRConsignmentExportECSExecutionRoleIntg",
           "arn:aws:iam::${staging_account}:role/TDRConsignmentExportECSExecutionRoleStaging",
-          "arn:aws:iam::${prod_account}:role/TDRConsignmentExportECSExecutionRoleProd"
+          "arn:aws:iam::${prod_account}:role/TDRConsignmentExportECSExecutionRoleProd",
+          "arn:aws:iam::${dev_account}:role/TDRConsignmentExportECSExecutionRoleDev"
         ]
       },
       "Action": [

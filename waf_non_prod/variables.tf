@@ -14,8 +14,13 @@ variable "environment" {
   description = "environment, e.g. prod"
 }
 
-variable "whitelist_ips" {
+variable "allowlist_ips" {
   description = "Allowed IPs"
+  type        = list(string)
+}
+
+variable "blocklist_ips" {
+  description = "Blocked IPS"
   type        = list(string)
 }
 
@@ -24,7 +29,7 @@ variable "associated_resources" {
   type        = list(string)
 }
 
-variable "log_retention_period" {
+variable "log_retention_period_days" {
   description = "How long in days to keep logs in cloudwatch logs"
   type        = number
   default     = 30
@@ -36,7 +41,7 @@ variable "rate_limit" {
   default     = 250
 }
 
-variable "rate_limit_evaluation_window" {
+variable "rate_limit_evaluation_window_secs" {
   description = "The amount of time to use for request counts - valid values are in seconds (60 120 300 600)"
   type        = number
   default     = 600
