@@ -42,3 +42,10 @@ variable "aws_backup_tag" {
   description = "Tag to indicate resource should be backed up"
   default     = null
 }
+
+variable "allocated_storage" {
+  description = "Allocated storage for the database in GB"
+  type        = number
+  default     = 60
+}
+
