@@ -1,4 +1,3 @@
-
 resource "random_string" "identifier_string" {
   length  = 10
   special = false
@@ -23,7 +22,7 @@ resource "aws_db_instance" "db_instance" {
   identifier                            = "${var.database_name}-${random_string.identifier_string.result}"
   storage_encrypted                     = true
   kms_key_id                            = var.kms_key_id
-  allocated_storage                     = 60
+  allocated_storage                     = var.allocated_storage
   engine                                = "postgres"
   engine_version                        = var.database_version
   username                              = var.admin_username
