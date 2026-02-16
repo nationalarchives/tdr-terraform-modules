@@ -16,10 +16,20 @@ resource "aws_db_subnet_group" "user_subnet_group" {
   )
 }
 
+locals {
+  # Use a local here for the db-identifier so it's always consistant for the db and log group
+  db_identifier = format("%s-%s", var.database_name, random_string.identifier_string.result)
+}
+
+resource "aws_cloudwatch_log_group" "database_log_group" {
+  name              = format("/aws/rds/instance/%s/postgresql", local.db_identifier)
+  retention_in_days = var.cloudwatch_log_retention_in_days
+}
+
 resource "aws_db_instance" "db_instance" {
   instance_class                        = var.instance_class
   db_name                               = var.database_name
-  identifier                            = "${var.database_name}-${random_string.identifier_string.result}"
+  identifier                            = local.db_identifier
   storage_encrypted                     = true
   kms_key_id                            = var.kms_key_id
   allocated_storage                     = var.allocated_storage
@@ -54,3 +64,5 @@ resource "aws_ssm_parameter" "database_url" {
   type  = "SecureString"
   value = aws_db_instance.db_instance.address
 }
+
+
