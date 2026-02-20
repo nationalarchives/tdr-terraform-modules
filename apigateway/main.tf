@@ -12,6 +12,8 @@ resource "aws_api_gateway_deployment" "api_deployment" {
   lifecycle {
     create_before_destroy = true
   }
+  depends_on = [aws_cloudwatch_log_group.logging]
+
 }
 
 resource "aws_api_gateway_stage" "api_stage" {
@@ -19,3 +21,9 @@ resource "aws_api_gateway_stage" "api_stage" {
   rest_api_id   = aws_api_gateway_rest_api.rest_api.id
   stage_name    = var.environment
 }
+
+resource "aws_cloudwatch_log_group" "logging" {
+  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.rest_api.id}/${var.environment}"
+  retention_in_days = var.cloudwatch_log_retention_in_days
+}
+
