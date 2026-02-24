@@ -12,7 +12,7 @@ resource "aws_api_gateway_deployment" "api_deployment" {
   lifecycle {
     create_before_destroy = true
   }
-  depends_on = [aws_cloudwatch_log_group.logging]
+  # depends_on = [aws_cloudwatch_log_group.logging] 
 
 }
 
@@ -22,8 +22,19 @@ resource "aws_api_gateway_stage" "api_stage" {
   stage_name    = var.environment
 }
 
-resource "aws_cloudwatch_log_group" "logging" {
-  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.rest_api.id}/${var.environment}"
-  retention_in_days = var.cloudwatch_log_retention_in_days
+# resource "aws_cloudwatch_log_group" "logging" {
+#   name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.rest_api.id}/${var.environment}"
+#   retention_in_days = var.cloudwatch_log_retention_in_days
+# }
+
+resource "aws_api_gateway_method_settings" "all" {
+  rest_api_id = aws_api_gateway_rest_api.rest_api.id
+  stage_name  = aws_api_gateway_stage.api_stage.stage_name
+  method_path = "*/*"
+
+  settings {
+    //metrics_enabled = true
+    logging_level = "INFO"
+  }
 }
 
