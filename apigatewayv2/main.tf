@@ -31,5 +31,6 @@ resource "aws_apigatewayv2_stage" "api_stage" {
 }
 
 resource "aws_cloudwatch_log_group" "api_log_group" {
-  name = "/apigateway/${var.api_name}"
+  name              = "/apigateway/${var.api_name}"
+  retention_in_days = var.cloudwatch_log_retention_in_days
 }

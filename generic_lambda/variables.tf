@@ -88,3 +88,8 @@ variable "policy_attachments" {
   default     = []
   description = "A list of policy arns to attach. These will need to be pre-existing policies"
 }
+
+variable "cloudwatch_log_retention_in_days" {
+  description = "Cloudwatch log retention period in days (0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1096, 1827, 2192, 2557, 2922, 3288, 3653)"
+  default     = 30
+}
