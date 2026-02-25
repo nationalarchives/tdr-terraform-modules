@@ -37,6 +37,10 @@ resource "aws_lambda_function" "lambda_function" {
   lifecycle {
     ignore_changes = [filename]
   }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.role_policy_attachment
+  ]
 }
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
