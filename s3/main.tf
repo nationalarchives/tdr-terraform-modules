@@ -22,7 +22,7 @@ resource "aws_s3_bucket_versioning" "log_bucket_versioning" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "s3_logs_ownership" {
-  count = var.access_logs == true && var.apply_resource == true ? 1 : 0
+  count  = var.access_logs == true && var.apply_resource == true ? 1 : 0
   bucket = aws_s3_bucket.log_bucket[count.index].id
 
   rule {
@@ -33,8 +33,8 @@ resource "aws_s3_bucket_ownership_controls" "s3_logs_ownership" {
 resource "aws_s3_bucket_acl" "log_bucket_acl" {
   count = var.access_logs == true && var.apply_resource == true ? 1 : 0
 
-  bucket = aws_s3_bucket.log_bucket[count.index].id
-  acl    = "log-delivery-write"
+  bucket     = aws_s3_bucket.log_bucket[count.index].id
+  acl        = "log-delivery-write"
   depends_on = [aws_s3_bucket_ownership_controls.s3_logs_ownership]
 }
 
@@ -71,7 +71,7 @@ resource "aws_s3_bucket_policy" "log_bucket" {
       account_id                   = data.aws_caller_identity.current.account_id,
       aws_logs_delivery_account_id = var.aws_logs_delivery_account_id
       aws_backup_local_role        = var.aws_backup_local_role_arn
-    })
+  })
   depends_on = [aws_s3_bucket_public_access_block.log_bucket]
 }
 
@@ -205,7 +205,7 @@ resource "aws_s3_bucket_policy" "bucket" {
       read_access_roles            = var.read_access_role_arns,
       cloudfront_distribution_arns = jsonencode(var.cloudfront_distribution_arns)
       aws_backup_local_role        = var.aws_backup_local_role_arn
-    })
+  })
   depends_on = [aws_s3_bucket_public_access_block.bucket]
 }
 
