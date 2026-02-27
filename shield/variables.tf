@@ -1,4 +1,4 @@
 variable "resource_arns" {
-  type = set(string)
+  type = map(string)
 }
 variable "project" {}

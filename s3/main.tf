@@ -21,11 +21,21 @@ resource "aws_s3_bucket_versioning" "log_bucket_versioning" {
   }
 }
 
+resource "aws_s3_bucket_ownership_controls" "s3_logs_ownership" {
+  count  = var.access_logs == true && var.apply_resource == true ? 1 : 0
+  bucket = aws_s3_bucket.log_bucket[count.index].id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
 resource "aws_s3_bucket_acl" "log_bucket_acl" {
   count = var.access_logs == true && var.apply_resource == true ? 1 : 0
 
-  bucket = aws_s3_bucket.log_bucket[count.index].id
-  acl    = "log-delivery-write"
+  bucket     = aws_s3_bucket.log_bucket[count.index].id
+  acl        = "log-delivery-write"
+  depends_on = [aws_s3_bucket_ownership_controls.s3_logs_ownership]
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "bucket_encryption" {
@@ -65,16 +75,6 @@ resource "aws_s3_bucket_policy" "log_bucket" {
   depends_on = [aws_s3_bucket_public_access_block.log_bucket]
 }
 
-resource "aws_s3_bucket_notification" "log_bucket_notification" {
-  count  = var.access_logs == true && var.apply_resource == true && var.log_data_sns_notification ? 1 : 0
-  bucket = aws_s3_bucket.log_bucket.*.id[0]
-
-  topic {
-    topic_arn = local.log_data_sns_topic_arn
-    events    = ["s3:ObjectCreated:*"]
-  }
-  depends_on = [aws_s3_bucket_policy.log_bucket]
-}
 # This module is to be deprecated
 resource "aws_s3_bucket" "bucket" {
   count         = var.apply_resource == true ? 1 : 0
