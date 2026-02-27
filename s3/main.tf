@@ -245,3 +245,19 @@ resource "aws_s3_bucket_ownership_controls" "bucket_owner_enforced" {
     object_ownership = "BucketOwnerEnforced"
   }
 }
+
+resource "aws_s3_bucket_metric" "bucket_request_metrics" {
+  count  = var.apply_resource == true && var.enable_request_metrics == true ? 1 : 0
+  bucket = aws_s3_bucket.bucket.*.id[0]
+  name   = var.request_metrics_filter == null ? "EntireBucket" : "LimitScope"
+
+  dynamic "filter" {
+    for_each = var.request_metrics_filter != null ? ["do_it"] : []
+    content {
+      access_point = var.request_metrics_filter["access_point"]
+      prefix       = var.request_metrics_filter["prefix"]
+      tags         = var.request_metrics_filter["tags"]
+    }
+  }
+}
+

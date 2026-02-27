@@ -166,3 +166,13 @@ variable "bucket_owner_object_ownership" {
   description = "Toggle to enforce bucket owner object control on bucket. Should be 'true' but toggling to ensure no breaking changes"
   default     = false
 }
+
+variable "enable_request_metrics" {
+  description = "Enable the additional request metrics for this bucket"
+  default     = false
+}
+
+variable "request_metrics_filter" {
+  description = "Filter object for aws_s3_bucket_metric"
+  default     = null
+}
