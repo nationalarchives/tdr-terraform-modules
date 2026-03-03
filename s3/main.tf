@@ -246,18 +246,21 @@ resource "aws_s3_bucket_ownership_controls" "bucket_owner_enforced" {
   }
 }
 
-resource "aws_s3_bucket_metric" "bucket_request_metrics" {
-  count  = var.apply_resource == true && var.enable_request_metrics == true ? 1 : 0
+resource "aws_s3_bucket_metric" "bucket_request_metrics_all" {
+  count  = var.enable_request_metrics_all == true ? 1 : 0
   bucket = aws_s3_bucket.bucket.*.id[0]
-  name   = var.request_metrics_filter == null ? "EntireBucket" : "LimitScope"
+  name   = "EntireBucket"
+}
 
-  dynamic "filter" {
-    for_each = var.request_metrics_filter != null ? ["do_it"] : []
-    content {
-      access_point = var.request_metrics_filter["access_point"]
-      prefix       = var.request_metrics_filter["prefix"]
-      tags         = var.request_metrics_filter["tags"]
-    }
+resource "aws_s3_bucket_metric" "bucket_request_metrics_filter" {
+  for_each = var.request_metrics_filters
+  bucket   = aws_s3_bucket.bucket.*.id[0]
+  name     = each.key
+
+  filter {
+    access_point = each.value.access_point
+    prefix       = each.value.prefix
+    tags         = each.value.tags
   }
 }
 
