@@ -174,5 +174,10 @@ variable "enable_request_metrics_all" {
 
 variable "request_metrics_filters" {
   description = "Enable the additional request metrics with filters.  Expects a map of Filter objects as documented in aws_s3_bucket_metric. Key is the filter name"
-  default     = {}
+  type = map(object({
+    access_point = optional(string)
+    prefix       = optional(string)
+    tags         = optional(map(any))
+  }))
+  default = {}
 }
