@@ -9,3 +9,7 @@ output "resource_id" {
 output "database_master_user_secret_arn" {
   value = aws_db_instance.db_instance.master_user_secret[0].secret_arn
 }
+
+output "identifier" {
+  value = aws_db_instance.db_instance.identifier
+}
