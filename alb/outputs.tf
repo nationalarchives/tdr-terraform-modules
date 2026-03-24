@@ -22,3 +22,6 @@ output "alb_id" {
   value = aws_alb.alb_module.id
 }
 
+output "alb_arn_suffix" {
+  value = aws_alb.alb_module.arn_suffix
+}
