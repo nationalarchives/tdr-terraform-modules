@@ -48,14 +48,20 @@
         "events:DescribeConnection",
         "events:UpdateConnection"
       ],
-      "Resource": "arn:aws:events:eu-west-2:${account_id}:connection/${api_connection_name}"
+      "Resource": [
+        "arn:aws:events:eu-west-2:${account_id}:connection/${api_connection_name}",
+        "arn:aws:events:eu-west-2:${account_id}:connection/${api_export_connection_name}"
+      ]
     },
     {
       "Action": [
         "secretsmanager:*"
       ],
       "Effect": "Allow",
-      "Resource": "${api_connection_secret_arn}"
+      "Resource": [
+        "${api_connection_secret_arn}",
+        "${api_export_connection_secret_arn}"
+      ]
     }
   ]
 }
