@@ -187,49 +187,46 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
     }
   }
 
-  #   rule {
-  #     name     = "allow_GT8K_body_uploads"
-  #     priority = 36
+    rule {
+      name     = "allow_GT8K_body_uploads"
+      priority = 26
 
-  #     action {
-  #       block {}
-  #     }
+      action {
+        block {}
+      }
 
-  #     statement {
-  #       and_statement {
-  #         statement {
-  #           label_match_statement {
-  #             key   = "awswaf:managed:aws:core-rule-set:SizeRestrictions_Body"
-  #             scope = "LABEL"
-  #           }
-  #         }
-  #         statement {
-  #           not_statement {
-  #             statement {
-  #               regex_match_statement {
-  #                 regex_string = "(^\\/graphql$|^\\/save-metadata$|^\\/consignment\\/.+\\/draft-metadata\\/upload$)"
+      statement {
+        and_statement {
+          statement {
+            label_match_statement {
+              key   = "awswaf:managed:aws:core-rule-set:SizeRestrictions_Body"
+              scope = "LABEL"
+            }
+          }
+          statement {
+            byte_match_statement {
+              positional_constraint = "EXACTLY"
+              search_string = "/cookies"
 
-  #                 field_to_match {
-  #                   uri_path {}
-  #                 }
+              field_to_match {
+                uri_path {}
+              }
 
-  #                 text_transformation {
-  #                   priority = 0
-  #                   type     = "NONE"
-  #                 }
-  #               }
-  #             }
-  #           }
-  #         }
-  #       }
-  #     }
+              text_transformation {
+                priority = 0
+                type     = "NONE"
+              }
+            }
+          }
+        }
+      }
 
-  #     visibility_config {
-  #       cloudwatch_metrics_enabled = true
-  #       metric_name                = "waf-allow-GT8K-body-uploads"
-  #       sampled_requests_enabled   = true
-  #     }
-  #   }
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = "waf-allow-GT8K-body-uploads"
+        sampled_requests_enabled   = true
+      }
+    }
 
   rule {
     name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
@@ -251,73 +248,4 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
       sampled_requests_enabled   = true
     }
   }
-
-
-  #   rule {
-  #     name     = "allow_in_allowlist"
-  #     priority = 60
-  #     action {
-  #       allow {}
-  #     }
-
-  #     statement {
-  #       ip_set_reference_statement {
-  #         arn = aws_wafv2_ip_set.allowlist_ips.arn
-  #       }
-  #     }
-
-  #     visibility_config {
-  #       cloudwatch_metrics_enabled = true
-  #       metric_name                = "waf-allow-in-allowlist"
-  #       sampled_requests_enabled   = true
-  #     }
-  #   }
-
-  #   # This allows keycloak token auth and /graphql if from GB
-  #   rule {
-  #     name     = "allow_public_urls"
-  #     priority = 70
-
-  #     action {
-  #       allow {
-  #       }
-  #     }
-
-  #     statement {
-  #       and_statement {
-
-  #         statement {
-  #           regex_match_statement {
-  #             regex_string = "^(/realms/tdr/protocol/openid-connect/(certs|userinfo|token)|/realms/tdr/.well-known/openid-configuration|/graphql)$"
-
-  #             field_to_match {
-  #               uri_path {}
-  #             }
-
-  #             text_transformation {
-  #               priority = 0
-  #               type     = "NONE"
-  #             }
-  #           }
-  #         }
-  #         statement {
-  #           geo_match_statement {
-  #             country_codes = ["GB"]
-  #           }
-  #         }
-  #       }
-  #     }
-
-  #     visibility_config {
-  #       cloudwatch_metrics_enabled = true
-  #       metric_name                = "waf-allow-public"
-  #       sampled_requests_enabled   = true
-  #     }
-  #   }
-  # }
 }
-# resource "aws_wafv2_web_acl_association" "association" {
-#   count        = length(var.associated_resources)
-#   resource_arn = var.associated_resources[count.index]
-#   web_acl_arn  = aws_wafv2_web_acl.waf.arn
-# }
