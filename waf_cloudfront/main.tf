@@ -9,7 +9,6 @@ terraform {
 
 locals {
   waf_name = format("%s-%s-%s-cloudfront-waf", var.project, var.function, var.environment)
-  //waf_name = format("cloudfront-waf-%s", local.environment)
 }
 
 resource "aws_cloudwatch_log_group" "waf_log_group" {
@@ -23,6 +22,15 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
   log_destination_configs = [aws_cloudwatch_log_group.waf_log_group.arn]
   resource_arn            = aws_wafv2_web_acl.cloudfront_waf.arn
   provider                = aws.useast1
+}
+
+resource "aws_wafv2_ip_set" "allowlist_ips" {
+  name               = "${var.project}-${var.function}-${var.environment}-allowlist"
+  addresses          = var.allowlist_ips
+  ip_address_version = "IPV4"
+  scope              = "CLOUDFRONT"
+  description        = "Allowed IPs"
+  provider           = aws.useast1
 }
 
 resource "aws_wafv2_ip_set" "blocklist_ips" {
@@ -39,7 +47,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
   name     = local.waf_name
   scope    = "CLOUDFRONT"
   default_action {
-    allow {}
+    block {}
   }
 
   visibility_config {
@@ -187,46 +195,46 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
     }
   }
 
-    rule {
-      name     = "allow_GT8K_body_uploads"
-      priority = 26
+  rule {
+    name     = "allow_GT8K_body_uploads"
+    priority = 26
 
-      action {
-        block {}
-      }
+    action {
+      block {}
+    }
 
-      statement {
-        and_statement {
-          statement {
-            label_match_statement {
-              key   = "awswaf:managed:aws:core-rule-set:SizeRestrictions_Body"
-              scope = "LABEL"
-            }
+    statement {
+      and_statement {
+        statement {
+          label_match_statement {
+            key   = "awswaf:managed:aws:core-rule-set:SizeRestrictions_Body"
+            scope = "LABEL"
           }
-          statement {
-            byte_match_statement {
-              positional_constraint = "EXACTLY"
-              search_string = "/cookies"
+        }
+        statement {
+          byte_match_statement {
+            positional_constraint = "EXACTLY"
+            search_string         = "/cookies"
 
-              field_to_match {
-                uri_path {}
-              }
+            field_to_match {
+              uri_path {}
+            }
 
-              text_transformation {
-                priority = 0
-                type     = "NONE"
-              }
+            text_transformation {
+              priority = 0
+              type     = "NONE"
             }
           }
         }
       }
-
-      visibility_config {
-        cloudwatch_metrics_enabled = true
-        metric_name                = "waf-allow-GT8K-body-uploads"
-        sampled_requests_enabled   = true
-      }
     }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-allow-GT8K-body-uploads"
+      sampled_requests_enabled   = true
+    }
+  }
 
   rule {
     name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
@@ -245,6 +253,26 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "allow_in_allowlist"
+    priority = 35
+    action {
+      allow {}
+    }
+
+    statement {
+      ip_set_reference_statement {
+        arn = aws_wafv2_ip_set.allowlist_ips.arn
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-allow-in-allowlist"
       sampled_requests_enabled   = true
     }
   }

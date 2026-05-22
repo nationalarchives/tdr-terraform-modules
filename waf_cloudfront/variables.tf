@@ -14,10 +14,10 @@ variable "environment" {
   description = "environment, e.g. prod"
 }
 
-# variable "allowlist_ips" {
-#   description = "Allowed IPs"
-#   type        = list(string)
-# }
+variable "allowlist_ips" {
+  description = "Allowed IPs"
+  type        = list(string)
+}
 
 variable "blocklist_ips" {
   description = "Blocked IPS"
