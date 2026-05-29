@@ -8,7 +8,7 @@ terraform {
 }
 
 locals {
-  waf_name = format("%s-%s-%s-cloudfront-waf", var.project, var.function, var.environment)
+  waf_name = format("%s-%s-%s-waf", var.project, var.function, var.environment)
 }
 
 resource "aws_cloudwatch_log_group" "waf_log_group" {
