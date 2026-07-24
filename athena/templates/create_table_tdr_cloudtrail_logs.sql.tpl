@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE tdr_cloudtrail_logs_fixed(
+CREATE EXTERNAL TABLE tdr_cloudtrail_logs(
 eventversion STRING,
     useridentity STRUCT<
         type: STRING,
