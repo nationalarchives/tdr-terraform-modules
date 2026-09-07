@@ -289,7 +289,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "log_bucket_lifecycle" {
       dynamic "noncurrent_version_expiration" {
         for_each = length(keys(lookup(rule.value, "noncurrent_version_expiration", {}))) == 0 ? [] : [rule.value.noncurrent_version_expiration]
         content {
-          noncurrent_days           = ookup(noncurrent_version_expiration.value, "noncurrent_days", null)
+          noncurrent_days           = lookup(noncurrent_version_expiration.value, "noncurrent_days", null)
           newer_noncurrent_versions = lookup(noncurrent_version_expiration.value, "newer_noncurrent_versions", null)
         }
       }
