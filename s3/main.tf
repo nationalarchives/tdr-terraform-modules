@@ -275,21 +275,21 @@ resource "aws_s3_bucket_lifecycle_configuration" "log_bucket_lifecycle" {
     for_each = var.log_bucket_lifecycle_rules
     iterator = rule
     content {
-      id = rule.value.id
+      id     = rule.value.id
       status = rule.value.status
 
       dynamic "expiration" {
         for_each = length(keys(lookup(rule.value, "expiration", {}))) == 0 ? [] : [rule.value.expiration]
         content {
-          date = lookup(expiration.value, "date", null)
-          days = lookup(expiration.value, "days", null)
+          date                         = lookup(expiration.value, "date", null)
+          days                         = lookup(expiration.value, "days", null)
           expired_object_delete_marker = lookup(expiration.value, "expired_object_delete_marker", null)
         }
       }
       dynamic "noncurrent_version_expiration" {
         for_each = length(keys(lookup(rule.value, "noncurrent_version_expiration", {}))) == 0 ? [] : [rule.value.noncurrent_version_expiration]
         content {
-          noncurrent_days = ookup(noncurrent_version_expiration.value, "noncurrent_days", null)
+          noncurrent_days           = ookup(noncurrent_version_expiration.value, "noncurrent_days", null)
           newer_noncurrent_versions = lookup(noncurrent_version_expiration.value, "newer_noncurrent_versions", null)
         }
       }
