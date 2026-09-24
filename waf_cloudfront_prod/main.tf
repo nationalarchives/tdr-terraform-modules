@@ -166,43 +166,18 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
         evaluation_window_sec = var.rate_limit_evaluation_window_secs
         limit                 = var.rate_limit
 
-        # PUT and OPTIONS (S3 uploads) are excluded here and rate-limited separately by
-        # rate_control_uploads, which allows a much higher limit sized for upload traffic.
         scope_down_statement {
-          or_statement {
-            statement {
-              not_statement {
-                statement {
-                  regex_match_statement {
-                    regex_string = "^(PUT|OPTIONS)$"
+          byte_match_statement {
+            positional_constraint = "EXACTLY"
+            search_string         = "/cookies"
 
-                    field_to_match {
-                      method {}
-                    }
-
-                    text_transformation {
-                      priority = 0
-                      type     = "NONE"
-                    }
-                  }
-                }
-              }
+            field_to_match {
+              uri_path {}
             }
 
-            statement {
-              byte_match_statement {
-                positional_constraint = "EXACTLY"
-                search_string         = "/cookies"
-
-                field_to_match {
-                  uri_path {}
-                }
-
-                text_transformation {
-                  priority = 0
-                  type     = "NONE"
-                }
-              }
+            text_transformation {
+              priority = 0
+              type     = "NONE"
             }
           }
         }
@@ -229,19 +204,24 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
         evaluation_window_sec = var.rate_limit_evaluation_window_secs
         limit                 = var.rate_limit_uploads
 
-        # S3 uploads send an OPTIONS and a PUT per file, so they need a much higher limit than
-        # rate_control. Counted here instead of being excluded from rate limiting altogether.
+        # Everything other than /cookies, sized for S3 upload traffic which needs a much
+        # higher limit than /cookies (unauthenticated, Lambda-backed).
         scope_down_statement {
-          regex_match_statement {
-            regex_string = "^(PUT|OPTIONS)$"
+          not_statement {
+            statement {
+              byte_match_statement {
+                positional_constraint = "EXACTLY"
+                search_string         = "/cookies"
 
-            field_to_match {
-              method {}
-            }
+                field_to_match {
+                  uri_path {}
+                }
 
-            text_transformation {
-              priority = 0
-              type     = "NONE"
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
+              }
             }
           }
         }
