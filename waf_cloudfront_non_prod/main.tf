@@ -131,7 +131,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 
         scope_down_statement {
           byte_match_statement {
-            positional_constraint = "EXACTLY"
+            positional_constraint = "STARTS_WITH"
             search_string         = "/cookies"
 
             field_to_match {
@@ -173,7 +173,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
           not_statement {
             statement {
               byte_match_statement {
-                positional_constraint = "EXACTLY"
+                positional_constraint = "STARTS_WITH"
                 search_string         = "/cookies"
 
                 field_to_match {
