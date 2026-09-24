@@ -31,13 +31,19 @@ variable "log_retention_period_days" {
 }
 
 variable "rate_limit" {
-  description = "Max requests per IP per evaluation window before blocking (10 - 2,000,000,000). PUT and OPTIONS are not counted."
+  description = "Max requests per IP per evaluation window before blocking (10 - 2,000,000,000). PUT and OPTIONS are counted separately by rate_limit_uploads."
   type        = number
   default     = 250
 }
 
+variable "rate_limit_uploads" {
+  description = "Max PUT/OPTIONS requests per IP per evaluation window before blocking (10 - 2,000,000,000). Covers S3 upload traffic, which needs a much higher limit than rate_limit."
+  type        = number
+  default     = 40000
+}
+
 variable "rate_limit_evaluation_window_secs" {
-  description = "Sliding window in seconds for rate_limit. Valid values are 60, 120, 300 and 600."
+  description = "Sliding window in seconds for rate_limit and rate_limit_uploads. Valid values are 60, 120, 300 and 600."
   type        = number
   default     = 600
 }

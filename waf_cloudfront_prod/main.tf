@@ -166,10 +166,8 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
         evaluation_window_sec = var.rate_limit_evaluation_window_secs
         limit                 = var.rate_limit
 
-        # Uploads send an OPTIONS and a PUT per file and trip the limit mid-transfer, which surfaces
-        # as an opaque CORS error, so those methods are not counted. /cookies still is: it is
-        # unauthenticated and Lambda-backed. Phrased as "what counts" to stay within the provider's
-        # statement nesting limit.
+        # PUT and OPTIONS (S3 uploads) are excluded here and rate-limited separately by
+        # rate_control_uploads, which allows a much higher limit sized for upload traffic.
         scope_down_statement {
           or_statement {
             statement {
@@ -214,6 +212,45 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "waf-rate-control"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "rate_control_uploads"
+    priority = 21
+    action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        aggregate_key_type    = "IP"
+        evaluation_window_sec = var.rate_limit_evaluation_window_secs
+        limit                 = var.rate_limit_uploads
+
+        # S3 uploads send an OPTIONS and a PUT per file, so they need a much higher limit than
+        # rate_control. Counted here instead of being excluded from rate limiting altogether.
+        scope_down_statement {
+          regex_match_statement {
+            regex_string = "^(PUT|OPTIONS)$"
+
+            field_to_match {
+              method {}
+            }
+
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-rate-control-uploads"
       sampled_requests_enabled   = true
     }
   }
