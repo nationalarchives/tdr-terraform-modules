@@ -31,13 +31,13 @@ variable "log_retention_period_days" {
 }
 
 variable "rate_limit" {
-  description = "Max requests per IP per evaluation window before blocking (10 - 2,000,000,000), applied to /cookies requests only. All other paths are counted separately by rate_limit_uploads."
+  description = "Default rate limit. Max requests per IP per evaluation window before blocking (10 - 2,000,000,000). Applies to all requests except the S3 upload requests, which are counted separately by rate_limit_uploads."
   type        = number
   default     = 250
 }
 
 variable "rate_limit_uploads" {
-  description = "Max requests per IP per evaluation window before blocking (10 - 2,000,000,000), applied to all requests other than /cookies. Sized for S3 upload traffic, which needs a much higher limit than rate_limit."
+  description = "Override rate limit for S3 upload requests only, identified by a URI path starting with a UUID. Max requests per IP per evaluation window before blocking (10 - 2,000,000,000). Upload traffic needs a much higher limit than the default."
   type        = number
   default     = 40000
 }
