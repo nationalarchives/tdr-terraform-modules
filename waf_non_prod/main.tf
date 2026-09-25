@@ -100,6 +100,92 @@ resource "aws_wafv2_web_acl" "waf" {
       sampled_requests_enabled   = true
     }
   }
+  rule {
+    name     = "allow_cookies_http_methods"
+    priority = 12
+    action {
+      allow {}
+    }
+
+    statement {
+      and_statement {
+        statement {
+          byte_match_statement {
+            positional_constraint = "EXACTLY"
+            search_string         = "/cookies"
+
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+
+        statement {
+          regex_match_statement {
+            field_to_match {
+              method {}
+            }
+            regex_string = "^(GET|OPTIONS)$"
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-http-methods-restrict-cookies"
+      sampled_requests_enabled   = true
+    }
+  }
+  rule {
+    name     = "restrict_uploads_http_methods"
+    priority = 13
+    action {
+      allow {}
+    }
+    statement {
+      and_statement {
+        statement {
+          regex_match_statement {
+            field_to_match {
+              uri_path {}
+            }
+            regex_string = "^(?!/cookies$).*"
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+        statement {
+          regex_match_statement {
+            field_to_match {
+              method {}
+            }
+            regex_string = "^(PUT|POST|OPTIONS)$"
+
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-restrict-uploads-http-methods"
+      sampled_requests_enabled   = true
+    }
+  }
 
   rule {
     name     = "rate_control"
