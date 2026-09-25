@@ -31,13 +31,19 @@ variable "log_retention_period_days" {
 }
 
 variable "rate_limit" {
-  description = "The maximum number of requests to allow during the specified time window between 10 - 2,000,000,000"
+  description = "Default rate limit. Max requests per IP per evaluation window before blocking (10 - 2,000,000,000). Applies to all requests except the S3 upload requests, which are counted separately by rate_limit_uploads."
   type        = number
   default     = 250
 }
 
+variable "rate_limit_uploads" {
+  description = "Override rate limit for S3 upload requests only, identified by a URI path starting with a UUID. Max requests per IP per evaluation window before blocking (10 - 2,000,000,000). Upload traffic needs a much higher limit than the default."
+  type        = number
+  default     = 40000
+}
+
 variable "rate_limit_evaluation_window_secs" {
-  description = "The amount of time to use for request counts - valid values are in seconds (60 120 300 600)"
+  description = "Sliding window in seconds for rate_limit and rate_limit_uploads. Valid values are 60, 120, 300 and 600."
   type        = number
   default     = 600
 }

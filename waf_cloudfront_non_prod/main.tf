@@ -9,6 +9,10 @@ terraform {
 
 locals {
   waf_name = format("%s-%s-%s-waf", var.project, var.function, var.environment)
+
+  # Upload requests are addressed by a path that starts with a UUID, e.g. /{userId}/{consignmentId}/...
+  # Anything that does not match this is treated as general traffic and gets the default rate limit.
+  upload_uri_path_regex = "^/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(/|$)"
 }
 
 resource "aws_cloudwatch_log_group" "waf_log_group" {
@@ -40,6 +44,19 @@ resource "aws_wafv2_ip_set" "blocklist_ips" {
   scope              = "CLOUDFRONT"
   description        = "Blocked IPs"
   provider           = aws.useast1
+}
+
+resource "aws_wafv2_regex_pattern_set" "upload_paths" {
+  name        = "${var.project}-${var.function}-${var.environment}-upload-paths"
+  scope       = "CLOUDFRONT"
+  description = "URI paths that identify S3 upload requests (path starts with a UUID)"
+  provider    = aws.useast1
+
+  regular_expression {
+    regex_string = local.upload_uri_path_regex
+  }
+
+  tags = var.common_tags
 }
 
 resource "aws_wafv2_web_acl" "cloudfront_waf" {
@@ -116,8 +133,10 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
     }
   }
 
+  # Default rate limit: applies to every request except the S3 upload requests, which are
+  # counted separately by the rate_limit_uploads_override rule below.
   rule {
-    name     = "rate_control"
+    name     = "rate_limit_default"
     priority = 15
     action {
       block {}
@@ -128,12 +147,70 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
         aggregate_key_type    = "IP"
         evaluation_window_sec = var.rate_limit_evaluation_window_secs
         limit                 = var.rate_limit
+
+        scope_down_statement {
+          not_statement {
+            statement {
+              regex_pattern_set_reference_statement {
+                arn = aws_wafv2_regex_pattern_set.upload_paths.arn
+
+                field_to_match {
+                  uri_path {}
+                }
+
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
+              }
+            }
+          }
+        }
       }
     }
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "waf-rate-control"
+      metric_name                = "waf-rate-limit-default"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  # Override for the S3 upload requests only. These are identified by a URI path starting with
+  # a UUID and need a much higher limit than the default.
+  rule {
+    name     = "rate_limit_uploads_override"
+    priority = 16
+    action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        aggregate_key_type    = "IP"
+        evaluation_window_sec = var.rate_limit_evaluation_window_secs
+        limit                 = var.rate_limit_uploads
+
+        scope_down_statement {
+          regex_pattern_set_reference_statement {
+            arn = aws_wafv2_regex_pattern_set.upload_paths.arn
+
+            field_to_match {
+              uri_path {}
+            }
+
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-rate-limit-uploads-override"
       sampled_requests_enabled   = true
     }
   }
