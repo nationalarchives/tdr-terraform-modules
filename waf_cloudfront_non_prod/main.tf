@@ -132,7 +132,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
       sampled_requests_enabled   = true
     }
   }
-      rule {
+  rule {
     name     = "allow_cookies_http_methods"
     priority = 12
     action {
@@ -165,7 +165,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
             text_transformation {
               priority = 0
               type     = "NONE"
-            } 
+            }
           }
         }
       }
@@ -178,7 +178,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
     }
   }
   rule {
-    name = "restrict_uploads_http_methods"
+    name     = "restrict_uploads_http_methods"
     priority = 13
     action {
       allow {}

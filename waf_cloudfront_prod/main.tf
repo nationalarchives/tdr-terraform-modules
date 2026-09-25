@@ -214,8 +214,8 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
       sampled_requests_enabled   = true
     }
   }
-    rule {
-    name = "restrict_uploads_http_methods"
+  rule {
+    name     = "restrict_uploads_http_methods"
     priority = 13
     action {
       block {}
