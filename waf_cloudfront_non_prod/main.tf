@@ -49,7 +49,7 @@ resource "aws_wafv2_ip_set" "blocklist_ips" {
 resource "aws_wafv2_regex_pattern_set" "upload_paths" {
   name        = "${var.project}-${var.function}-${var.environment}-upload-paths"
   scope       = "CLOUDFRONT"
-  description = "URI paths that identify S3 upload requests (path starts with a UUID)"
+  description = "URI paths that identify S3 upload requests - path starts with a UUID"
   provider    = aws.useast1
 
   regular_expression {
