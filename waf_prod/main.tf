@@ -112,7 +112,92 @@ resource "aws_wafv2_web_acl" "waf" {
       sampled_requests_enabled   = true
     }
   }
+  rule {
+    name     = "restrict_cookies_methods"
+    priority = 10
+    action {
+      block {}
+    }
 
+    statement {
+      and_statement {
+        statement {
+          byte_match_statement {
+            field_to_match {
+              uri_path {}
+            }
+            positional_constraint = "EXACTLY"
+            search_string         = "/cookies"
+
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+        statement {
+          regex_match_statement {
+            field_to_match {
+              method {}
+            }
+            regex_string = "^(?!GET$|OPTIONS$).*"
+
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-restrict-cookies-methods"
+      sampled_requests_enabled   = true
+    }
+  }
+    rule {
+    name = "restrict_uploads_http_methods"
+    priority = 13
+    action {
+      block {}
+    }
+    statement {
+      and_statement {
+        statement {
+          regex_match_statement {
+            field_to_match {
+              uri_path {}
+            }
+            regex_string = "^(?!/cookies$).*"
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+        statement {
+          regex_match_statement {
+            field_to_match {
+              method {}
+            }
+            regex_string = "^(?!PUT$|POST$|OPTIONS$).*"
+
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-restrict-uploads-http-methods"
+      sampled_requests_enabled   = true
+    }
+  }
   rule {
     name     = "block_admin_urls_unless_in_allowlist"
     priority = 20
