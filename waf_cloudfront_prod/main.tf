@@ -227,7 +227,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
             field_to_match {
               uri_path {}
             }
-            regex_string = "^(?!/cookies$).*"
+            regex_string = local.upload_uri_path_regex
             text_transformation {
               priority = 0
               type     = "NONE"
