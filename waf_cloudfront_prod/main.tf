@@ -170,7 +170,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
     }
   }
   rule {
-    name     = "restrict_cookies_methods"
+    name     = "restrict_cookies_http_methods"
     priority = 10
     action {
       block {}
@@ -210,7 +210,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name                = "waf-restrict-cookies-methods"
+      metric_name                = "waf-restrict-cookies-http-methods"
       sampled_requests_enabled   = true
     }
   }
