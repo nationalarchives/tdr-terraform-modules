@@ -6,7 +6,7 @@ resource "aws_lambda_function" "signed_cookies_lambda_function" {
   runtime                        = "python3.13"
   filename                       = "${path.module}/functions/signed-cookies.zip"
   timeout                        = var.timeout_seconds
-  memory_size                    = 1024
+  memory_size                    = 256
   reserved_concurrent_executions = var.reserved_concurrency
   tags                           = var.common_tags
   environment {
