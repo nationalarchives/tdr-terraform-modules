@@ -408,6 +408,14 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
             }
           }
         }
+        # Upload bodies are opaque file content, so this rule only produces false positives on them.
+        rule_action_override {
+          name = "GenericRFI_BODY"
+          action_to_use {
+            count {
+            }
+          }
+        }
       }
     }
 
@@ -497,6 +505,49 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "waf-allow-CrossSiteScripting-BODY-on-uploads"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  # GenericRFI_BODY is counted above so that file uploads are not blocked by it. This
+  # restores the block for the signed cookies API, whose body is not file content.
+  rule {
+    name     = "allow_GenericRFI_BODY_on_uploads"
+    priority = 33
+
+    action {
+      block {}
+    }
+
+    statement {
+      and_statement {
+        statement {
+          label_match_statement {
+            key   = "awswaf:managed:aws:core-rule-set:GenericRFI_Body"
+            scope = "LABEL"
+          }
+        }
+        statement {
+          byte_match_statement {
+            positional_constraint = "EXACTLY"
+            search_string         = "/cookies"
+
+            field_to_match {
+              uri_path {}
+            }
+
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "waf-allow-GenericRFI-BODY-on-uploads"
       sampled_requests_enabled   = true
     }
   }
