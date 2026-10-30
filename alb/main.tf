@@ -21,6 +21,13 @@ resource "aws_alb" "alb_module" {
   )
 }
 
+# Retain during migration: deposed target groups may still depend on this resource in state.
+resource "random_string" "alb_prefix" {
+  length  = 4
+  upper   = false
+  special = false
+}
+
 resource "aws_alb_target_group_attachment" "alb_module" {
   count            = var.alb_target_type == "instance" ? 1 : 0
   target_group_arn = aws_alb_target_group.alb_module.arn
