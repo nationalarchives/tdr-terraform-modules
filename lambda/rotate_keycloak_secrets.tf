@@ -3,7 +3,7 @@ resource "aws_lambda_function" "rotate_keycloak_secrets_lambda_function" {
   function_name                  = local.rotate_keycloak_secrets_function_name
   handler                        = "uk.gov.nationalarchives.rotate.Lambda::handleRequest"
   role                           = aws_iam_role.rotate_keycloak_secrets_lambda_iam_role.*.arn[0]
-  runtime                        = "java11"
+  runtime                        = "java17"
   filename                       = "${path.module}/functions/rotate-keycloak-secrets.jar"
   timeout                        = var.timeout_seconds
   memory_size                    = 1024
