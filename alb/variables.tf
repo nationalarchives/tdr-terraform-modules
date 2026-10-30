@@ -27,10 +27,16 @@ variable "alb_target_group_port" {
   default     = 80
 }
 
+variable "alb_target_group_protocol" {
+  description = "Protocol to use for routing traffic to the targets. Should be one of GENEVE, HTTP, HTTPS, TCP, TCP_UDP, TLS, UDP, QUIC, or TCP_QUIC"
+  default     = "HTTP"
+}
+
 variable "alb_target_type" {
   description = "ALB target group type, must be instance, ip, or lambda"
   default     = "instance"
 }
+
 
 variable "certificate_arn" {
   description = "SSL certificate ARN"
