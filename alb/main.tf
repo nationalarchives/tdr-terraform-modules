@@ -38,7 +38,7 @@ resource "aws_alb_target_group" "alb_module" {
   # name cannot be longer than 32 characters
   name        = "${var.project}-${var.function}-${random_string.alb_prefix.result}-${var.environment}"
   port        = var.alb_target_group_port
-  protocol    = "HTTP"
+  protocol    = var.alb_target_group_protocol
   target_type = var.alb_target_type
   vpc_id      = var.vpc_id
 
@@ -46,7 +46,7 @@ resource "aws_alb_target_group" "alb_module" {
     port                = var.health_check_port
     healthy_threshold   = "3"
     interval            = "30"
-    protocol            = "HTTP"
+    protocol            = var.alb_target_group_protocol
     matcher             = var.health_check_matcher
     timeout             = "3"
     path                = "/${var.health_check_path}"
