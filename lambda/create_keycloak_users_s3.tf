@@ -3,7 +3,7 @@ resource "aws_lambda_function" "create_keycloak_users_s3_lambda_function" {
   function_name                  = local.create_keycloak_user_s3_function_name
   handler                        = "uk.gov.nationalarchives.keycloak.users.CSVLambda::handleRequest"
   role                           = aws_iam_role.create_keycloak_users_s3_lambda_iam_role.*.arn[0]
-  runtime                        = "java11"
+  runtime                        = var.runtime
   filename                       = "${path.module}/functions/create-keycloak-user-s3.jar"
   timeout                        = var.timeout_seconds
   memory_size                    = 1024
