@@ -33,3 +33,11 @@ module "guardduty-s3" {
 * Simple Notification Service (SNS)
 * Simple Storage Service (S3)
 * Web Application Firewall (WAF) - should be upgraded to WAFv2 when supported by Terraform
+
+## Development notifications
+
+When notifications are enabled in the `dev` workspace, the Lambda module routes all
+Slack webhook variables to `/dev/slack/notifications/webhook` and creates that
+SecureString parameter. After applying, replace its placeholder value securely with
+the integration Slack webhook URL. Subsequent applies preserve the manually set
+value. Other environments retain their existing Slack destinations.
