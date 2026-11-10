@@ -4,19 +4,6 @@ locals {
   kms_export_bucket_encryption_count = var.apply_resource == true && local.environment != "mgmt" ? local.count_notifications : 0
 }
 
-resource "aws_ssm_parameter" "dev_notifications_slack_webhook" {
-  count       = local.environment == "dev" ? local.count_notifications : 0
-  name        = local.slack_notifications_webhook
-  description = "Development Slack notifications webhook. Populate manually with the integration webhook URL."
-  type        = "SecureString"
-  value       = "To be manually added"
-  tags        = merge(var.common_tags, { ManualInput = "true" })
-
-  lifecycle {
-    ignore_changes = [value]
-  }
-}
-
 resource "aws_lambda_function" "notifications_lambda_function" {
   count                          = local.count_notifications
   function_name                  = local.notifications_function_name

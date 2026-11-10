@@ -37,7 +37,7 @@ module "guardduty-s3" {
 ## Development notifications
 
 When notifications are enabled in the `dev` workspace, the Lambda module routes all
-Slack webhook variables to `/dev/slack/notifications/webhook` and creates that
-SecureString parameter. After applying, replace its placeholder value securely with
-the integration Slack webhook URL. Subsequent applies preserve the manually set
-value. Other environments retain their existing Slack destinations.
+Slack webhook variables to the existing `/dev/slack/notifications/webhook` SSM
+parameter. Set its value securely to the integration Slack webhook URL; this module
+does not create or modify the parameter. Other environments retain their existing
+Slack destinations.
