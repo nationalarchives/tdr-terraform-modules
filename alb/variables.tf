@@ -28,8 +28,13 @@ variable "alb_target_group_port" {
 }
 
 variable "alb_target_group_protocol" {
-  description = "Protocol to use for routing traffic to the targets. Should be one of GENEVE, HTTP, HTTPS, TCP, TCP_UDP, TLS, UDP, QUIC, or TCP_QUIC"
+  description = "Protocol to use for routing traffic to the targets. Must be HTTP or HTTPS."
+  type        = string
   default     = "HTTP"
+  validation {
+    condition     = contains(["HTTP", "HTTPS"], var.alb_target_group_protocol)
+    error_message = "alb_target_group_protocol must be HTTP or HTTPS."
+  }
 }
 
 variable "alb_target_type" {
