@@ -6,6 +6,12 @@ variable "common_tags" {}
 
 variable "project" {}
 
+variable "runtime" {
+  description = "Java runtime versions used by Lambda functions"
+  type        = string
+  default     = "java17"
+}
+
 variable "apply_resource" {
   description = "use to conditionally apply resource from the calling module"
   default     = true
