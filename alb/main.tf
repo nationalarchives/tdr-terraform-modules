@@ -21,7 +21,7 @@ resource "aws_alb" "alb_module" {
   )
 }
 
-# Retain during migration: deposed target groups may still depend on this resource in state.
+# Can be deleted after https://github.com/nationalarchives/tdr-terraform-modules/tree/TDRD-1405/enable_https_target_group has been merged and deployed
 resource "random_string" "alb_prefix" {
   length  = 4
   upper   = false
