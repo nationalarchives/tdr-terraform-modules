@@ -42,7 +42,6 @@ variable "alb_target_type" {
   default     = "instance"
 }
 
-
 variable "certificate_arn" {
   description = "SSL certificate ARN"
 }
