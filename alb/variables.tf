@@ -27,6 +27,16 @@ variable "alb_target_group_port" {
   default     = 80
 }
 
+variable "alb_target_group_protocol" {
+  description = "Protocol to use for routing traffic to the targets. Must be HTTP or HTTPS."
+  type        = string
+  default     = "HTTP"
+  validation {
+    condition     = contains(["HTTP", "HTTPS"], var.alb_target_group_protocol)
+    error_message = "alb_target_group_protocol must be HTTP or HTTPS."
+  }
+}
+
 variable "alb_target_type" {
   description = "ALB target group type, must be instance, ip, or lambda"
   default     = "instance"

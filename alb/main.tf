@@ -21,7 +21,7 @@ resource "aws_alb" "alb_module" {
   )
 }
 
-# random string to allow alb target group to be deleted and recreated
+# Can be deleted after https://github.com/nationalarchives/tdr-terraform-modules/tree/TDRD-1405/enable_https_target_group has been merged and deployed
 resource "random_string" "alb_prefix" {
   length  = 4
   upper   = false
@@ -35,18 +35,21 @@ resource "aws_alb_target_group_attachment" "alb_module" {
 }
 
 resource "aws_alb_target_group" "alb_module" {
-  # name cannot be longer than 32 characters
-  name        = "${var.project}-${var.function}-${random_string.alb_prefix.result}-${var.environment}"
+  name_prefix = "${var.project}-"
   port        = var.alb_target_group_port
-  protocol    = "HTTP"
+  protocol    = var.alb_target_group_protocol
   target_type = var.alb_target_type
   vpc_id      = var.vpc_id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   health_check {
     port                = var.health_check_port
     healthy_threshold   = "3"
     interval            = "30"
-    protocol            = "HTTP"
+    protocol            = var.alb_target_group_protocol
     matcher             = var.health_check_matcher
     timeout             = "3"
     path                = "/${var.health_check_path}"
@@ -55,7 +58,7 @@ resource "aws_alb_target_group" "alb_module" {
   tags = merge(
     var.common_tags,
     tomap(
-      { "Name" = "${var.project}-${var.function}-${random_string.alb_prefix.result}-${var.environment}" }
+      { "Name" = "${var.project}-${var.function}-${var.environment}" }
     )
   )
   depends_on = [aws_alb.alb_module]
