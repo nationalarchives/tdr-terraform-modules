@@ -3,7 +3,7 @@ resource "aws_lambda_function" "create_db_users_lambda_function" {
   function_name                  = local.create_db_users_function_name
   handler                        = "uk.gov.nationalarchives.db.users.Lambda::process"
   role                           = aws_iam_role.create_db_users_lambda_iam_role.*.arn[0]
-  runtime                        = "java11"
+  runtime                        = var.runtime
   filename                       = "${path.module}/functions/create-db-users.jar"
   timeout                        = var.timeout_seconds
   memory_size                    = 1024

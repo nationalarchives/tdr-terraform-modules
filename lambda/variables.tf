@@ -9,7 +9,7 @@ variable "project" {}
 variable "runtime" {
   description = "Java runtime versions used by Lambda functions"
   type        = string
-  default     = "java17"
+  default     = null
 }
 
 variable "apply_resource" {

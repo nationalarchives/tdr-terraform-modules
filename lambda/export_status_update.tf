@@ -3,7 +3,7 @@ resource "aws_lambda_function" "export_status_update_lambda_function" {
   function_name                  = local.export_status_update_function_name
   handler                        = "uk.gov.nationalarchives.exportstatusupdate.Lambda::handleRequest"
   role                           = aws_iam_role.export_status_update_lambda_iam_role.*.arn[0]
-  runtime                        = "java11"
+  runtime                        = var.runtime
   filename                       = "${path.module}/functions/export-status-update.jar"
   timeout                        = var.timeout_seconds
   memory_size                    = 1024
