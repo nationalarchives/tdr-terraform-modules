@@ -3,7 +3,7 @@ resource "aws_lambda_function" "ecr_scan_lambda_function" {
   function_name                  = "${var.project}-ecr-scan-${local.environment}"
   handler                        = "uk.gov.nationalarchives.ecr.scan.Lambda::process"
   role                           = aws_iam_role.ecr_scan_lambda_iam_role.*.arn[0]
-  runtime                        = "java11"
+  runtime                        = var.runtime
   filename                       = "${path.module}/functions/ecr-scan.jar"
   timeout                        = var.timeout_seconds
   memory_size                    = 512
